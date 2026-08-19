@@ -4,114 +4,132 @@ import { ArrowRight, Mail, Lock, User, Bike, Store } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function SignUp() {
+
   const [accountType, setAccountType] = useState<"rider" | "restaurant">("rider");
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+
+      const response = await fetch("http://localhost:5000/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          accountType
+        }),
+      });
+
+
+      const data = await response.json();
+
+      if(response.ok){
+        alert("Account created successfully");
+        console.log(data);
+      }
+      else{
+        alert(data.message || "Signup failed");
+      }
+
+
+    } catch(error){
+
+      console.log(error);
+      alert("Server not connected");
+
+    }
+  };
+
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-['Nunito',sans-serif] font-extrabold text-slate-900 mb-2">
-          Create an account
-        </h1>
-        <p className="text-slate-600 text-lg">
-          Join GigWorker and start your journey today.
-        </p>
+    <motion.div>
+
+      <h1 className="text-3xl font-bold mb-4">
+        Create an account
+      </h1>
+
+
+      <div className="flex gap-4 mb-5">
+
+        <button
+        type="button"
+        onClick={()=>setAccountType("rider")}
+        >
+          <Bike/> Rider
+        </button>
+
+
+        <button
+        type="button"
+        onClick={()=>setAccountType("restaurant")}
+        >
+          <Store/> Restaurant
+        </button>
+
       </div>
 
-      <div className="flex gap-4 mb-8">
-        <button 
-          onClick={() => setAccountType("rider")}
-          className={`flex-1 py-3 px-4 rounded-xl border-2 flex items-center justify-center gap-2 font-bold transition-all ${
-            accountType === "rider" 
-              ? "border-[#A33D20] bg-orange-50 text-[#A33D20]" 
-              : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
-          }`}
-        >
-          <Bike className="w-5 h-5" /> Rider
-        </button>
-        <button 
-          onClick={() => setAccountType("restaurant")}
-          className={`flex-1 py-3 px-4 rounded-xl border-2 flex items-center justify-center gap-2 font-bold transition-all ${
-            accountType === "restaurant" 
-              ? "border-[#A33D20] bg-orange-50 text-[#A33D20]" 
-              : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
-          }`}
-        >
-          <Store className="w-5 h-5" /> Restaurant
-        </button>
-      </div>
 
-      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">
-            {accountType === "rider" ? "Full name" : "Business name"}
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-              <User className="w-5 h-5" />
-            </div>
-            <input 
-              type="text" 
-              className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#A33D20]/20 focus:border-[#A33D20] transition-all bg-white text-slate-900" 
-              placeholder={accountType === "rider" ? "John Doe" : "Tasty Bites Cafe"} 
-              required
-            />
-          </div>
-        </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Email address
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-              <Mail className="w-5 h-5" />
-            </div>
-            <input 
-              type="email" 
-              className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#A33D20]/20 focus:border-[#A33D20] transition-all bg-white text-slate-900" 
-              placeholder="you@example.com" 
-              required
-            />
-          </div>
-        </div>
-        
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Password
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-              <Lock className="w-5 h-5" />
-            </div>
-            <input 
-              type="password" 
-              className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#A33D20]/20 focus:border-[#A33D20] transition-all bg-white text-slate-900" 
-              placeholder="Create a strong password" 
-              required
-            />
-          </div>
-        </div>
+      <form onSubmit={handleSignup} className="space-y-4">
 
-        <button 
-          type="submit" 
-          className="w-full py-4 rounded-xl bg-[#A33D20] text-white font-bold text-lg hover:bg-[#8B331A] transition-all shadow-[0_8px_20px_-6px_rgba(163,61,32,0.4)] flex items-center justify-center gap-2 mt-6"
+
+        <input
+        value={name}
+        onChange={(e)=>setName(e.target.value)}
+        placeholder="Name"
+        className="border p-3 w-full"
+        />
+
+
+        <input
+        value={email}
+        onChange={(e)=>setEmail(e.target.value)}
+        placeholder="Email"
+        className="border p-3 w-full"
+        />
+
+
+        <input
+        value={password}
+        onChange={(e)=>setPassword(e.target.value)}
+        type="password"
+        placeholder="Password"
+        className="border p-3 w-full"
+        />
+
+
+        <button
+        type="submit"
+        className="bg-orange-700 text-white p-3 w-full rounded"
         >
-          Create Account <ArrowRight className="w-5 h-5" />
+
+        Create Account
+        <ArrowRight className="inline ml-2"/>
+
         </button>
+
+
       </form>
 
-      <div className="mt-8 pt-8 border-t border-slate-100 text-center">
-        <p className="text-slate-600">
-          Already have an account?{" "}
-          <Link to="/login" className="font-bold text-[#A33D20] hover:text-[#8B331A] transition-colors">
-            Sign in here
-          </Link>
-        </p>
-      </div>
+
+      <p className="mt-5">
+        Already have account?
+        <Link to="/login">
+        Sign in
+        </Link>
+      </p>
+
+
     </motion.div>
   );
 }
