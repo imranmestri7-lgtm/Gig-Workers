@@ -1,115 +1,137 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { Store, Package, PlusCircle, User, LogOut } from "lucide-react";
+import {
+  LogOut,
+  Package,
+  PlusCircle,
+  Truck,
+  User,
+} from "lucide-react";
 
 export default function RestaurantDashboard() {
   const navigate = useNavigate();
 
-  const user = JSON.parse(
-    localStorage.getItem("user") || "{}"
-  );
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+
+    if (!savedUser) {
+      navigate("/login");
+      return;
+    }
+
+    const userData = JSON.parse(savedUser);
+
+    // Only restaurant can access this dashboard
+    if (userData.accountType !== "restaurant") {
+      navigate("/");
+      return;
+    }
+
+    setUser(userData);
+  }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
     navigate("/login");
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
 
-      <header className="bg-white border-b border-slate-200">
+      {/* NAVBAR */}
+      <nav className="bg-white border-b border-slate-200 px-6 py-4">
 
-        <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-          <div className="flex items-center gap-3">
+          <div>
 
-            <Store className="w-8 h-8 text-[#A33D20]" />
-
-            <h1 className="text-2xl font-extrabold text-slate-900">
+            <h1 className="text-2xl font-extrabold text-[#A33D20]">
               GigWorker
             </h1>
 
+            <p className="text-sm text-slate-500">
+              Restaurant Dashboard
+            </p>
+
           </div>
 
 
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-slate-600 hover:text-[#A33D20]"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+
+            <div className="flex items-center gap-2">
+
+              <User className="w-5 h-5 text-slate-500" />
+
+              <span className="font-semibold text-slate-700">
+                {user?.name}
+              </span>
+
+            </div>
+
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+
+          </div>
 
         </div>
 
-      </header>
+      </nav>
 
 
-      <main className="max-w-7xl mx-auto px-6 py-10">
+      {/* MAIN */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
 
-        <div className="mb-10">
+        {/* WELCOME */}
+        <div className="mb-8">
 
           <h2 className="text-3xl font-extrabold text-slate-900">
-            Welcome, {user.name || "Restaurant"} 👋
+            Welcome, {user?.name} 👋
           </h2>
 
           <p className="text-slate-600 mt-2">
-            Manage your deliveries and restaurant account.
+            Manage your deliveries and orders.
           </p>
 
         </div>
 
 
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* CREATE DELIVERY */}
+        <div className="bg-[#A33D20] rounded-2xl p-6 text-white mb-8">
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
 
-            <PlusCircle className="w-8 h-8 text-[#A33D20] mb-4" />
+            <div>
 
-            <h3 className="text-xl font-bold">
+              <h3 className="text-2xl font-bold">
+                Need a delivery partner?
+              </h3>
+
+              <p className="text-white/80 mt-1">
+                Post a new delivery request for riders.
+              </p>
+
+            </div>
+
+
+            <button
+              onClick={() => alert("Create delivery coming next!")}
+              className="flex items-center gap-2 bg-white text-[#A33D20] px-5 py-3 rounded-xl font-bold hover:bg-slate-100"
+            >
+
+              <PlusCircle className="w-5 h-5" />
+
               Create Delivery
-            </h3>
 
-            <p className="text-slate-500 mt-2">
-              Create a new delivery request.
-            </p>
-
-            <button className="mt-5 bg-[#A33D20] text-white px-5 py-3 rounded-xl font-bold">
-              Create Delivery
-            </button>
-
-          </div>
-
-
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
-
-            <Package className="w-8 h-8 text-[#A33D20] mb-4" />
-
-            <h3 className="text-xl font-bold">
-              My Deliveries
-            </h3>
-
-            <p className="text-slate-500 mt-2">
-              View and track your deliveries.
-            </p>
-
-          </div>
-
-
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
-
-            <User className="w-8 h-8 text-[#A33D20] mb-4" />
-
-            <h3 className="text-xl font-bold">
-              Restaurant Profile
-            </h3>
-
-            <p className="text-slate-500 mt-2">
-              {user.email || "Your account"}
-            </p>
-
-            <button className="mt-5 border border-slate-300 px-5 py-3 rounded-xl font-bold">
-              View Profile
             </button>
 
           </div>
@@ -117,15 +139,105 @@ export default function RestaurantDashboard() {
         </div>
 
 
-        <div className="mt-8 bg-white rounded-2xl border border-slate-200 p-8">
+        {/* STAT CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
-          <h3 className="text-2xl font-bold mb-3">
-            Delivery Requests
+          <div className="bg-white p-6 rounded-2xl border border-slate-200">
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-slate-500">
+                  Active Deliveries
+                </p>
+
+                <h3 className="text-3xl font-bold mt-2">
+                  0
+                </h3>
+
+              </div>
+
+              <Truck className="w-10 h-10 text-[#A33D20]" />
+
+            </div>
+
+          </div>
+
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-200">
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-slate-500">
+                  Completed
+                </p>
+
+                <h3 className="text-3xl font-bold mt-2">
+                  0
+                </h3>
+
+              </div>
+
+              <Package className="w-10 h-10 text-green-600" />
+
+            </div>
+
+          </div>
+
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-200">
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-slate-500">
+                  Total Requests
+                </p>
+
+                <h3 className="text-3xl font-bold mt-2">
+                  0
+                </h3>
+
+              </div>
+
+              <PlusCircle className="w-10 h-10 text-blue-600" />
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        {/* DELIVERIES */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6">
+
+          <h3 className="text-2xl font-bold text-slate-900">
+            My Deliveries
           </h3>
 
-          <p className="text-slate-500">
-            You don't have any delivery requests yet.
+          <p className="text-slate-500 mt-1">
+            Track your delivery requests.
           </p>
+
+
+          <div className="text-center py-16">
+
+            <Package className="w-16 h-16 mx-auto text-slate-300" />
+
+            <h4 className="text-xl font-bold text-slate-700 mt-4">
+              No deliveries yet
+            </h4>
+
+            <p className="text-slate-500 mt-2">
+              Create your first delivery request.
+            </p>
+
+          </div>
 
         </div>
 

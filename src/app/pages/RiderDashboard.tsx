@@ -1,120 +1,194 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { Bike, Package, Wallet, User, LogOut } from "lucide-react";
+import { LogOut, Package, MapPin, IndianRupee, User } from "lucide-react";
 
 export default function RiderDashboard() {
   const navigate = useNavigate();
 
-  const user = JSON.parse(
-    localStorage.getItem("user") || "{}"
-  );
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+
+    if (!savedUser) {
+      navigate("/login");
+      return;
+    }
+
+    const userData = JSON.parse(savedUser);
+
+    // Make sure only rider can access this page
+    if (userData.accountType !== "rider") {
+      navigate("/");
+      return;
+    }
+
+    setUser(userData);
+  }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
     navigate("/login");
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
 
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      {/* NAVBAR */}
+      <nav className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-          <div className="flex items-center gap-3">
-            <Bike className="w-8 h-8 text-[#A33D20]" />
-
-            <h1 className="text-2xl font-extrabold text-slate-900">
+          <div>
+            <h1 className="text-2xl font-extrabold text-[#A33D20]">
               GigWorker
             </h1>
+
+            <p className="text-sm text-slate-500">
+              Rider Dashboard
+            </p>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-slate-600 hover:text-[#A33D20]"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+
+            <div className="flex items-center gap-2">
+              <User className="w-5 h-5 text-slate-500" />
+
+              <span className="font-semibold text-slate-700">
+                {user?.name}
+              </span>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+
+          </div>
 
         </div>
-      </header>
+      </nav>
 
 
-      <main className="max-w-7xl mx-auto px-6 py-10">
+      {/* MAIN */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
 
-        <div className="mb-10">
+        {/* WELCOME */}
+        <div className="mb-8">
 
           <h2 className="text-3xl font-extrabold text-slate-900">
-            Welcome, {user.name || "Rider"} 👋
+            Welcome, {user?.name} 👋
           </h2>
 
           <p className="text-slate-600 mt-2">
-            Find delivery jobs and manage your work.
+            Find deliveries and start earning.
           </p>
 
         </div>
 
 
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* STAT CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200">
-            <Package className="w-8 h-8 text-[#A33D20] mb-4" />
+            <div className="flex items-center justify-between">
 
-            <h3 className="text-xl font-bold">
-              Available Jobs
-            </h3>
+              <div>
+                <p className="text-slate-500">
+                  Available Deliveries
+                </p>
 
-            <p className="text-slate-500 mt-2">
-              Find nearby delivery jobs.
-            </p>
+                <h3 className="text-3xl font-bold mt-2">
+                  0
+                </h3>
+              </div>
 
-            <button className="mt-5 bg-[#A33D20] text-white px-5 py-3 rounded-xl font-bold">
-              Find Jobs
-            </button>
+              <Package className="w-10 h-10 text-[#A33D20]" />
+
+            </div>
           </div>
 
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200">
-            <Wallet className="w-8 h-8 text-[#A33D20] mb-4" />
 
-            <h3 className="text-xl font-bold">
-              Earnings
-            </h3>
+            <div className="flex items-center justify-between">
 
-            <p className="text-slate-500 mt-2">
-              ₹0.00
-            </p>
+              <div>
+                <p className="text-slate-500">
+                  Completed Deliveries
+                </p>
+
+                <h3 className="text-3xl font-bold mt-2">
+                  0
+                </h3>
+              </div>
+
+              <MapPin className="w-10 h-10 text-green-600" />
+
+            </div>
+
           </div>
 
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200">
-            <User className="w-8 h-8 text-[#A33D20] mb-4" />
 
-            <h3 className="text-xl font-bold">
-              Profile
-            </h3>
+            <div className="flex items-center justify-between">
 
-            <p className="text-slate-500 mt-2">
-              {user.email || "Your account"}
-            </p>
+              <div>
+                <p className="text-slate-500">
+                  Total Earnings
+                </p>
 
-            <button className="mt-5 border border-slate-300 px-5 py-3 rounded-xl font-bold">
-              View Profile
-            </button>
+                <h3 className="text-3xl font-bold mt-2">
+                  ₹0
+                </h3>
+              </div>
+
+              <IndianRupee className="w-10 h-10 text-blue-600" />
+
+            </div>
+
           </div>
 
         </div>
 
 
-        <div className="mt-8 bg-white rounded-2xl border border-slate-200 p-8">
+        {/* AVAILABLE DELIVERIES */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6">
 
-          <h3 className="text-2xl font-bold mb-3">
-            My Deliveries
-          </h3>
+          <div className="flex items-center justify-between mb-6">
 
-          <p className="text-slate-500">
-            You don't have any deliveries yet.
-          </p>
+            <div>
+              <h3 className="text-2xl font-bold text-slate-900">
+                Available Deliveries
+              </h3>
+
+              <p className="text-slate-500 mt-1">
+                Choose a delivery and start earning.
+              </p>
+            </div>
+
+          </div>
+
+
+          {/* EMPTY STATE */}
+          <div className="text-center py-16">
+
+            <Package className="w-16 h-16 mx-auto text-slate-300" />
+
+            <h4 className="text-xl font-bold text-slate-700 mt-4">
+              No deliveries available
+            </h4>
+
+            <p className="text-slate-500 mt-2">
+              New delivery requests will appear here.
+            </p>
+
+          </div>
 
         </div>
 

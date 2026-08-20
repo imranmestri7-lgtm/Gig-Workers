@@ -12,7 +12,6 @@ import FindDeliveries from "./pages/FindDeliveries";
 import BecomeRider from "./pages/BecomeRider";
 import AboutUs from "./pages/AboutUs";
 
-// Dashboard pages
 import RiderDashboard from "./pages/RiderDashboard";
 import RestaurantDashboard from "./pages/RestaurantDashboard";
 
@@ -59,7 +58,7 @@ export const router = createBrowserRouter([
 
 
   // =========================
-  // LOGIN / SIGNUP
+  // AUTH
   // =========================
 
   {
