@@ -1,115 +1,155 @@
 import { useEffect, useState } from "react";
+import {
+  MapPin,
+  Package,
+  IndianRupee,
+  LogOut,
+} from "lucide-react";
 import { useNavigate } from "react-router";
 
-import {
-  LogOut,
-  Package,
-  MapPin,
-  IndianRupee,
-  User,
-} from "lucide-react";
-
+type Delivery = {
+  _id: string;
+  pickupLocation: string;
+  dropLocation: string;
+  packageDetails: string;
+  payment: number;
+  status: string;
+  restaurantId?: {
+    name: string;
+    email: string;
+  };
+};
 
 export default function RiderDashboard() {
-
   const navigate = useNavigate();
 
+  const [availableDeliveries, setAvailableDeliveries] = useState<Delivery[]>(
+    []
+  );
 
-  const [user, setUser] = useState<any>(null);
-
-  const [deliveries, setDeliveries] = useState<any[]>([]);
+  const [activeDeliveries, setActiveDeliveries] = useState<Delivery[]>([]);
 
   const [loading, setLoading] = useState(true);
 
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
 
-  // =====================================
-  // CHECK LOGIN + LOAD DELIVERIES
-  // =====================================
 
-  useEffect(() => {
+  // ==========================================
+  // GET CURRENT RIDER
+  // ==========================================
 
-    const savedUser = localStorage.getItem("user");
+  const getCurrentUser = () => {
+    const userString = localStorage.getItem("user");
 
-    if (!savedUser) {
-
-      navigate("/login");
-
-      return;
+    if (!userString) {
+      return null;
     }
-
-
-    const userData = JSON.parse(savedUser);
-
-
-    if (userData.accountType !== "rider") {
-
-      navigate("/");
-
-      return;
-    }
-
-
-    setUser(userData);
-
-    fetchDeliveries();
-
-  }, [navigate]);
-
-
-  // =====================================
-  // GET AVAILABLE DELIVERIES
-  // =====================================
-
-  const fetchDeliveries = async () => {
 
     try {
-
-      const response = await fetch(
-        "http://localhost:5000/api/deliveries"
-      );
-
-
-      const data = await response.json();
-
-
-      if (response.ok) {
-
-        setDeliveries(data.deliveries);
-
-      }
-
-    } catch (error) {
-
-      console.error(
-        "Get deliveries error:",
-        error
-      );
-
-    } finally {
-
-      setLoading(false);
-
+      return JSON.parse(userString);
+    } catch {
+      return null;
     }
   };
 
 
-  // =====================================
-  // ACCEPT DELIVERY
-  // =====================================
+  // ==========================================
+  // FETCH AVAILABLE DELIVERIES
+  // ==========================================
 
-  const handleAcceptDelivery = async (
-    deliveryId: string
-  ) => {
-
-    if (!user) {
-
-      alert("Please login again");
-
-      return;
-    }
-
-
+  const fetchAvailableDeliveries = async () => {
     try {
+      const response = await fetch(
+        "http://localhost:5000/api/deliveries/available"
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.log(data.message);
+        return;
+      }
+
+      setAvailableDeliveries(data);
+
+    } catch (error) {
+      console.error("Available deliveries error:", error);
+    }
+  };
+
+
+  // ==========================================
+  // FETCH RIDER ACTIVE DELIVERIES
+  // ==========================================
+
+  const fetchActiveDeliveries = async () => {
+    try {
+      const user = getCurrentUser();
+
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(
+        `http://localhost:5000/api/deliveries/rider/${user.id}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.log(data.message);
+        return;
+      }
+
+      setActiveDeliveries(data);
+
+    } catch (error) {
+      console.error("Active deliveries error:", error);
+    }
+  };
+
+
+  // ==========================================
+  // LOAD ALL DATA
+  // ==========================================
+
+  const loadDeliveries = async () => {
+    setLoading(true);
+
+    await Promise.all([
+      fetchAvailableDeliveries(),
+      fetchActiveDeliveries(),
+    ]);
+
+    setLoading(false);
+  };
+
+
+  // ==========================================
+  // LOAD WHEN PAGE OPENS
+  // ==========================================
+
+  useEffect(() => {
+    loadDeliveries();
+  }, []);
+
+
+  // ==========================================
+  // ACCEPT DELIVERY
+  // ==========================================
+
+  const handleAccept = async (deliveryId: string) => {
+    try {
+      const user = getCurrentUser();
+
+      if (!user) {
+        alert("Please login again");
+        navigate("/login");
+        return;
+      }
+
+      setAcceptingId(deliveryId);
 
       const response = await fetch(
         `http://localhost:5000/api/deliveries/${deliveryId}/accept`,
@@ -126,126 +166,118 @@ export default function RiderDashboard() {
         }
       );
 
-
       const data = await response.json();
 
-
       if (!response.ok) {
-
-        alert(
-          data.message ||
-          "Could not accept delivery"
-        );
-
+        alert(data.message || "Failed to accept delivery");
         return;
       }
 
+      alert("Delivery accepted successfully!");
 
-      alert(
-        "Delivery accepted successfully!"
+
+      // ========================================
+      // IMPORTANT
+      // Remove accepted order from available
+      // ========================================
+
+      setAvailableDeliveries((previous) =>
+        previous.filter(
+          (delivery) => delivery._id !== deliveryId
+        )
       );
 
 
-      fetchDeliveries();
+      // ========================================
+      // Add accepted order to active deliveries
+      // ========================================
+
+      setActiveDeliveries((previous) => [
+        data.delivery,
+        ...previous,
+      ]);
 
     } catch (error) {
-
-      console.error(
-        "Accept delivery error:",
-        error
-      );
+      console.error("Accept delivery error:", error);
 
       alert("Server not connected");
 
+    } finally {
+      setAcceptingId(null);
     }
-
   };
 
 
-  // =====================================
+  // ==========================================
   // LOGOUT
-  // =====================================
+  // ==========================================
 
   const handleLogout = () => {
-
     localStorage.removeItem("token");
-
     localStorage.removeItem("user");
 
     navigate("/login");
-
   };
 
 
-  return (
+  // ==========================================
+  // TOTAL EARNINGS
+  // ==========================================
 
+  const totalEarnings = activeDeliveries.reduce(
+    (total, delivery) => total + delivery.payment,
+    0
+  );
+
+
+  return (
     <div className="min-h-screen bg-slate-50">
 
+      {/* ======================================
+          HEADER
+      ====================================== */}
 
-      {/* =====================================
-          NAVBAR
-      ===================================== */}
+      <header className="bg-white border-b border-slate-200">
 
-      <nav className="bg-white border-b border-slate-200 px-6 py-4">
-
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
           <div>
-
             <h1 className="text-2xl font-extrabold text-[#A33D20]">
-
               GigWorker
-
             </h1>
 
             <p className="text-sm text-slate-500">
-
               Rider Dashboard
-
             </p>
-
           </div>
 
 
           <div className="flex items-center gap-4">
 
-            <div className="flex items-center gap-2">
-
-              <User className="w-5 h-5 text-slate-500" />
-
-              <span className="font-semibold text-slate-700">
-
-                {user?.name}
-
-              </span>
-
-            </div>
-
+            <span className="font-semibold text-slate-700">
+              {getCurrentUser()?.name || "Rider"}
+            </span>
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100"
             >
-
               <LogOut className="w-4 h-4" />
-
               Logout
-
             </button>
 
           </div>
 
         </div>
 
-      </nav>
+      </header>
 
 
-      {/* =====================================
+      {/* ======================================
           MAIN
-      ===================================== */}
+      ====================================== */}
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 py-10">
 
 
         {/* WELCOME */}
@@ -253,44 +285,38 @@ export default function RiderDashboard() {
         <div className="mb-8">
 
           <h2 className="text-3xl font-extrabold text-slate-900">
-
-            Welcome, {user?.name} 👋
-
+            Welcome, {getCurrentUser()?.name || "Rider"} 👋
           </h2>
 
           <p className="text-slate-600 mt-2">
-
             Find deliveries and start earning.
-
           </p>
 
         </div>
 
 
-        {/* =====================================
-            STAT CARDS
-        ===================================== */}
+        {/* ======================================
+            STATISTICS
+        ====================================== */}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
 
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
+          {/* AVAILABLE */}
 
-            <div className="flex items-center justify-between">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+
+            <div className="flex justify-between">
 
               <div>
 
-                <p className="text-slate-500">
-
+                <p className="text-slate-500 font-medium">
                   Available Deliveries
-
                 </p>
 
-                <h3 className="text-3xl font-bold mt-2">
-
-                  {deliveries.length}
-
-                </h3>
+                <p className="text-4xl font-extrabold text-slate-900 mt-2">
+                  {availableDeliveries.length}
+                </p>
 
               </div>
 
@@ -301,23 +327,21 @@ export default function RiderDashboard() {
           </div>
 
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
+          {/* ACTIVE */}
 
-            <div className="flex items-center justify-between">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+
+            <div className="flex justify-between">
 
               <div>
 
-                <p className="text-slate-500">
-
-                  Completed Deliveries
-
+                <p className="text-slate-500 font-medium">
+                  Active Deliveries
                 </p>
 
-                <h3 className="text-3xl font-bold mt-2">
-
-                  0
-
-                </h3>
+                <p className="text-4xl font-extrabold text-slate-900 mt-2">
+                  {activeDeliveries.length}
+                </p>
 
               </div>
 
@@ -328,23 +352,21 @@ export default function RiderDashboard() {
           </div>
 
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200">
+          {/* EARNINGS */}
 
-            <div className="flex items-center justify-between">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+
+            <div className="flex justify-between">
 
               <div>
 
-                <p className="text-slate-500">
-
-                  Total Earnings
-
+                <p className="text-slate-500 font-medium">
+                  Active Earnings
                 </p>
 
-                <h3 className="text-3xl font-bold mt-2">
-
-                  ₹0
-
-                </h3>
+                <p className="text-4xl font-extrabold text-slate-900 mt-2">
+                  ₹{totalEarnings}
+                </p>
 
               </div>
 
@@ -354,175 +376,125 @@ export default function RiderDashboard() {
 
           </div>
 
-
         </div>
 
 
-        {/* =====================================
+        {/* ======================================
             AVAILABLE DELIVERIES
-        ===================================== */}
+        ====================================== */}
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-6">
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 mb-8">
 
+          <div className="mb-6">
 
-          <h3 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              Available Deliveries
+            </h2>
 
-            Available Deliveries
+            <p className="text-slate-500">
+              Choose a delivery and start earning.
+            </p>
 
-          </h3>
-
-          <p className="text-slate-500 mt-1 mb-6">
-
-            Choose a delivery and start earning.
-
-          </p>
+          </div>
 
 
           {loading ? (
 
-            <div className="text-center py-16">
+            <p className="text-slate-500">
+              Loading deliveries...
+            </p>
+
+          ) : availableDeliveries.length === 0 ? (
+
+            <div className="text-center py-10">
+
+              <Package className="w-12 h-12 mx-auto text-slate-300 mb-3" />
+
+              <h3 className="text-lg font-bold text-slate-700">
+                No available deliveries
+              </h3>
 
               <p className="text-slate-500">
-
-                Loading deliveries...
-
-              </p>
-
-            </div>
-
-          ) : deliveries.length === 0 ? (
-
-            <div className="text-center py-16">
-
-              <Package className="w-16 h-16 mx-auto text-slate-300" />
-
-              <h4 className="text-xl font-bold text-slate-700 mt-4">
-
-                No deliveries available
-
-              </h4>
-
-              <p className="text-slate-500 mt-2">
-
-                New delivery requests will appear here.
-
+                New restaurant requests will appear here.
               </p>
 
             </div>
 
           ) : (
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid md:grid-cols-2 gap-6">
 
-              {deliveries.map((delivery) => (
+              {availableDeliveries.map((delivery) => (
 
                 <div
                   key={delivery._id}
-                  className="border border-slate-200 rounded-2xl p-5 hover:shadow-md transition"
+                  className="border border-slate-200 rounded-2xl p-5"
                 >
-
 
                   {/* RESTAURANT */}
 
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex justify-between mb-5">
 
                     <div>
 
                       <p className="text-sm text-slate-500">
-
                         Restaurant
-
                       </p>
 
-                      <h4 className="font-bold text-lg">
-
-                        {delivery.restaurant?.name ||
-                          "Restaurant"}
-
-                      </h4>
+                      <h3 className="text-xl font-bold text-slate-900">
+                        {delivery.restaurantId?.name || "Restaurant"}
+                      </h3>
 
                     </div>
 
 
-                    <div className="flex items-center gap-1 text-[#A33D20] font-bold">
-
-                      <IndianRupee className="w-4 h-4" />
-
-                      {delivery.payment}
-
-                    </div>
+                    <p className="text-xl font-bold text-[#A33D20]">
+                      ₹ {delivery.payment}
+                    </p>
 
                   </div>
 
 
-                  {/* LOCATIONS */}
+                  {/* PICKUP */}
 
-                  <div className="space-y-3 mb-5">
+                  <div className="mb-4">
 
+                    <p className="text-xs text-slate-500 uppercase">
+                      Pickup
+                    </p>
 
-                    <div className="flex items-start gap-3">
+                    <p className="font-semibold text-slate-800">
+                      {delivery.pickupLocation}
+                    </p>
 
-                      <MapPin className="w-5 h-5 text-green-600 mt-0.5" />
-
-                      <div>
-
-                        <p className="text-xs text-slate-500">
-
-                          PICKUP
-
-                        </p>
-
-                        <p className="font-semibold">
-
-                          {delivery.pickupLocation}
-
-                        </p>
-
-                      </div>
-
-                    </div>
+                  </div>
 
 
-                    <div className="flex items-start gap-3">
+                  {/* DROP */}
 
-                      <MapPin className="w-5 h-5 text-red-500 mt-0.5" />
+                  <div className="mb-4">
 
-                      <div>
+                    <p className="text-xs text-slate-500 uppercase">
+                      Drop
+                    </p>
 
-                        <p className="text-xs text-slate-500">
-
-                          DROP
-
-                        </p>
-
-                        <p className="font-semibold">
-
-                          {delivery.dropLocation}
-
-                        </p>
-
-                      </div>
-
-                    </div>
-
+                    <p className="font-semibold text-slate-800">
+                      {delivery.dropLocation}
+                    </p>
 
                   </div>
 
 
                   {/* PACKAGE */}
 
-                  <div className="bg-slate-50 rounded-lg p-3 mb-4">
+                  <div className="bg-slate-50 rounded-xl p-4 mb-5">
 
-                    <p className="text-xs text-slate-500">
-
-                      PACKAGE
-
+                    <p className="text-xs text-slate-500 uppercase">
+                      Package
                     </p>
 
-                    <p className="font-semibold">
-
+                    <p className="font-semibold text-slate-800">
                       {delivery.packageDetails}
-
                     </p>
 
                   </div>
@@ -531,18 +503,14 @@ export default function RiderDashboard() {
                   {/* ACCEPT */}
 
                   <button
-                    onClick={() =>
-                      handleAcceptDelivery(
-                        delivery._id
-                      )
-                    }
-                    className="w-full py-3 rounded-xl bg-[#A33D20] text-white font-bold hover:bg-[#8B331A]"
+                    onClick={() => handleAccept(delivery._id)}
+                    disabled={acceptingId === delivery._id}
+                    className="w-full py-3 rounded-xl bg-[#A33D20] text-white font-bold hover:bg-[#8B331A] disabled:opacity-60"
                   >
-
-                    Accept Delivery
-
+                    {acceptingId === delivery._id
+                      ? "Accepting..."
+                      : "Accept Delivery"}
                   </button>
-
 
                 </div>
 
@@ -552,11 +520,143 @@ export default function RiderDashboard() {
 
           )}
 
-        </div>
+        </section>
+
+
+        {/* ======================================
+            MY ACTIVE DELIVERY
+        ====================================== */}
+
+        <section className="bg-white border border-slate-200 rounded-2xl p-6">
+
+          <div className="mb-6">
+
+            <h2 className="text-2xl font-extrabold text-slate-900">
+              My Active Deliveries
+            </h2>
+
+            <p className="text-slate-500">
+              Deliveries you have accepted.
+            </p>
+
+          </div>
+
+
+          {activeDeliveries.length === 0 ? (
+
+            <div className="text-center py-10">
+
+              <MapPin className="w-12 h-12 mx-auto text-slate-300 mb-3" />
+
+              <h3 className="text-lg font-bold text-slate-700">
+                No active deliveries
+              </h3>
+
+              <p className="text-slate-500">
+                Accept a delivery to see it here.
+              </p>
+
+            </div>
+
+          ) : (
+
+            <div className="grid md:grid-cols-2 gap-6">
+
+              {activeDeliveries.map((delivery) => (
+
+                <div
+                  key={delivery._id}
+                  className="border border-green-200 bg-green-50 rounded-2xl p-5"
+                >
+
+                  <div className="flex justify-between mb-5">
+
+                    <div>
+
+                      <p className="text-sm text-slate-500">
+                        Restaurant
+                      </p>
+
+                      <h3 className="text-xl font-bold text-slate-900">
+                        {delivery.restaurantId?.name || "Restaurant"}
+                      </h3>
+
+                    </div>
+
+                    <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-bold h-fit">
+                      Accepted
+                    </span>
+
+                  </div>
+
+
+                  <div className="space-y-4">
+
+                    <div>
+
+                      <p className="text-xs text-slate-500 uppercase">
+                        Pickup
+                      </p>
+
+                      <p className="font-semibold">
+                        {delivery.pickupLocation}
+                      </p>
+
+                    </div>
+
+
+                    <div>
+
+                      <p className="text-xs text-slate-500 uppercase">
+                        Drop
+                      </p>
+
+                      <p className="font-semibold">
+                        {delivery.dropLocation}
+                      </p>
+
+                    </div>
+
+
+                    <div>
+
+                      <p className="text-xs text-slate-500 uppercase">
+                        Package
+                      </p>
+
+                      <p className="font-semibold">
+                        {delivery.packageDetails}
+                      </p>
+
+                    </div>
+
+
+                    <div>
+
+                      <p className="text-xs text-slate-500 uppercase">
+                        Payment
+                      </p>
+
+                      <p className="font-bold text-green-600">
+                        ₹{delivery.payment}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          )}
+
+        </section>
 
       </main>
 
     </div>
-
   );
 }

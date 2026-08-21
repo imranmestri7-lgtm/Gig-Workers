@@ -1,57 +1,64 @@
 const mongoose = require("mongoose");
 
-const deliverySchema = new mongoose.Schema(
-    {
-        restaurant: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true
-        },
 
-        rider: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            default: null
-        },
+const deliverySchema = new mongoose.Schema({
 
-        pickupLocation: {
-            type: String,
-            required: true,
-            trim: true
-        },
-
-        dropLocation: {
-            type: String,
-            required: true,
-            trim: true
-        },
-
-        packageDetails: {
-            type: String,
-            required: true,
-            trim: true
-        },
-
-        payment: {
-            type: Number,
-            required: true
-        },
-
-        status: {
-            type: String,
-            enum: [
-                "available",
-                "accepted",
-                "picked_up",
-                "out_for_delivery",
-                "completed"
-            ],
-            default: "available"
-        }
+    restaurantId:{
+        type:String,
+        required:true
     },
-    {
-        timestamps: true
-    }
-);
 
-module.exports = mongoose.model("Delivery", deliverySchema);
+    restaurantName:{
+        type:String,
+        required:true
+    },
+
+    pickupLocation:{
+        type:String,
+        required:true
+    },
+
+    dropLocation:{
+        type:String,
+        required:true
+    },
+
+    packageDetails:{
+        type:String,
+        required:true
+    },
+
+    payment:{
+        type:Number,
+        required:true
+    },
+
+
+    status:{
+        type:String,
+        default:"available"
+    },
+
+
+    riderId:{
+        type:String,
+        default:null
+    },
+
+
+    riderName:{
+        type:String,
+        default:null
+    }
+
+
+},
+{
+    timestamps:true
+});
+
+
+module.exports = mongoose.model(
+    "Delivery",
+    deliverySchema
+);

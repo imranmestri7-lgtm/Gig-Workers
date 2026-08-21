@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+
 const authRoutes = require("./routes/auth");
 const deliveryRoutes = require("./routes/delivery");
 
@@ -10,49 +11,75 @@ const deliveryRoutes = require("./routes/delivery");
 const app = express();
 
 
-// =====================================
-// MIDDLEWARE
-// =====================================
+// ================================
+// Middleware
+// ================================
 
-app.use(cors());
+app.use(
+    cors({
+        origin:"http://localhost:5173",
+        credentials:true
+    })
+);
+
+
 app.use(express.json());
 
 
-// =====================================
-// ROUTES
-// =====================================
+
+// ================================
+// Routes
+// ================================
 
 app.use("/api", authRoutes);
-app.use("/api", deliveryRoutes);
+
+app.use("/api/deliveries", deliveryRoutes);
 
 
-// =====================================
-// HOME
-// =====================================
 
-app.get("/", (req, res) => {
+// ================================
+// Home Route
+// ================================
+
+app.get("/",(req,res)=>{
+
     res.send("GigWorker Backend Running");
+
 });
 
 
-// =====================================
-// MONGODB
-// =====================================
+
+// ================================
+// MongoDB Connection
+// ================================
 
 mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("MongoDB Connected");
-    })
-    .catch((error) => {
-        console.log("MongoDB Connection Error:", error);
-    });
+.connect(process.env.MONGO_URI)
+.then(()=>{
+
+    console.log("MongoDB Connected");
+
+})
+.catch((error)=>{
+
+    console.log(
+        "MongoDB Connection Error:",
+        error
+    );
+
+});
 
 
-// =====================================
-// SERVER
-// =====================================
 
-app.listen(5000, () => {
-    console.log("Server started on port 5000");
+// ================================
+// Server
+// ================================
+
+
+app.listen(5000,()=>{
+
+    console.log(
+        "Server started on port 5000"
+    );
+
 });
