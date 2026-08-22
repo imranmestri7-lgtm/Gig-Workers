@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
-
 const authRoutes = require("./routes/auth");
 const deliveryRoutes = require("./routes/delivery");
 
@@ -12,13 +11,13 @@ const app = express();
 
 
 // ================================
-// Middleware
+// MIDDLEWARE
 // ================================
 
 app.use(
     cors({
-        origin:"http://localhost:5173",
-        credentials:true
+        origin: "http://localhost:5173",
+        credentials: true
     })
 );
 
@@ -27,21 +26,28 @@ app.use(express.json());
 
 
 
+
 // ================================
-// Routes
+// ROUTES
 // ================================
 
 app.use("/api", authRoutes);
+
+
+// IMPORTANT
+// All delivery APIs start with:
+// http://localhost:5000/api/deliveries
 
 app.use("/api/deliveries", deliveryRoutes);
 
 
 
+
 // ================================
-// Home Route
+// TEST ROUTE
 // ================================
 
-app.get("/",(req,res)=>{
+app.get("/", (req,res)=>{
 
     res.send("GigWorker Backend Running");
 
@@ -49,32 +55,34 @@ app.get("/",(req,res)=>{
 
 
 
+
 // ================================
-// MongoDB Connection
+// DATABASE
 // ================================
 
-mongoose
-.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI)
+
 .then(()=>{
 
     console.log("MongoDB Connected");
 
 })
+
 .catch((error)=>{
 
     console.log(
-        "MongoDB Connection Error:",
-        error
+        "MongoDB Error:",
+        error.message
     );
 
 });
 
 
 
-// ================================
-// Server
-// ================================
 
+// ================================
+// SERVER
+// ================================
 
 app.listen(5000,()=>{
 

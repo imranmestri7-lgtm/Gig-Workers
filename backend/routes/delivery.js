@@ -5,104 +5,69 @@ const Delivery = require("../models/Delivery");
 
 
 
-// ==============================
-// CREATE DELIVERY RESTAURANT
-// ==============================
+// =====================================
+// CREATE DELIVERY (RESTAURANT)
+// POST /api/deliveries
+// =====================================
 
-router.post("/deliveries", async(req,res)=>{
+router.post("/", async (req, res) => {
 
+    try {
 
-try{
-
-
-const delivery = new Delivery({
-
-restaurantId:req.body.restaurantId,
-
-restaurantName:req.body.restaurantName,
-
-pickupLocation:req.body.pickupLocation,
-
-dropLocation:req.body.dropLocation,
-
-packageDetails:req.body.packageDetails,
-
-payment:req.body.payment
+        const {
+            restaurantId,
+            restaurantName,
+            pickupLocation,
+            dropLocation,
+            packageDetails,
+            payment
+        } = req.body;
 
 
-});
+        const delivery = new Delivery({
+
+            restaurantId,
+
+            restaurantName,
+
+            pickupLocation,
+
+            dropLocation,
+
+            packageDetails,
+
+            payment,
+
+            status:"available"
+
+        });
 
 
-await delivery.save();
+        await delivery.save();
 
 
+        res.status(201).json({
 
-res.status(201).json({
+            message:"Delivery created successfully",
 
-message:"Delivery Created",
+            delivery
 
-delivery
-
-});
-
+        });
 
 
-}catch(error){
+    }
+    catch(error){
 
-console.log(error);
-
-res.status(500).json({
-message:"Server Error"
-});
+        console.log(error);
 
 
-}
+        res.status(500).json({
 
+            message:error.message
 
-});
+        });
 
-
-
-
-// ==============================
-// RESTAURANT ALL DELIVERY
-// ==============================
-
-
-router.get(
-"/deliveries/restaurant/:id",
-async(req,res)=>{
-
-
-try{
-
-
-const deliveries =
-await Delivery.find({
-
-restaurantId:req.params.id
-
-});
-
-
-res.json({
-
-deliveries
-
-});
-
-
-
-}catch(error){
-
-res.status(500).json({
-message:"Error"
-});
-
-
-}
-
-
+    }
 
 });
 
@@ -110,107 +75,41 @@ message:"Error"
 
 
 
-
-// ==============================
-// RIDER AVAILABLE DELIVERY
-// ==============================
-
-
-router.get(
-"/deliveries/available",
-async(req,res)=>{
+// =====================================
+// RESTAURANT SEE OWN DELIVERIES
+// GET /api/deliveries/restaurant/:id
+// =====================================
 
 
-try{
+router.get("/restaurant/:id", async(req,res)=>{
 
 
-const deliveries =
-await Delivery.find({
-
-status:"available"
-
-});
+    try{
 
 
-res.json({
+        const deliveries = await Delivery.find({
 
-deliveries
+            restaurantId:req.params.id
 
-});
+        });
+
+
+        res.json(deliveries);
 
 
 
-}catch(error){
+    }
+    catch(error){
 
 
-res.status(500).json({
-message:"Error"
-});
+        res.status(500).json({
+
+            message:error.message
+
+        });
 
 
-}
-
-
-});
-
-
-
-
-// ==============================
-// ACCEPT DELIVERY
-// ==============================
-
-
-router.put(
-"/deliveries/accept/:id",
-async(req,res)=>{
-
-
-try{
-
-
-const delivery =
-await Delivery.findByIdAndUpdate(
-
-req.params.id,
-
-{
-
-status:"accepted",
-
-riderId:req.body.riderId,
-
-riderName:req.body.riderName
-
-},
-
-{
-new:true
-}
-
-);
-
-
-
-res.json({
-
-message:"Accepted",
-
-delivery
-
-});
-
-
-
-}catch(error){
-
-res.status(500).json({
-message:"Error"
-});
-
-
-}
-
+    }
 
 
 });
@@ -219,47 +118,240 @@ message:"Error"
 
 
 
-// ==============================
+
+
+
+// =====================================
+// RIDER SEE AVAILABLE DELIVERY
+// GET /api/deliveries/available
+// =====================================
+
+
+router.get("/available", async(req,res)=>{
+
+
+    try{
+
+
+        const deliveries = await Delivery.find({
+
+            status:"available"
+
+        });
+
+
+        res.json(deliveries);
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+
+    }
+
+
+});
+
+
+
+
+
+
+
+
+// =====================================
+// RIDER ACCEPT DELIVERY
+// PUT /api/deliveries/accept/:id
+// =====================================
+
+
+router.put("/accept/:id", async(req,res)=>{
+
+
+    try{
+
+
+        const delivery = await Delivery.findByIdAndUpdate(
+
+
+            req.params.id,
+
+
+            {
+
+                status:"accepted",
+
+                riderId:req.body.riderId,
+
+                riderName:req.body.riderName
+
+
+            },
+
+
+            {
+
+                new:true
+
+            }
+
+
+        );
+
+
+
+        res.json({
+
+            message:"Delivery accepted",
+
+            delivery
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+
+    }
+
+
+});
+
+
+
+
+
+
+
+
+// =====================================
+// RIDER REJECT DELIVERY
+// PUT /api/deliveries/reject/:id
+// =====================================
+
+
+router.put("/reject/:id", async(req,res)=>{
+
+
+    try{
+
+
+        const delivery = await Delivery.findByIdAndUpdate(
+
+
+            req.params.id,
+
+
+            {
+
+                status:"rejected"
+
+
+            },
+
+
+            {
+
+                new:true
+
+            }
+
+
+        );
+
+
+
+        res.json({
+
+            message:"Delivery rejected",
+
+            delivery
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+
+    }
+
+
+});
+
+
+
+
+
+
+
+
+// =====================================
 // RIDER ACTIVE DELIVERY
-// ==============================
+// GET /api/deliveries/rider/:id
+// =====================================
 
 
-router.get(
-"/deliveries/rider/:id",
-async(req,res)=>{
+router.get("/rider/:id", async(req,res)=>{
 
 
-try{
+    try{
 
 
-const deliveries =
-await Delivery.find({
+        const deliveries = await Delivery.find({
 
-riderId:req.params.id
+            riderId:req.params.id,
+
+            status:"accepted"
+
+        });
+
+
+        res.json(deliveries);
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+
+    }
+
 
 });
 
-
-
-res.json({
-
-deliveries
-
-});
-
-
-}catch(error){
-
-res.status(500).json({
-message:"Error"
-});
-
-
-}
-
-
-
-});
 
 
 

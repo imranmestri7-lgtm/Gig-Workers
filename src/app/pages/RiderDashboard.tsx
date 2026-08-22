@@ -1,662 +1,888 @@
 import { useEffect, useState } from "react";
-import {
-  MapPin,
-  Package,
-  IndianRupee,
-  LogOut,
-} from "lucide-react";
 import { useNavigate } from "react-router";
 
+import {
+  Package,
+  MapPin,
+  IndianRupee,
+  LogOut,
+  Check,
+  X
+} from "lucide-react";
+
+
 type Delivery = {
-  _id: string;
-  pickupLocation: string;
-  dropLocation: string;
-  packageDetails: string;
-  payment: number;
-  status: string;
-  restaurantId?: {
-    name: string;
-    email: string;
-  };
+
+  _id:string;
+
+  restaurantName:string;
+
+  pickupLocation:string;
+
+  dropLocation:string;
+
+  packageDetails:string;
+
+  payment:number;
+
+  status:string;
+
+  riderName?:string;
+
 };
 
-export default function RiderDashboard() {
-  const navigate = useNavigate();
 
-  const [availableDeliveries, setAvailableDeliveries] = useState<Delivery[]>(
-    []
-  );
 
-  const [activeDeliveries, setActiveDeliveries] = useState<Delivery[]>([]);
 
-  const [loading, setLoading] = useState(true);
+export default function RiderDashboard(){
 
-  const [acceptingId, setAcceptingId] = useState<string | null>(null);
 
+const navigate = useNavigate();
 
-  // ==========================================
-  // GET CURRENT RIDER
-  // ==========================================
 
-  const getCurrentUser = () => {
-    const userString = localStorage.getItem("user");
 
-    if (!userString) {
-      return null;
-    }
+const [availableDeliveries,setAvailableDeliveries] =
+useState<Delivery[]>([]);
 
-    try {
-      return JSON.parse(userString);
-    } catch {
-      return null;
-    }
-  };
 
 
-  // ==========================================
-  // FETCH AVAILABLE DELIVERIES
-  // ==========================================
+const [activeDeliveries,setActiveDeliveries] =
+useState<Delivery[]>([]);
 
-  const fetchAvailableDeliveries = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/deliveries/available"
-      );
 
-      const data = await response.json();
 
-      if (!response.ok) {
-        console.log(data.message);
-        return;
-      }
+const [loading,setLoading] =
+useState(true);
 
-      setAvailableDeliveries(data);
 
-    } catch (error) {
-      console.error("Available deliveries error:", error);
-    }
-  };
 
+const user =
+JSON.parse(localStorage.getItem("user") || "{}");
 
-  // ==========================================
-  // FETCH RIDER ACTIVE DELIVERIES
-  // ==========================================
 
-  const fetchActiveDeliveries = async () => {
-    try {
-      const user = getCurrentUser();
 
-      if (!user) {
-        navigate("/login");
-        return;
-      }
 
-      const response = await fetch(
-        `http://localhost:5000/api/deliveries/rider/${user.id}`
-      );
 
-      const data = await response.json();
+// =================================
+// GET AVAILABLE DELIVERY
+// =================================
 
-      if (!response.ok) {
-        console.log(data.message);
-        return;
-      }
 
-      setActiveDeliveries(data);
+const fetchAvailableDeliveries = async()=>{
 
-    } catch (error) {
-      console.error("Active deliveries error:", error);
-    }
-  };
 
+try{
 
-  // ==========================================
-  // LOAD ALL DATA
-  // ==========================================
 
-  const loadDeliveries = async () => {
-    setLoading(true);
+const response = await fetch(
 
-    await Promise.all([
-      fetchAvailableDeliveries(),
-      fetchActiveDeliveries(),
-    ]);
+"http://localhost:5000/api/deliveries/available"
 
-    setLoading(false);
-  };
+);
 
 
-  // ==========================================
-  // LOAD WHEN PAGE OPENS
-  // ==========================================
 
-  useEffect(() => {
-    loadDeliveries();
-  }, []);
+const data =
+await response.json();
 
 
-  // ==========================================
-  // ACCEPT DELIVERY
-  // ==========================================
 
-  const handleAccept = async (deliveryId: string) => {
-    try {
-      const user = getCurrentUser();
+console.log(
+"Available deliveries:",
+data
+);
 
-      if (!user) {
-        alert("Please login again");
-        navigate("/login");
-        return;
-      }
 
-      setAcceptingId(deliveryId);
 
-      const response = await fetch(
-        `http://localhost:5000/api/deliveries/${deliveryId}/accept`,
-        {
-          method: "PUT",
+if(response.ok){
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+setAvailableDeliveries(data);
 
-          body: JSON.stringify({
-            riderId: user.id,
-          }),
-        }
-      );
+}
 
-      const data = await response.json();
 
-      if (!response.ok) {
-        alert(data.message || "Failed to accept delivery");
-        return;
-      }
+}
+catch(error){
 
-      alert("Delivery accepted successfully!");
+console.log(error);
 
+alert("Server not connected");
 
-      // ========================================
-      // IMPORTANT
-      // Remove accepted order from available
-      // ========================================
+}
 
-      setAvailableDeliveries((previous) =>
-        previous.filter(
-          (delivery) => delivery._id !== deliveryId
-        )
-      );
 
+};
 
-      // ========================================
-      // Add accepted order to active deliveries
-      // ========================================
 
-      setActiveDeliveries((previous) => [
-        data.delivery,
-        ...previous,
-      ]);
 
-    } catch (error) {
-      console.error("Accept delivery error:", error);
 
-      alert("Server not connected");
 
-    } finally {
-      setAcceptingId(null);
-    }
-  };
 
 
-  // ==========================================
-  // LOGOUT
-  // ==========================================
+// =================================
+// GET MY ACTIVE DELIVERY
+// =================================
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
 
-    navigate("/login");
-  };
+const fetchActiveDeliveries = async()=>{
 
 
-  // ==========================================
-  // TOTAL EARNINGS
-  // ==========================================
+try{
 
-  const totalEarnings = activeDeliveries.reduce(
-    (total, delivery) => total + delivery.payment,
-    0
-  );
 
+if(!user.id)
+return;
 
-  return (
-    <div className="min-h-screen bg-slate-50">
 
-      {/* ======================================
-          HEADER
-      ====================================== */}
 
-      <header className="bg-white border-b border-slate-200">
+const response = await fetch(
 
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+`http://localhost:5000/api/deliveries/rider/${user.id}`
 
-          <div>
-            <h1 className="text-2xl font-extrabold text-[#A33D20]">
-              GigWorker
-            </h1>
+);
 
-            <p className="text-sm text-slate-500">
-              Rider Dashboard
-            </p>
-          </div>
 
 
-          <div className="flex items-center gap-4">
+const data =
+await response.json();
 
-            <span className="font-semibold text-slate-700">
-              {getCurrentUser()?.name || "Rider"}
-            </span>
 
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
 
-          </div>
+console.log(
+"Active deliveries:",
+data
+);
 
-        </div>
 
-      </header>
 
+if(response.ok){
 
-      {/* ======================================
-          MAIN
-      ====================================== */}
+setActiveDeliveries(data);
 
-      <main className="max-w-7xl mx-auto px-6 py-10">
+}
 
 
-        {/* WELCOME */}
+}
+catch(error){
 
-        <div className="mb-8">
+console.log(error);
 
-          <h2 className="text-3xl font-extrabold text-slate-900">
-            Welcome, {getCurrentUser()?.name || "Rider"} 👋
-          </h2>
+}
 
-          <p className="text-slate-600 mt-2">
-            Find deliveries and start earning.
-          </p>
 
-        </div>
+};
 
 
-        {/* ======================================
-            STATISTICS
-        ====================================== */}
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
 
 
-          {/* AVAILABLE */}
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-6">
 
-            <div className="flex justify-between">
+// =================================
+// LOAD DATA
+// =================================
 
-              <div>
 
-                <p className="text-slate-500 font-medium">
-                  Available Deliveries
-                </p>
+const loadData = async()=>{
 
-                <p className="text-4xl font-extrabold text-slate-900 mt-2">
-                  {availableDeliveries.length}
-                </p>
 
-              </div>
+setLoading(true);
 
-              <Package className="w-10 h-10 text-[#A33D20]" />
 
-            </div>
 
-          </div>
+await Promise.all([
 
+fetchAvailableDeliveries(),
 
-          {/* ACTIVE */}
+fetchActiveDeliveries()
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+]);
 
-            <div className="flex justify-between">
 
-              <div>
 
-                <p className="text-slate-500 font-medium">
-                  Active Deliveries
-                </p>
+setLoading(false);
 
-                <p className="text-4xl font-extrabold text-slate-900 mt-2">
-                  {activeDeliveries.length}
-                </p>
 
-              </div>
+};
 
-              <MapPin className="w-10 h-10 text-green-600" />
 
-            </div>
 
-          </div>
 
 
-          {/* EARNINGS */}
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+useEffect(()=>{
 
-            <div className="flex justify-between">
 
-              <div>
+loadData();
 
-                <p className="text-slate-500 font-medium">
-                  Active Earnings
-                </p>
 
-                <p className="text-4xl font-extrabold text-slate-900 mt-2">
-                  ₹{totalEarnings}
-                </p>
+},[]);
 
-              </div>
 
-              <IndianRupee className="w-10 h-10 text-blue-600" />
 
-            </div>
 
-          </div>
 
-        </div>
 
 
-        {/* ======================================
-            AVAILABLE DELIVERIES
-        ====================================== */}
+// =================================
+// ACCEPT
+// =================================
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 mb-8">
 
-          <div className="mb-6">
+const acceptDelivery = async(id:string)=>{
 
-            <h2 className="text-2xl font-extrabold text-slate-900">
-              Available Deliveries
-            </h2>
 
-            <p className="text-slate-500">
-              Choose a delivery and start earning.
-            </p>
+try{
 
-          </div>
 
+const response =
+await fetch(
 
-          {loading ? (
+`http://localhost:5000/api/deliveries/accept/${id}`,
 
-            <p className="text-slate-500">
-              Loading deliveries...
-            </p>
+{
 
-          ) : availableDeliveries.length === 0 ? (
 
-            <div className="text-center py-10">
+method:"PUT",
 
-              <Package className="w-12 h-12 mx-auto text-slate-300 mb-3" />
 
-              <h3 className="text-lg font-bold text-slate-700">
-                No available deliveries
-              </h3>
+headers:{
 
-              <p className="text-slate-500">
-                New restaurant requests will appear here.
-              </p>
+"Content-Type":"application/json"
 
-            </div>
+},
 
-          ) : (
 
-            <div className="grid md:grid-cols-2 gap-6">
+body:JSON.stringify({
 
-              {availableDeliveries.map((delivery) => (
+riderId:user.id,
 
-                <div
-                  key={delivery._id}
-                  className="border border-slate-200 rounded-2xl p-5"
-                >
+riderName:user.name
 
-                  {/* RESTAURANT */}
+})
 
-                  <div className="flex justify-between mb-5">
 
-                    <div>
+}
 
-                      <p className="text-sm text-slate-500">
-                        Restaurant
-                      </p>
+);
 
-                      <h3 className="text-xl font-bold text-slate-900">
-                        {delivery.restaurantId?.name || "Restaurant"}
-                      </h3>
 
-                    </div>
 
 
-                    <p className="text-xl font-bold text-[#A33D20]">
-                      ₹ {delivery.payment}
-                    </p>
+const data =
+await response.json();
 
-                  </div>
 
 
-                  {/* PICKUP */}
+console.log(data);
 
-                  <div className="mb-4">
 
-                    <p className="text-xs text-slate-500 uppercase">
-                      Pickup
-                    </p>
 
-                    <p className="font-semibold text-slate-800">
-                      {delivery.pickupLocation}
-                    </p>
+if(response.ok){
 
-                  </div>
+alert(
+"Delivery accepted"
+);
 
 
-                  {/* DROP */}
+loadData();
 
-                  <div className="mb-4">
 
-                    <p className="text-xs text-slate-500 uppercase">
-                      Drop
-                    </p>
+}
+else{
 
-                    <p className="font-semibold text-slate-800">
-                      {delivery.dropLocation}
-                    </p>
+alert(data.message);
 
-                  </div>
+}
 
 
-                  {/* PACKAGE */}
 
-                  <div className="bg-slate-50 rounded-xl p-4 mb-5">
+}
+catch(error){
 
-                    <p className="text-xs text-slate-500 uppercase">
-                      Package
-                    </p>
+console.log(error);
 
-                    <p className="font-semibold text-slate-800">
-                      {delivery.packageDetails}
-                    </p>
+alert(
+"Server not connected"
+);
 
-                  </div>
 
+}
 
-                  {/* ACCEPT */}
 
-                  <button
-                    onClick={() => handleAccept(delivery._id)}
-                    disabled={acceptingId === delivery._id}
-                    className="w-full py-3 rounded-xl bg-[#A33D20] text-white font-bold hover:bg-[#8B331A] disabled:opacity-60"
-                  >
-                    {acceptingId === delivery._id
-                      ? "Accepting..."
-                      : "Accept Delivery"}
-                  </button>
+};
 
-                </div>
 
-              ))}
 
-            </div>
 
-          )}
 
-        </section>
 
 
-        {/* ======================================
-            MY ACTIVE DELIVERY
-        ====================================== */}
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6">
+// =================================
+// REJECT
+// =================================
 
-          <div className="mb-6">
 
-            <h2 className="text-2xl font-extrabold text-slate-900">
-              My Active Deliveries
-            </h2>
+const rejectDelivery = async(id:string)=>{
 
-            <p className="text-slate-500">
-              Deliveries you have accepted.
-            </p>
 
-          </div>
+try{
 
 
-          {activeDeliveries.length === 0 ? (
+const response =
+await fetch(
 
-            <div className="text-center py-10">
+`http://localhost:5000/api/deliveries/reject/${id}`,
 
-              <MapPin className="w-12 h-12 mx-auto text-slate-300 mb-3" />
+{
 
-              <h3 className="text-lg font-bold text-slate-700">
-                No active deliveries
-              </h3>
 
-              <p className="text-slate-500">
-                Accept a delivery to see it here.
-              </p>
+method:"PUT",
 
-            </div>
+headers:{
 
-          ) : (
+"Content-Type":"application/json"
 
-            <div className="grid md:grid-cols-2 gap-6">
+}
 
-              {activeDeliveries.map((delivery) => (
 
-                <div
-                  key={delivery._id}
-                  className="border border-green-200 bg-green-50 rounded-2xl p-5"
-                >
+}
 
-                  <div className="flex justify-between mb-5">
+);
 
-                    <div>
 
-                      <p className="text-sm text-slate-500">
-                        Restaurant
-                      </p>
 
-                      <h3 className="text-xl font-bold text-slate-900">
-                        {delivery.restaurantId?.name || "Restaurant"}
-                      </h3>
+const data =
+await response.json();
 
-                    </div>
 
-                    <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-bold h-fit">
-                      Accepted
-                    </span>
 
-                  </div>
+console.log(data);
 
 
-                  <div className="space-y-4">
 
-                    <div>
+if(response.ok){
 
-                      <p className="text-xs text-slate-500 uppercase">
-                        Pickup
-                      </p>
+alert(
+"Delivery rejected"
+);
 
-                      <p className="font-semibold">
-                        {delivery.pickupLocation}
-                      </p>
 
-                    </div>
+loadData();
 
+}
 
-                    <div>
 
-                      <p className="text-xs text-slate-500 uppercase">
-                        Drop
-                      </p>
+}
+catch(error){
 
-                      <p className="font-semibold">
-                        {delivery.dropLocation}
-                      </p>
+console.log(error);
 
-                    </div>
+alert(
+"Server not connected"
+);
 
 
-                    <div>
+}
 
-                      <p className="text-xs text-slate-500 uppercase">
-                        Package
-                      </p>
 
-                      <p className="font-semibold">
-                        {delivery.packageDetails}
-                      </p>
 
-                    </div>
+};
 
 
-                    <div>
 
-                      <p className="text-xs text-slate-500 uppercase">
-                        Payment
-                      </p>
 
-                      <p className="font-bold text-green-600">
-                        ₹{delivery.payment}
-                      </p>
 
-                    </div>
 
-                  </div>
 
-                </div>
 
-              ))}
+// =================================
+// LOGOUT
+// =================================
 
-            </div>
 
-          )}
+const logout=()=>{
 
-        </section>
 
-      </main>
+localStorage.removeItem("token");
 
-    </div>
-  );
+localStorage.removeItem("user");
+
+
+navigate("/login");
+
+
+};
+
+
+
+
+
+
+
+const earnings =
+activeDeliveries.reduce(
+
+(total,item)=>
+
+total + Number(item.payment || 0),
+
+0
+
+);
+
+
+
+
+
+
+return(
+
+
+<div className="min-h-screen bg-slate-50">
+
+
+
+<header className="bg-white border-b">
+
+
+<div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+
+
+
+<div>
+
+
+<h1 className="text-3xl font-extrabold text-[#A33D20]">
+
+GigWorker
+
+</h1>
+
+
+<p className="text-gray-500">
+
+Rider Dashboard
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div className="flex items-center gap-5">
+
+
+<span className="font-bold">
+
+{user.name}
+
+</span>
+
+
+
+<button
+
+onClick={logout}
+
+className="bg-red-100 text-red-600 px-5 py-2 rounded-xl flex gap-2"
+
+>
+
+<LogOut size={18}/>
+
+Logout
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+<main className="max-w-7xl mx-auto p-8">
+
+
+
+<h2 className="text-4xl font-bold">
+
+Welcome {user.name} 👋
+
+</h2>
+
+
+
+<p className="text-gray-600">
+
+Accept deliveries and start earning.
+
+</p>
+
+
+
+
+
+
+
+<div className="grid md:grid-cols-3 gap-6 mt-8">
+
+
+<div className="bg-white p-6 rounded-2xl shadow">
+
+<Package/>
+
+<p>
+
+Available
+
+</p>
+
+
+<h1 className="text-4xl font-bold">
+
+{availableDeliveries.length}
+
+</h1>
+
+
+</div>
+
+
+
+
+
+<div className="bg-white p-6 rounded-2xl shadow">
+
+
+<MapPin/>
+
+
+<p>
+
+Active
+
+</p>
+
+
+<h1 className="text-4xl font-bold">
+
+{activeDeliveries.length}
+
+</h1>
+
+
+</div>
+
+
+
+
+
+<div className="bg-white p-6 rounded-2xl shadow">
+
+
+<IndianRupee/>
+
+
+<p>
+
+Earnings
+
+</p>
+
+
+<h1 className="text-4xl font-bold">
+
+₹{earnings}
+
+</h1>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<section className="mt-10">
+
+
+<h2 className="text-3xl font-bold mb-5">
+
+Available Deliveries
+
+</h2>
+
+
+
+
+{
+
+loading ?
+
+<p>Loading...</p>
+
+
+
+:
+
+availableDeliveries.length===0 ?
+
+
+<div className="bg-white p-10 rounded-xl">
+
+No deliveries available
+
+</div>
+
+
+
+:
+
+
+<div className="grid md:grid-cols-2 gap-6">
+
+
+{
+
+availableDeliveries.map((delivery)=>(
+
+
+
+<div
+
+key={delivery._id}
+
+className="bg-white p-6 rounded-2xl shadow"
+
+
+>
+
+
+
+<h3 className="text-xl font-bold">
+
+{delivery.restaurantName}
+
+</h3>
+
+
+
+<p>
+
+📍 {delivery.pickupLocation}
+
+</p>
+
+
+
+<p>
+
+🏠 {delivery.dropLocation}
+
+</p>
+
+
+
+<p>
+
+📦 {delivery.packageDetails}
+
+</p>
+
+
+
+<p className="font-bold text-[#A33D20]">
+
+₹{delivery.payment}
+
+</p>
+
+
+
+
+<div className="flex gap-3 mt-5">
+
+
+
+<button
+
+onClick={()=>acceptDelivery(delivery._id)}
+
+className="flex-1 bg-green-600 text-white p-3 rounded-xl flex justify-center gap-2"
+
+>
+
+<Check/>
+
+Accept
+
+</button>
+
+
+
+
+
+<button
+
+onClick={()=>rejectDelivery(delivery._id)}
+
+className="flex-1 bg-red-500 text-white p-3 rounded-xl flex justify-center gap-2"
+
+>
+
+<X/>
+
+Reject
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+}
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<section className="mt-12">
+
+
+<h2 className="text-3xl font-bold mb-5">
+
+My Active Deliveries
+
+</h2>
+
+
+
+<div className="grid md:grid-cols-2 gap-6">
+
+
+
+{
+
+activeDeliveries.map((delivery)=>(
+
+
+<div
+
+key={delivery._id}
+
+className="bg-green-50 border border-green-300 p-6 rounded-2xl"
+
+
+>
+
+
+<h3 className="font-bold text-xl">
+
+{delivery.restaurantName}
+
+</h3>
+
+
+<p>
+
+{delivery.pickupLocation}
+
+→
+
+{delivery.dropLocation}
+
+</p>
+
+
+
+<p>
+
+📦 {delivery.packageDetails}
+
+</p>
+
+
+
+<p className="font-bold text-green-700">
+
+₹{delivery.payment}
+
+</p>
+
+
+</div>
+
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+</main>
+
+
+</div>
+
+
+);
+
+
 }

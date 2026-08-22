@@ -18,10 +18,6 @@ import RestaurantDashboard from "./pages/RestaurantDashboard";
 
 export const router = createBrowserRouter([
 
-  // =========================
-  // MAIN WEBSITE
-  // =========================
-
   {
     path: "/",
     Component: MainLayout,
@@ -57,10 +53,6 @@ export const router = createBrowserRouter([
   },
 
 
-  // =========================
-  // AUTH
-  // =========================
-
   {
     path: "/",
     Component: AuthLayout,
@@ -81,23 +73,16 @@ export const router = createBrowserRouter([
   },
 
 
-  // =========================
-  // RIDER DASHBOARD
-  // =========================
-
   {
     path: "/rider-dashboard",
     Component: RiderDashboard,
   },
 
 
-  // =========================
-  // RESTAURANT DASHBOARD
-  // =========================
-
   {
     path: "/restaurant-dashboard",
     Component: RestaurantDashboard,
   },
+
 
 ]);
