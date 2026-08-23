@@ -13,21 +13,26 @@ import {
 
 type Delivery = {
 
-  _id:string;
+ _id:string;
 
-  restaurantName:string;
+ restaurantName:string;
 
-  pickupLocation:string;
+ pickupLocation:string;
 
-  dropLocation:string;
+ dropLocation:string;
 
-  packageDetails:string;
+ packageDetails:string;
 
-  payment:number;
+ payment:number;
 
-  status:string;
+ status:
+ "available" |
+ "accepted" |
+ "picked" |
+ "out_for_delivery" |
+ "delivered";
 
-  riderName?:string;
+ riderName?:string;
 
 };
 
@@ -390,7 +395,84 @@ alert(
 
 };
 
+// =================================
+// UPDATE STATUS
+// =================================
 
+const updateStatus = async(
+    id:string,
+    status:string
+)=>{
+
+
+try{
+
+
+const response = await fetch(
+
+`http://localhost:5000/api/deliveries/status/${id}`,
+
+{
+
+method:"PUT",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+status
+
+})
+
+}
+
+);
+
+
+
+const data = await response.json();
+
+
+console.log(data);
+
+
+
+if(response.ok){
+
+alert(
+"Status Updated"
+);
+
+
+loadData();
+
+
+}
+else{
+
+alert(data.message);
+
+}
+
+
+
+}
+catch(error){
+
+console.log(error);
+
+alert(
+"Server not connected"
+);
+
+}
+
+
+};
 
 
 
@@ -785,27 +867,16 @@ Reject
 
 </section>
 
-
-
-
-
-
-
-
-
 <section className="mt-12">
 
 
 <h2 className="text-3xl font-bold mb-5">
-
 My Active Deliveries
-
 </h2>
 
 
 
 <div className="grid md:grid-cols-2 gap-6">
-
 
 
 {
@@ -830,16 +901,18 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 </h3>
 
 
-<p>
+<p className="mt-3">
 
-{delivery.pickupLocation}
-
-→
-
-{delivery.dropLocation}
+📍 {delivery.pickupLocation}
 
 </p>
 
+
+<p>
+
+🏠 {delivery.dropLocation}
+
+</p>
 
 
 <p>
@@ -849,10 +922,26 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 </p>
 
 
-
-<p className="font-bold text-green-700">
+<p className="font-bold text-green-700 mt-2">
 
 ₹{delivery.payment}
+
+</p>
+
+
+
+<div className="mt-5">
+
+
+<p className="font-bold">
+
+Status:
+
+<span className="ml-2 text-blue-600">
+
+{delivery.status}
+
+</span>
 
 </p>
 
@@ -861,11 +950,102 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 
 
 
+
+
+<div className="mt-5">
+
+
+{
+delivery.status==="accepted" &&
+
+<button
+
+onClick={()=>updateStatus(
+delivery._id,
+"picked"
+)}
+
+className="w-full bg-yellow-500 text-white p-3 rounded-xl font-bold"
+
+>
+
+📦 Picked Up
+
+</button>
+
+}
+
+
+
+
+{
+delivery.status==="picked" &&
+
+<button
+
+onClick={()=>updateStatus(
+delivery._id,
+"out_for_delivery"
+)}
+
+className="w-full bg-blue-600 text-white p-3 rounded-xl font-bold"
+
+>
+
+🚴 Start Delivery
+
+</button>
+
+}
+
+
+
+
+{
+delivery.status==="out_for_delivery" &&
+
+<button
+
+onClick={()=>updateStatus(
+delivery._id,
+"delivered"
+)}
+
+className="w-full bg-green-600 text-white p-3 rounded-xl font-bold"
+
+>
+
+✅ Delivered
+
+</button>
+
+}
+
+
+
+{
+delivery.status==="delivered" &&
+
+<div className="bg-green-200 text-green-800 p-3 rounded-xl text-center font-bold">
+
+Delivery Completed 🎉
+
+</div>
+
+}
+
+
+</div>
+
+
+
+</div>
+
+
 ))
 
 
 }
-
 
 
 </div>
@@ -873,16 +1053,7 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 
 </section>
 
-
-
-
 </main>
-
-
 </div>
-
-
 );
-
-
 }

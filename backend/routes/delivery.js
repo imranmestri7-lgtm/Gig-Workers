@@ -10,33 +10,23 @@ const Delivery = require("../models/Delivery");
 // POST /api/deliveries
 // =====================================
 
-router.post("/", async (req, res) => {
+router.post("/", async(req,res)=>{
 
-    try {
-
-        const {
-            restaurantId,
-            restaurantName,
-            pickupLocation,
-            dropLocation,
-            packageDetails,
-            payment
-        } = req.body;
-
+    try{
 
         const delivery = new Delivery({
 
-            restaurantId,
+            restaurantId:req.body.restaurantId,
 
-            restaurantName,
+            restaurantName:req.body.restaurantName,
 
-            pickupLocation,
+            pickupLocation:req.body.pickupLocation,
 
-            dropLocation,
+            dropLocation:req.body.dropLocation,
 
-            packageDetails,
+            packageDetails:req.body.packageDetails,
 
-            payment,
+            payment:req.body.payment,
 
             status:"available"
 
@@ -75,13 +65,14 @@ router.post("/", async (req, res) => {
 
 
 
+
 // =====================================
 // RESTAURANT SEE OWN DELIVERIES
 // GET /api/deliveries/restaurant/:id
 // =====================================
 
 
-router.get("/restaurant/:id", async(req,res)=>{
+router.get("/restaurant/:id",async(req,res)=>{
 
 
     try{
@@ -127,7 +118,7 @@ router.get("/restaurant/:id", async(req,res)=>{
 // =====================================
 
 
-router.get("/available", async(req,res)=>{
+router.get("/available",async(req,res)=>{
 
 
     try{
@@ -173,13 +164,14 @@ router.get("/available", async(req,res)=>{
 // =====================================
 
 
-router.put("/accept/:id", async(req,res)=>{
+router.put("/accept/:id",async(req,res)=>{
 
 
     try{
 
 
-        const delivery = await Delivery.findByIdAndUpdate(
+        const delivery =
+        await Delivery.findByIdAndUpdate(
 
 
             req.params.id,
@@ -193,16 +185,12 @@ router.put("/accept/:id", async(req,res)=>{
 
                 riderName:req.body.riderName
 
-
             },
 
 
             {
-
                 new:true
-
             }
-
 
         );
 
@@ -241,19 +229,29 @@ router.put("/accept/:id", async(req,res)=>{
 
 
 
+
 // =====================================
-// RIDER REJECT DELIVERY
-// PUT /api/deliveries/reject/:id
+// UPDATE DELIVERY STATUS
+// PUT /api/deliveries/status/:id
 // =====================================
 
 
-router.put("/reject/:id", async(req,res)=>{
+router.put("/status/:id",async(req,res)=>{
 
 
     try{
 
 
-        const delivery = await Delivery.findByIdAndUpdate(
+        const {
+
+            status
+
+        } = req.body;
+
+
+
+        const delivery =
+        await Delivery.findByIdAndUpdate(
 
 
             req.params.id,
@@ -261,8 +259,7 @@ router.put("/reject/:id", async(req,res)=>{
 
             {
 
-                status:"rejected"
-
+                status:status
 
             },
 
@@ -280,7 +277,7 @@ router.put("/reject/:id", async(req,res)=>{
 
         res.json({
 
-            message:"Delivery rejected",
+            message:"Status updated",
 
             delivery
 
@@ -311,25 +308,36 @@ router.put("/reject/:id", async(req,res)=>{
 
 
 
+
 // =====================================
 // RIDER ACTIVE DELIVERY
 // GET /api/deliveries/rider/:id
 // =====================================
 
 
-router.get("/rider/:id", async(req,res)=>{
+router.get("/rider/:id",async(req,res)=>{
 
 
     try{
 
 
-        const deliveries = await Delivery.find({
+        const deliveries =
+        await Delivery.find({
 
             riderId:req.params.id,
 
-            status:"accepted"
+
+            status:{
+                $in:[
+                    "accepted",
+                    "picked",
+                    "out_for_delivery"
+                ]
+            }
+
 
         });
+
 
 
         res.json(deliveries);
@@ -351,6 +359,8 @@ router.get("/rider/:id", async(req,res)=>{
 
 
 });
+
+
 
 
 
