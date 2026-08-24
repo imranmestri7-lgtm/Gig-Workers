@@ -9,29 +9,33 @@ const Delivery = require("../models/Delivery");
 // CREATE DELIVERY (RESTAURANT)
 // POST /api/deliveries
 // =====================================
-
 router.post("/", async(req,res)=>{
 
-    try{
+   try{
+        console.log("Incoming Delivery:",req.body);
+       const delivery = new Delivery({
 
-        const delivery = new Delivery({
+           restaurantId:req.body.restaurantId,
 
-            restaurantId:req.body.restaurantId,
+           restaurantName:req.body.restaurantName,
 
-            restaurantName:req.body.restaurantName,
+           category:req.body.category,
 
-            pickupLocation:req.body.pickupLocation,
+           pickupLocation:req.body.pickupLocation,
 
-            dropLocation:req.body.dropLocation,
+           dropLocation:req.body.dropLocation,
 
-            packageDetails:req.body.packageDetails,
+           distance:req.body.distance,
 
-            payment:req.body.payment,
+           estimatedTime:req.body.estimatedTime,
 
-            status:"available"
+           packageDetails:req.body.packageDetails,
 
-        });
+           payment:req.body.payment,
 
+           status:"available"
+
+       });
 
         await delivery.save();
 
@@ -46,18 +50,16 @@ router.post("/", async(req,res)=>{
 
 
     }
-    catch(error){
 
-        console.log(error);
+  catch(error){
 
+console.log("CREATE DELIVERY ERROR:",error);
 
-        res.status(500).json({
+res.status(500).json({
+message:error.message
+});
 
-            message:error.message
-
-        });
-
-    }
+}
 
 });
 
@@ -222,7 +224,62 @@ router.put("/accept/:id",async(req,res)=>{
 
 });
 
+router.put("/reject/:id", async(req,res)=>{
 
+try{
+
+
+const delivery =
+await Delivery.findById(req.params.id);
+
+
+
+if(!delivery){
+
+return res.status(404).json({
+message:"Delivery not found"
+});
+
+}
+
+
+
+delivery.status="available";
+
+delivery.riderId=null;
+
+delivery.riderName=null;
+
+
+await delivery.save();
+
+
+
+res.json({
+
+message:"Delivery rejected",
+
+delivery
+
+});
+
+
+}
+catch(error){
+
+console.log(error);
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+});
 
 
 

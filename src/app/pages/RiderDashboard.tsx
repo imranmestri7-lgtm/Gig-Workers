@@ -327,54 +327,42 @@ alert(
 // =================================
 // REJECT
 // =================================
-
-
 const rejectDelivery = async(id:string)=>{
-
 
 try{
 
+console.log("Reject clicked ID:", id);
 
-const response =
-await fetch(
 
+const response = await fetch(
 `http://localhost:5000/api/deliveries/reject/${id}`,
-
 {
-
-
 method:"PUT",
-
 headers:{
-
 "Content-Type":"application/json"
-
 }
-
-
 }
-
 );
 
 
-
-const data =
-await response.json();
+const data = await response.json();
 
 
-
-console.log(data);
+console.log("Reject API Response:", data);
 
 
 
 if(response.ok){
 
-alert(
-"Delivery rejected"
-);
+alert("Delivery Rejected");
 
 
 loadData();
+
+}
+else{
+
+alert(data.message || "Reject failed");
 
 }
 
@@ -382,18 +370,15 @@ loadData();
 }
 catch(error){
 
-console.log(error);
+console.log("Reject Error:",error);
 
-alert(
-"Server not connected"
-);
-
+alert("Server not connected");
 
 }
 
 
-
 };
+
 
 // =================================
 // UPDATE STATUS
@@ -826,23 +811,17 @@ Accept
 
 
 
-
-
 <button
 
 onClick={()=>rejectDelivery(delivery._id)}
 
-className="flex-1 bg-red-500 text-white p-3 rounded-xl flex justify-center gap-2"
+className="bg-red-600 text-white px-5 py-2 rounded-xl font-bold cursor-pointer"
 
 >
-
-<X/>
 
 Reject
 
 </button>
-
-
 
 </div>
 

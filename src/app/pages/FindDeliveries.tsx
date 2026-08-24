@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
+import DeliveryBatchCard from "../components/DeliveryBatchCard";
 
 import {
   MapPin,
@@ -15,22 +16,27 @@ import {
 
 type Delivery = {
 
-  _id:string;
+_id:string;
 
-  restaurantName:string;
+restaurantName:string;
 
-  pickupLocation:string;
+category:string;
 
-  dropLocation:string;
+pickupLocation:string;
 
-  packageDetails:string;
+dropLocation:string;
 
-  payment:number;
+distance:string;
 
-  status:string;
+estimatedTime:string;
+
+packageDetails:string;
+
+payment:number;
+
+status:string;
 
 };
-
 
 
 
@@ -50,9 +56,20 @@ useState("");
 const [loading,setLoading] =
 useState(true);
 
+const [selectedCategory,setSelectedCategory] =
+useState("");
 
+const viewOrders = (category:string)=>{
 
+setSelectedCategory(category);
 
+document
+.getElementById("available-orders")
+?.scrollIntoView({
+behavior:"smooth"
+});
+
+};
 
 // ===============================
 // GET AVAILABLE DELIVERY
@@ -130,21 +147,37 @@ setLoading(false);
 
 
 
+const filteredDeliveries = deliveries.filter((item)=>{
 
-const filteredDeliveries =
-deliveries.filter((item)=>
+
+const searchMatch =
 
 item.restaurantName
 .toLowerCase()
 .includes(search.toLowerCase())
 
 ||
+
 item.pickupLocation
 .toLowerCase()
-.includes(search.toLowerCase())
+.includes(search.toLowerCase());
 
-);
 
+
+const categoryMatch =
+
+selectedCategory === ""
+
+||
+
+item.category === selectedCategory;
+
+
+
+return searchMatch && categoryMatch;
+
+
+});
 
 
 
@@ -274,7 +307,9 @@ Filter
 
 
 
-
+<DeliveryBatchCard 
+viewOrders={viewOrders}
+/>
 
 
 

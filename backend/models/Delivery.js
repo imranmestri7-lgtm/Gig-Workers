@@ -16,7 +16,17 @@ const deliverySchema = new mongoose.Schema({
         type:String,
         required:true
     },
+// Delivery Category
 
+category:{
+    type:String,
+    required:true,
+    enum:[
+        "restaurant",
+        "grocery",
+        "cafe"
+    ]
+},
 
     // Delivery Location
 
@@ -44,7 +54,18 @@ const deliverySchema = new mongoose.Schema({
         type:Number,
         required:true
     },
+// Google Maps Data
 
+distance:{
+    type:String,
+    default:null
+},
+
+
+estimatedTime:{
+    type:String,
+    default:null
+},
 
     // Delivery Status
 

@@ -41,7 +41,6 @@ const [loading,setLoading] =
 useState(false);
 
 
-
 const [pickupLocation,setPickupLocation] =
 useState("");
 
@@ -55,7 +54,17 @@ const [payment,setPayment] =
 useState("");
 
 
+// Delivery type
+const [category,setCategory] =
+useState("restaurant");
 
+
+// Google Maps calculated values
+const [distance,setDistance] =
+useState("");
+
+const [estimatedTime,setEstimatedTime] =
+useState("");
 
 
 // =============================
@@ -199,9 +208,15 @@ restaurantId:user.id,
 
 restaurantName:user.name,
 
+category,
+
 pickupLocation,
 
 dropLocation,
+
+distance,
+
+estimatedTime,
 
 packageDetails,
 
@@ -590,6 +605,38 @@ className="w-full border p-3 rounded-xl"
 
 />
 
+<select
+
+value={category}
+
+onChange={(e)=>setCategory(e.target.value)}
+
+className="w-full border p-3 rounded-xl"
+
+>
+
+<option value="restaurant">
+
+Restaurant Delivery
+
+</option>
+
+
+<option value="grocery">
+
+Grocery Delivery
+
+</option>
+
+
+<option value="cafe">
+
+Cafe & Bakery Delivery
+
+</option>
+
+
+</select>
 
 
 
