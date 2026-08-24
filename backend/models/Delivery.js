@@ -86,6 +86,12 @@ estimatedTime:{
 
     // Rider Information
 
+rejectedBy:[
+    {
+        type:String
+    }
+],
+
     riderId:{
         type:String,
         default:null

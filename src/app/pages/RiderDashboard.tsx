@@ -78,13 +78,9 @@ const fetchAvailableDeliveries = async()=>{
 
 try{
 
-
 const response = await fetch(
-
-"http://localhost:5000/api/deliveries/available"
-
+`http://localhost:5000/api/deliveries/available/${user.id}`
 );
-
 
 
 const data =

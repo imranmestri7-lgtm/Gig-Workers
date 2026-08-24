@@ -170,7 +170,6 @@ alert("Server not connected");
 // CREATE DELIVERY
 // =============================
 
-
 const createDelivery =
 async(e:React.FormEvent)=>{
 
@@ -178,12 +177,28 @@ async(e:React.FormEvent)=>{
 e.preventDefault();
 
 
+if(category===""){
+
+alert("Please select delivery type");
+
+return;
+
+}
+
 try{
 
 
 setLoading(true);
 
-
+console.log({
+restaurantId:user.id,
+restaurantName:user.name,
+category,
+pickupLocation,
+dropLocation,
+packageDetails,
+payment:Number(payment)
+});
 
 const response =
 await fetch(
@@ -201,29 +216,29 @@ headers:{
 
 },
 
-
 body:JSON.stringify({
 
-restaurantId:user.id,
+    restaurantId:user.id,
 
-restaurantName:user.name,
+    restaurantName:user.name,
+    
+    riderId:user.id,
 
-category,
+    category:category,   // ✅ ADD THIS LINE
 
-pickupLocation,
+    pickupLocation,
 
-dropLocation,
+    dropLocation,
 
-distance,
+    distance,
 
-estimatedTime,
+    estimatedTime,
 
-packageDetails,
+    packageDetails,
 
-payment:Number(payment)
+    payment:Number(payment)
 
 })
-
 
 }
 
@@ -615,30 +630,27 @@ className="w-full border p-3 rounded-xl"
 
 >
 
+<option value="">
+Select Delivery Type
+</option>
+
+
 <option value="restaurant">
-
 Restaurant Delivery
-
 </option>
 
 
 <option value="grocery">
-
 Grocery Delivery
-
 </option>
 
 
 <option value="cafe">
-
 Cafe & Bakery Delivery
-
 </option>
 
 
 </select>
-
-
 
 <input
 

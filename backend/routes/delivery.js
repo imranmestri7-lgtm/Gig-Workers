@@ -118,41 +118,35 @@ router.get("/restaurant/:id",async(req,res)=>{
 // RIDER SEE AVAILABLE DELIVERY
 // GET /api/deliveries/available
 // =====================================
+router.get("/available/:riderId",async(req,res)=>{
+
+try{
 
 
-router.get("/available",async(req,res)=>{
+const deliveries = await Delivery.find({
 
+status:"available",
 
-    try{
-
-
-        const deliveries = await Delivery.find({
-
-            status:"available"
-
-        });
-
-
-        res.json(deliveries);
-
-
-
-    }
-    catch(error){
-
-
-        res.status(500).json({
-
-            message:error.message
-
-        });
-
-
-    }
-
+rejectedBy:{
+    $ne:req.params.riderId
+}
 
 });
 
+
+res.json(deliveries);
+
+
+}
+catch(error){
+
+res.status(500).json({
+message:error.message
+});
+
+}
+
+});
 
 
 
@@ -223,8 +217,7 @@ router.put("/accept/:id",async(req,res)=>{
 
 
 });
-
-router.put("/reject/:id", async(req,res)=>{
+router.put("/reject/:id",async(req,res)=>{
 
 try{
 
@@ -244,11 +237,16 @@ message:"Delivery not found"
 
 
 
-delivery.status="available";
+const riderId=req.body.riderId;
 
-delivery.riderId=null;
 
-delivery.riderName=null;
+
+if(!delivery.rejectedBy.includes(riderId)){
+
+delivery.rejectedBy.push(riderId);
+
+}
+
 
 
 await delivery.save();
@@ -257,7 +255,7 @@ await delivery.save();
 
 res.json({
 
-message:"Delivery rejected",
+message:"Delivery rejected for this rider",
 
 delivery
 
@@ -276,16 +274,10 @@ message:error.message
 
 });
 
-
 }
 
+
 });
-
-
-
-
-
-
 
 // =====================================
 // UPDATE DELIVERY STATUS
