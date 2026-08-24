@@ -334,11 +334,20 @@ const response = await fetch(
 `http://localhost:5000/api/deliveries/reject/${id}`,
 {
 method:"PUT",
+
 headers:{
 "Content-Type":"application/json"
-}
+},
+
+body:JSON.stringify({
+
+riderId:user.id   // ✅ ADD THIS
+
+})
+
 }
 );
+
 
 
 const data = await response.json();
@@ -353,7 +362,17 @@ if(response.ok){
 alert("Delivery Rejected");
 
 
+// remove instantly from UI
+setAvailableDeliveries((prev)=>
+prev.filter((delivery)=>
+delivery._id !== id
+)
+);
+
+
+// reload from database
 loadData();
+
 
 }
 else{
@@ -372,9 +391,7 @@ alert("Server not connected");
 
 }
 
-
 };
-
 
 // =================================
 // UPDATE STATUS
