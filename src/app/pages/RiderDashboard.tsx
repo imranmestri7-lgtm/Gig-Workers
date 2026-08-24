@@ -744,7 +744,7 @@ Active
 
 <p>
 
-Earnings
+Total Earnings
 
 </p>
 
@@ -774,9 +774,7 @@ Earnings Overview 💰
 </h2>
 
 
-
-<div className="grid md:grid-cols-4 gap-6">
-
+<div className="grid md:grid-cols-3 gap-6">
 
 <div className="bg-white p-6 rounded-2xl shadow">
 
@@ -804,19 +802,6 @@ This Week
 
 </div>
 
-
-
-<div className="bg-white p-6 rounded-2xl shadow">
-
-<p className="text-gray-500">
-Total Earned
-</p>
-
-<h1 className="text-3xl font-bold text-[#A33D20]">
-₹{earnings.total}
-</h1>
-
-</div>
 
 
 
