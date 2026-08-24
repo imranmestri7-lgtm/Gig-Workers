@@ -409,7 +409,151 @@ router.get("/rider/:id",async(req,res)=>{
 
 });
 
+// =====================================
+// RIDER EARNINGS
+// GET /api/deliveries/rider/earnings/:id
+// =====================================
 
+router.get("/rider/earnings/:id", async(req,res)=>{
+
+try{
+
+
+const riderId = req.params.id;
+
+
+// Total completed deliveries
+
+const completedDeliveries =
+await Delivery.find({
+
+riderId:riderId,
+
+status:"delivered"
+
+});
+
+
+
+// Total earnings
+
+const total =
+completedDeliveries.reduce(
+
+(sum,item)=>
+sum + Number(item.payment || 0),
+
+0
+
+);
+
+
+
+// Today date
+
+const today = new Date();
+
+today.setHours(0,0,0,0);
+
+
+
+// Today's completed deliveries
+
+const todayDeliveries =
+await Delivery.find({
+
+riderId:riderId,
+
+status:"delivered",
+
+createdAt:{
+$gte:today
+}
+
+});
+
+
+
+const todayEarning =
+todayDeliveries.reduce(
+
+(sum,item)=>
+sum + Number(item.payment || 0),
+
+0
+
+);
+
+
+
+// Last 7 days
+
+const weekDate = new Date();
+
+weekDate.setDate(
+weekDate.getDate()-7
+);
+
+
+
+const weekDeliveries =
+await Delivery.find({
+
+riderId:riderId,
+
+status:"delivered",
+
+createdAt:{
+$gte:weekDate
+}
+
+});
+
+
+
+const weekEarning =
+weekDeliveries.reduce(
+
+(sum,item)=>
+sum + Number(item.payment || 0),
+
+0
+
+);
+
+
+
+res.json({
+
+today:todayEarning,
+
+week:weekEarning,
+
+total:total,
+
+completed:completedDeliveries.length
+
+});
+
+
+}
+catch(error){
+
+
+console.log(error);
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
 
 
 

@@ -36,6 +36,17 @@ type Delivery = {
 
 };
 
+type Earnings = {
+
+today:number;
+
+week:number;
+
+total:number;
+
+completed:number;
+
+};
 
 
 
@@ -65,6 +76,18 @@ const user =
 JSON.parse(localStorage.getItem("user") || "{}");
 
 
+const [earnings,setEarnings] =
+useState<Earnings>({
+
+today:0,
+
+week:0,
+
+total:0,
+
+completed:0
+
+});
 
 
 
@@ -173,7 +196,47 @@ console.log(error);
 
 };
 
+const fetchEarnings = async()=>{
 
+
+try{
+
+
+const response = await fetch(
+
+`http://localhost:5000/api/deliveries/rider/earnings/${user.id}`
+
+);
+
+
+const data =
+await response.json();
+
+
+
+console.log(
+"Earnings:",
+data
+);
+
+
+
+if(response.ok){
+
+setEarnings(data);
+
+}
+
+
+}
+catch(error){
+
+console.log(error);
+
+}
+
+
+};
 
 
 
@@ -190,12 +253,13 @@ const loadData = async()=>{
 setLoading(true);
 
 
-
 await Promise.all([
 
 fetchAvailableDeliveries(),
 
-fetchActiveDeliveries()
+fetchActiveDeliveries(),
+
+fetchEarnings()
 
 ]);
 
@@ -500,8 +564,7 @@ navigate("/login");
 
 
 
-
-const earnings =
+const activeEarnings =
 activeDeliveries.reduce(
 
 (total,item)=>
@@ -688,7 +751,7 @@ Earnings
 
 <h1 className="text-4xl font-bold">
 
-₹{earnings}
+₹{earnings.total}
 
 </h1>
 
@@ -699,7 +762,81 @@ Earnings
 
 </div>
 
+{/* Earnings Overview */}
 
+<section className="mt-10">
+
+
+<h2 className="text-3xl font-bold mb-5">
+
+Earnings Overview 💰
+
+</h2>
+
+
+
+<div className="grid md:grid-cols-4 gap-6">
+
+
+<div className="bg-white p-6 rounded-2xl shadow">
+
+<p className="text-gray-500">
+Today
+</p>
+
+<h1 className="text-3xl font-bold text-green-600">
+₹{earnings.today}
+</h1>
+
+</div>
+
+
+
+<div className="bg-white p-6 rounded-2xl shadow">
+
+<p className="text-gray-500">
+This Week
+</p>
+
+<h1 className="text-3xl font-bold">
+₹{earnings.week}
+</h1>
+
+</div>
+
+
+
+<div className="bg-white p-6 rounded-2xl shadow">
+
+<p className="text-gray-500">
+Total Earned
+</p>
+
+<h1 className="text-3xl font-bold text-[#A33D20]">
+₹{earnings.total}
+</h1>
+
+</div>
+
+
+
+<div className="bg-white p-6 rounded-2xl shadow">
+
+<p className="text-gray-500">
+Completed
+</p>
+
+<h1 className="text-3xl font-bold">
+{earnings.completed}
+</h1>
+
+</div>
+
+
+</div>
+
+
+</section>
 
 
 
