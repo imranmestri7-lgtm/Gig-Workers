@@ -725,85 +725,138 @@ if (selectedDelivery) {
         )}
 
         {/* Actions */}
-        <div className="bg-white rounded-2xl shadow p-6">
+        {selectedDelivery.status !== "delivered" && (
+  <div className="bg-white rounded-2xl shadow p-6">
 
-          <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex flex-col md:flex-row gap-4">
 
-            <button
-              onClick={() => setShowMap(!showMap)}
-              className="flex-1 bg-gray-900 text-white py-4 rounded-xl font-bold"
-            >
-              {showMap ? "Hide Map" : "🗺️ Open Map"}
-            </button>
+      {/* MAP */}
+      <button
+        onClick={() => setShowMap(!showMap)}
+        className="flex-1 bg-gray-900 text-white py-4 rounded-xl font-bold"
+      >
+        {showMap ? "Hide Map" : "🗺️ Open Map"}
+      </button>
 
+      {/* PICKED UP */}
+      {selectedDelivery.status === "accepted" && (
+        <button
+          onClick={async () => {
+            await updateStatus(
+              selectedDelivery._id,
+              "picked"
+            );
 
-{selectedDelivery.status === "accepted" && (
-  <button
-    onClick={async () => {
-      await updateStatus(
-        selectedDelivery._id,
-        "picked"
-      );
+            setSelectedDelivery({
+              ...selectedDelivery,
+              status: "picked"
+            });
+          }}
+          className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold"
+        >
+          📦 Picked Up
+        </button>
+      )}
 
-      setSelectedDelivery({
-        ...selectedDelivery,
-        status: "picked"
-      });
-    }}
-    className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold"
-  >
-    📦 Picked Up
-  </button>
+      {/* START DELIVERY */}
+      {selectedDelivery.status === "picked" && (
+        <button
+          onClick={async () => {
+            await updateStatus(
+              selectedDelivery._id,
+              "out_for_delivery"
+            );
+
+            setSelectedDelivery({
+              ...selectedDelivery,
+              status: "out_for_delivery"
+            });
+          }}
+          className="flex-1 bg-blue-600 text-white py-4 rounded-xl font-bold"
+        >
+          🚴 Start Delivery
+        </button>
+      )}
+
+      {/* MARK DELIVERED */}
+      {selectedDelivery.status === "out_for_delivery" && (
+        <button
+          onClick={async () => {
+            await updateStatus(
+              selectedDelivery._id,
+              "delivered"
+            );
+
+            setSelectedDelivery({
+              ...selectedDelivery,
+              status: "delivered"
+            });
+
+            setShowMap(false);
+          }}
+          className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
+        >
+          ✓ Mark as Delivered
+        </button>
+      )}
+
+    </div>
+
+  </div>
 )}
-{selectedDelivery.status === "picked" && (
-  <button
-    onClick={async () => {
-      await updateStatus(
-        selectedDelivery._id,
-        "out_for_delivery"
-      );
+       
+{selectedDelivery.status === "delivered" && (
+  <div className="bg-white rounded-2xl shadow p-8 text-center">
 
-      setSelectedDelivery({
-        ...selectedDelivery,
-        status: "out_for_delivery"
-      });
-    }}
-    className="flex-1 bg-blue-600 text-white py-4 rounded-xl font-bold"
-  >
-    🚴 Start Delivery
-  </button>
+    <div className="text-5xl mb-4">
+      🎉
+    </div>
+
+    <h2 className="text-3xl font-bold text-green-600">
+      Congratulations!
+    </h2>
+
+    <p className="text-gray-600 mt-3">
+      Delivery completed successfully.
+    </p>
+
+    <p className="text-xl font-bold text-green-700 mt-5">
+      You earned ₹{selectedDelivery.payment}
+    </p>
+
+    <div className="flex flex-col md:flex-row gap-4 mt-6">
+
+      <button
+        onClick={() => {
+          // message feature will be added next
+          alert("Messaging feature coming next!");
+        }}
+        className="flex-1 bg-gray-900 text-white py-4 rounded-xl font-bold"
+      >
+        💬 Send Message
+      </button>
+
+      <button
+        onClick={() => {
+          setSelectedDelivery(null);
+          setShowMap(false);
+          loadData();
+        }}
+        className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
+      >
+        🚴 Start New Delivery
+      </button>
+
+    </div>
+
+  </div>
 )}
-            
-
-           {selectedDelivery.status === "out_for_delivery" && (
-  <button
-    onClick={async () => {
-      await updateStatus(
-        selectedDelivery._id,
-        "delivered"
-      );
-
-      setSelectedDelivery({
-        ...selectedDelivery,
-        status: "delivered"
-      });
-    }}
-    className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
-  >
-     ✓ Mark as Delivered
-  </button>
-)}
-
-          </div>
+   </div>
 
         </div>
 
-      </div>
-    </div>
   );
 }
-
-
 
 
 return(
@@ -1278,15 +1331,41 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 </div>
 
 {
-delivery.status==="delivered" &&
+  delivery.status === "delivered" && (
+    <div className="bg-white rounded-2xl shadow p-8 text-center mt-5">
 
-<div className="bg-green-200 text-green-800 p-3 rounded-xl text-center font-bold">
+      <div className="text-5xl mb-4">
+        🎉
+      </div>
 
-Delivery Completed 🎉
+      <h2 className="text-3xl font-bold text-green-600">
+        Congratulations!
+      </h2>
 
-</div>
+      <p className="text-gray-600 mt-3">
+        Delivery completed successfully.
+      </p>
 
+      <p className="text-xl font-bold text-green-700 mt-5">
+        You earned ₹{delivery.payment}
+      </p>
+
+      <button
+        onClick={() => {
+          setSelectedDelivery(null);
+          setShowMap(false);
+          loadData();
+        }}
+        className="w-full mt-6 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
+      >
+        🚴 Start New Delivery
+      </button>
+
+    </div>
+  )
 }
+
+
 
 
 
