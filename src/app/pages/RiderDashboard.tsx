@@ -755,28 +755,44 @@ if (selectedDelivery) {
     📦 Picked Up
   </button>
 )}
+{selectedDelivery.status === "picked" && (
+  <button
+    onClick={async () => {
+      await updateStatus(
+        selectedDelivery._id,
+        "out_for_delivery"
+      );
 
-            {selectedDelivery.status === "picked" && (
-              <button
-                onClick={() => {
-                  // use your existing start-delivery API here
-                }}
-                className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
-              >
-                🚴 Start Delivery
-              </button>
-            )}
+      setSelectedDelivery({
+        ...selectedDelivery,
+        status: "out_for_delivery"
+      });
+    }}
+    className="flex-1 bg-blue-600 text-white py-4 rounded-xl font-bold"
+  >
+    🚴 Start Delivery
+  </button>
+)}
+            
 
-            {selectedDelivery.status === "out_for_delivery" && (
-              <button
-                onClick={() => {
-                  // use your existing delivered API here
-                }}
-                className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
-              >
-                ✓ Mark as Delivered
-              </button>
-            )}
+           {selectedDelivery.status === "out_for_delivery" && (
+  <button
+    onClick={async () => {
+      await updateStatus(
+        selectedDelivery._id,
+        "delivered"
+      );
+
+      setSelectedDelivery({
+        ...selectedDelivery,
+        status: "delivered"
+      });
+    }}
+    className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
+  >
+     ✓ Mark as Delivered
+  </button>
+)}
 
           </div>
 
