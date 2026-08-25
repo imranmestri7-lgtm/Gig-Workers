@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import DeliveryMap from "../components/DeliveryMap";
 
 import {
   Package,
@@ -89,7 +90,10 @@ completed:0
 
 });
 
+const [selectedDelivery, setSelectedDelivery] =
+  useState<Delivery | null>(null);
 
+const [showMap, setShowMap] = useState(false);
 
 // =================================
 // GET AVAILABLE DELIVERY
@@ -575,7 +579,204 @@ total + Number(item.payment || 0),
 
 );
 
+if (selectedDelivery) {
+  return (
+    <div className="min-h-screen bg-gray-50">
 
+      {/* Header */}
+      <div className="bg-white border-b px-6 py-5">
+        <button
+          onClick={() => {
+            setSelectedDelivery(null);
+            setShowMap(false);
+          }}
+          className="text-gray-700 font-semibold hover:text-black"
+        >
+          ← Back to Dashboard
+        </button>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 py-8">
+
+        <h1 className="text-3xl font-bold mb-2">
+          Delivery Details
+        </h1>
+
+        <p className="text-gray-500 mb-8">
+          Focus on this delivery
+        </p>
+
+        {/* Delivery information */}
+        <div className="bg-white rounded-2xl shadow p-6 mb-6">
+
+          <h2 className="text-2xl font-bold mb-5">
+            {selectedDelivery.restaurantName}
+          </h2>
+
+          <div className="space-y-4 text-lg">
+
+            <p>
+              📍 <strong>Pickup:</strong>{" "}
+              {selectedDelivery.pickupLocation}
+            </p>
+
+            <p>
+              🏠 <strong>Drop:</strong>{" "}
+              {selectedDelivery.dropLocation}
+            </p>
+
+            <p>
+              📦 <strong>Package:</strong>{" "}
+              {selectedDelivery.packageDetails}
+            </p>
+
+            <p className="text-green-600 font-bold">
+              💰 ₹{selectedDelivery.payment}
+            </p>
+            
+
+          </div>
+          
+        </div>
+
+        {/* Status */}
+        <div className="bg-white rounded-2xl shadow p-6 mb-6">
+
+          <h2 className="text-xl font-bold mb-6">
+            Delivery Status
+          </h2>
+
+          <div className="space-y-4">
+
+            <div className="flex items-center gap-3">
+              <span className="text-green-600 text-xl">✓</span>
+              <span>Accepted</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span
+                className={
+                  ["picked", "out_for_delivery", "delivered"].includes(
+                    selectedDelivery.status
+                  )
+                    ? "text-green-600 text-xl"
+                    : "text-gray-400 text-xl"
+                }
+              >
+                {["picked", "out_for_delivery", "delivered"].includes(
+                  selectedDelivery.status
+                )
+                  ? "✓"
+                  : "○"}
+              </span>
+
+              <span>Picked Up</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span
+                className={
+                  ["out_for_delivery", "delivered"].includes(
+                    selectedDelivery.status
+                  )
+                    ? "text-green-600 text-xl"
+                    : "text-gray-400 text-xl"
+                }
+              >
+                {["out_for_delivery", "delivered"].includes(
+                  selectedDelivery.status
+                )
+                  ? "✓"
+                  : "○"}
+              </span>
+
+              <span>Out for Delivery</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span
+                className={
+                  selectedDelivery.status === "delivered"
+                    ? "text-green-600 text-xl"
+                    : "text-gray-400 text-xl"
+                }
+              >
+                {selectedDelivery.status === "delivered"
+                  ? "✓"
+                  : "○"}
+              </span>
+
+              <span>Delivered</span>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Map */}
+        {showMap && (
+          <div className="mb-6">
+
+            <DeliveryMap
+              pickupPosition={[16.705, 74.243]}
+              dropPosition={[16.704, 74.243]}
+            />
+
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="bg-white rounded-2xl shadow p-6">
+
+          <div className="flex flex-col md:flex-row gap-4">
+
+            <button
+              onClick={() => setShowMap(!showMap)}
+              className="flex-1 bg-gray-900 text-white py-4 rounded-xl font-bold"
+            >
+              {showMap ? "Hide Map" : "🗺️ Open Map"}
+            </button>
+
+            {selectedDelivery.status === "accepted" && (
+              <button
+                onClick={() => {
+                  // use your existing picked-up API here
+                }}
+                className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
+              >
+                📦 Picked Up
+              </button>
+            )}
+
+            {selectedDelivery.status === "picked" && (
+              <button
+                onClick={() => {
+                  // use your existing start-delivery API here
+                }}
+                className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
+              >
+                🚴 Start Delivery
+              </button>
+            )}
+
+            {selectedDelivery.status === "out_for_delivery" && (
+              <button
+                onClick={() => {
+                  // use your existing delivered API here
+                }}
+                className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
+              >
+                ✓ Mark as Delivered
+              </button>
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
 
 
 
@@ -1007,42 +1208,34 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 
 >
 
-
 <h3 className="font-bold text-xl">
-
-{delivery.restaurantName}
-
+  {delivery.restaurantName}
 </h3>
 
-
 <p className="mt-3">
-
-📍 {delivery.pickupLocation}
-
+  📍 {delivery.pickupLocation}
 </p>
-
 
 <p>
-
-🏠 {delivery.dropLocation}
-
+  🏠 {delivery.dropLocation}
 </p>
-
 
 <p>
-
-📦 {delivery.packageDetails}
-
+  📦 {delivery.packageDetails}
 </p>
-
 
 <p className="font-bold text-green-700 mt-2">
-
-₹{delivery.payment}
-
+  ₹{delivery.payment}
 </p>
 
-
+<div className="mt-5">
+  <p className="font-bold">
+    Status:
+    <span className="ml-2 text-blue-600">
+      {delivery.status}
+    </span>
+  </p>
+</div>
 
 <div className="mt-5">
 
@@ -1063,79 +1256,19 @@ Status:
 </div>
 
 
-
-
-
 <div className="mt-5">
 
+  <button
+    onClick={() => {
+      setSelectedDelivery(delivery);
+      setShowMap(false);
+    }}
+    className="w-full bg-black text-white p-3 rounded-xl font-bold"
+  >
+    📋 View Order
+  </button>
 
-{
-delivery.status==="accepted" &&
-
-<button
-
-onClick={()=>updateStatus(
-delivery._id,
-"picked"
-)}
-
-className="w-full bg-yellow-500 text-white p-3 rounded-xl font-bold"
-
->
-
-📦 Picked Up
-
-</button>
-
-}
-
-
-
-
-{
-delivery.status==="picked" &&
-
-<button
-
-onClick={()=>updateStatus(
-delivery._id,
-"out_for_delivery"
-)}
-
-className="w-full bg-blue-600 text-white p-3 rounded-xl font-bold"
-
->
-
-🚴 Start Delivery
-
-</button>
-
-}
-
-
-
-
-{
-delivery.status==="out_for_delivery" &&
-
-<button
-
-onClick={()=>updateStatus(
-delivery._id,
-"delivered"
-)}
-
-className="w-full bg-green-600 text-white p-3 rounded-xl font-bold"
-
->
-
-✅ Delivered
-
-</button>
-
-}
-
-
+</div>
 
 {
 delivery.status==="delivered" &&
@@ -1149,7 +1282,7 @@ Delivery Completed 🎉
 }
 
 
-</div>
+
 
 
 
