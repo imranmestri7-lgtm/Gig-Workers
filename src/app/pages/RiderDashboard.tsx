@@ -1237,24 +1237,6 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
   </p>
 </div>
 
-<div className="mt-5">
-
-
-<p className="font-bold">
-
-Status:
-
-<span className="ml-2 text-blue-600">
-
-{delivery.status}
-
-</span>
-
-</p>
-
-
-</div>
-
 
 <div className="mt-5">
 
