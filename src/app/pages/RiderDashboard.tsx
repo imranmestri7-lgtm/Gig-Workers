@@ -736,16 +736,25 @@ if (selectedDelivery) {
               {showMap ? "Hide Map" : "🗺️ Open Map"}
             </button>
 
-            {selectedDelivery.status === "accepted" && (
-              <button
-                onClick={() => {
-                  // use your existing picked-up API here
-                }}
-                className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
-              >
-                📦 Picked Up
-              </button>
-            )}
+
+{selectedDelivery.status === "accepted" && (
+  <button
+    onClick={async () => {
+      await updateStatus(
+        selectedDelivery._id,
+        "picked"
+      );
+
+      setSelectedDelivery({
+        ...selectedDelivery,
+        status: "picked"
+      });
+    }}
+    className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold"
+  >
+    📦 Picked Up
+  </button>
+)}
 
             {selectedDelivery.status === "picked" && (
               <button
