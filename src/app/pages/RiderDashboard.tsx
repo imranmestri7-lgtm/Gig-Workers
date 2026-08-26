@@ -20,6 +20,8 @@ type Delivery = {
 
  platform: string;
 
+ orderId?: string;
+
  pickupLocation:string;
 
  dropLocation:string;
@@ -1169,7 +1171,9 @@ className="bg-white p-6 rounded-2xl shadow"
 
 >
 
-
+<p className="text-red-600 font-bold mb-2">
+  🛵 {delivery.platform}
+</p>
 
 <h3 className="text-xl font-bold">
 
@@ -1293,7 +1297,7 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 
 >
 <p className="text-red-600 font-bold mb-2">
-    🛵 Zomato
+   🛵 {delivery.platform}
 </p>
 
 <h3 className="font-bold text-xl">
