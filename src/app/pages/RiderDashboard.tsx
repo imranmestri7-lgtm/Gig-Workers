@@ -619,9 +619,6 @@ if (selectedDelivery) {
   {selectedDelivery.restaurantName}
 </h2>
 
-          <h2 className="text-2xl font-bold mb-5">
-            {selectedDelivery.restaurantName}
-          </h2>
 
           <div className="space-y-4 text-lg">
 
