@@ -13,29 +13,33 @@ router.post("/", async(req,res)=>{
 
    try{
         console.log("Incoming Delivery:",req.body);
-       const delivery = new Delivery({
+      const delivery = new Delivery({
 
-           restaurantId:req.body.restaurantId,
+    restaurantId:req.body.restaurantId,
 
-           restaurantName:req.body.restaurantName,
+    restaurantName:req.body.restaurantName,
 
-           category:req.body.category,
+    // External Platform
+    platform:req.body.platform,
+    orderId:req.body.orderId,
 
-           pickupLocation:req.body.pickupLocation,
+    category:req.body.category,
 
-           dropLocation:req.body.dropLocation,
+    pickupLocation:req.body.pickupLocation,
 
-           distance:req.body.distance,
+    dropLocation:req.body.dropLocation,
 
-           estimatedTime:req.body.estimatedTime,
+    distance:req.body.distance,
 
-           packageDetails:req.body.packageDetails,
+    estimatedTime:req.body.estimatedTime,
 
-           payment:req.body.payment,
+    packageDetails:req.body.packageDetails,
 
-           status:"available"
+    payment:req.body.payment,
 
-       });
+    status:"available"
+
+});
 
         await delivery.save();
 
