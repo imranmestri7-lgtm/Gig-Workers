@@ -15,6 +15,7 @@ import AboutUs from "./pages/AboutUs";
 import RiderDashboard from "./pages/RiderDashboard";
 import RestaurantDashboard from "./pages/RestaurantDashboard";
 
+import ZomatoDemo from "./pages/platforms/ZomatoDemo";
 
 export const router = createBrowserRouter([
 
@@ -84,5 +85,9 @@ export const router = createBrowserRouter([
     Component: RestaurantDashboard,
   },
 
+  {
+  path: "/zomato-demo",
+  Component: ZomatoDemo,
+},
 
 ]);
