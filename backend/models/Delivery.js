@@ -16,6 +16,24 @@ const deliverySchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    // External Delivery Platform
+platform:{
+    type:String,
+    required:true,
+    enum:[
+        "zomato",
+        "swiggy",
+        "uber",
+        "blinkit",
+        "zepto",
+        "other"
+    ]
+},
+
+orderId:{
+    type:String,
+    required:true
+},
 // Delivery Category
 
 category:{
