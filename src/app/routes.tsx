@@ -17,6 +17,9 @@ import RestaurantDashboard from "./pages/RestaurantDashboard";
 
 import ZomatoDemo from "./pages/platforms/ZomatoDemo";
 import SwiggyDemo from "./pages/platforms/SwiggyDemo";
+import UberDemo from "./pages/platforms/UberDemo";
+import BlinkitDemo from "./pages/platforms/BlinkitDemo";
+import ZeptoDemo from "./pages/platforms/ZeptoDemo";
 
 export const router = createBrowserRouter([
 
@@ -94,6 +97,21 @@ export const router = createBrowserRouter([
 {
   path: "/swiggy-demo",
   Component: SwiggyDemo,
+},
+
+{
+  path: "/uber-demo",
+  Component: UberDemo,
+},
+
+{
+  path: "/blinkit-demo",
+  Component: BlinkitDemo,
+},
+
+{
+  path: "/zepto-demo",
+  Component: ZeptoDemo,
 },
 
 ]);
