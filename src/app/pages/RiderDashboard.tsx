@@ -18,6 +18,8 @@ type Delivery = {
 
  restaurantName:string;
 
+ platform: string;
+
  pickupLocation:string;
 
  dropLocation:string;
@@ -608,6 +610,14 @@ if (selectedDelivery) {
 
         {/* Delivery information */}
         <div className="bg-white rounded-2xl shadow p-6 mb-6">
+
+          <p className="text-red-600 font-bold mb-2">
+  🛵 {selectedDelivery.platform}
+</p>
+
+<h2 className="text-2xl font-bold mb-5">
+  {selectedDelivery.restaurantName}
+</h2>
 
           <h2 className="text-2xl font-bold mb-5">
             {selectedDelivery.restaurantName}
@@ -1285,6 +1295,9 @@ className="bg-green-50 border border-green-300 p-6 rounded-2xl"
 
 
 >
+<p className="text-red-600 font-bold mb-2">
+    🛵 Zomato
+</p>
 
 <h3 className="font-bold text-xl">
   {delivery.restaurantName}
