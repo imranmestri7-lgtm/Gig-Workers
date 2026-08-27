@@ -559,6 +559,120 @@ message:error.message
 
 });
 
+// =====================================
+// RIDER PLATFORM STATISTICS
+// GET /api/deliveries/rider/platform-stats/:id/:platform
+// =====================================
+
+router.get(
+    "/rider/platform-stats/:id/:platform",
+    async (req, res) => {
+
+        try {
+
+            const riderId = req.params.id;
+            const platform = req.params.platform;
+
+            // Today
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Last 7 days
+            const weekDate = new Date();
+            weekDate.setDate(
+                weekDate.getDate() - 7
+            );
+
+            // All completed deliveries
+            const completedDeliveries =
+                await Delivery.find({
+                    riderId: riderId,
+                    platform: platform,
+                    status: "delivered"
+                });
+
+            // Today's deliveries
+            const todayDeliveries =
+                await Delivery.find({
+                    riderId: riderId,
+                    platform: platform,
+                    status: "delivered",
+                    createdAt: {
+                        $gte: today
+                    }
+                });
+
+            // This week's deliveries
+            const weekDeliveries =
+                await Delivery.find({
+                    riderId: riderId,
+                    platform: platform,
+                    status: "delivered",
+                    createdAt: {
+                        $gte: weekDate
+                    }
+                });
+
+            // Earnings
+            const totalEarnings =
+                completedDeliveries.reduce(
+                    (sum, item) =>
+                        sum + Number(item.payment || 0),
+                    0
+                );
+
+            const todayEarnings =
+                todayDeliveries.reduce(
+                    (sum, item) =>
+                        sum + Number(item.payment || 0),
+                    0
+                );
+
+            const weekEarnings =
+                weekDeliveries.reduce(
+                    (sum, item) =>
+                        sum + Number(item.payment || 0),
+                    0
+                );
+
+            res.json({
+
+                todayDeliveries:
+                    todayDeliveries.length,
+
+                todayEarnings:
+                    todayEarnings,
+
+                weekDeliveries:
+                    weekDeliveries.length,
+
+                weekEarnings:
+                    weekEarnings,
+
+                totalDeliveries:
+                    completedDeliveries.length,
+
+                totalEarnings:
+                    totalEarnings
+
+            });
+
+        }
+        catch (error) {
+
+            console.log(
+                "PLATFORM STATS ERROR:",
+                error
+            );
+
+            res.status(500).json({
+                message: error.message
+            });
+
+        }
+
+    }
+);
 
 
 
