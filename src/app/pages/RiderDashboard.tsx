@@ -1048,6 +1048,8 @@ Total Earnings
 
 
 
+
+
 </div>
 
 {/* Earnings Overview */}
@@ -1111,7 +1113,28 @@ Completed
 
 </section>
 
+<div className="bg-white rounded-2xl shadow p-6 mt-8">
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
+    <div>
+      <h2 className="text-2xl font-bold">
+        🏢 Platform Dashboard
+      </h2>
+
+      <p className="text-gray-500 mt-1">
+        View your deliveries and earnings from each platform
+      </p>
+    </div>
+
+    <button
+      onClick={() => navigate("/platform-dashboard")}
+      className="bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800"
+    >
+      View Platforms →
+    </button>
+
+  </div>
+</div>
 
 
 
