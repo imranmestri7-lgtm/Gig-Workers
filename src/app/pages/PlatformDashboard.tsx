@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -59,6 +60,9 @@ export default function PlatformDashboard() {
     totalEarnings: 0,
   });
 
+  const [platformOrders, setPlatformOrders] =
+    useState<any[]>([]);
+
   const [loading, setLoading] = useState(false);
 
   const user = JSON.parse(
@@ -73,6 +77,7 @@ export default function PlatformDashboard() {
     }
 
     loadPlatformStats();
+    loadPlatformOrders();
   }, [selectedPlatform, riderId]);
 
   const loadPlatformStats = async () => {
@@ -100,6 +105,30 @@ export default function PlatformDashboard() {
     }
   };
 
+  const loadPlatformOrders = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/deliveries/rider/platform-orders/${riderId}/${selectedPlatform}`
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setPlatformOrders(data);
+      } else {
+        console.log(data.message);
+        setPlatformOrders([]);
+      }
+    } catch (error) {
+      console.log(
+        "Platform orders error:",
+        error
+      );
+
+      setPlatformOrders([]);
+    }
+  };
+
   const currentPlatform = platforms.find(
     (platform) =>
       platform.value === selectedPlatform
@@ -115,7 +144,9 @@ export default function PlatformDashboard() {
         <div className="max-w-6xl mx-auto">
 
           <button
-            onClick={() => navigate("/rider-dashboard")}
+            onClick={() =>
+              navigate("/rider-dashboard")
+            }
             className="mb-4 text-gray-300 hover:text-white"
           >
             ← Back to Rider Dashboard
@@ -314,6 +345,82 @@ export default function PlatformDashboard() {
         </section>
 
 
+        {/* Completed Deliveries */}
+
+        <section className="mt-10">
+
+          <h2 className="text-2xl font-bold mb-5">
+            Completed {currentPlatform?.name} Deliveries
+          </h2>
+
+          {platformOrders.length === 0 ? (
+
+            <div className="bg-white rounded-2xl shadow p-8 text-center">
+
+              <p className="text-gray-500">
+                No completed deliveries yet.
+              </p>
+
+            </div>
+
+          ) : (
+
+            <div className="grid md:grid-cols-2 gap-6">
+
+              {platformOrders.map((order) => (
+
+                <div
+                  key={order._id}
+                  className="bg-white rounded-2xl shadow p-6"
+                >
+
+                  <p className="text-red-600 font-bold mb-3">
+                    {currentPlatform?.icon}{" "}
+                    {order.platform}
+                  </p>
+
+                  <h3 className="text-xl font-bold">
+                    {order.restaurantName}
+                  </h3>
+
+                  <p className="mt-3">
+                    📍 <b>Pickup:</b>{" "}
+                    {order.pickupLocation}
+                  </p>
+
+                  <p>
+                    🏠 <b>Drop:</b>{" "}
+                    {order.dropLocation}
+                  </p>
+
+                  <p>
+                    📦 <b>Package:</b>{" "}
+                    {order.packageDetails}
+                  </p>
+
+                  <p className="font-bold text-green-700 mt-3">
+                    💰 ₹{order.payment}
+                  </p>
+
+                  <p className="text-gray-500 mt-2">
+                    Order ID: {order.orderId}
+                  </p>
+
+                  <p className="text-green-600 font-bold mt-2">
+                    ✓ Delivered
+                  </p>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          )}
+
+        </section>
+
+
         {/* Summary */}
 
         <section className="mt-8">
@@ -321,24 +428,34 @@ export default function PlatformDashboard() {
           <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
 
             <h3 className="text-xl font-bold">
+
               {currentPlatform?.icon}{" "}
               {currentPlatform?.name} Summary
+
             </h3>
 
             <p className="text-gray-600 mt-2">
+
               You have completed{" "}
+
               <span className="font-bold">
                 {stats.totalDeliveries}
               </span>{" "}
+
               deliveries on{" "}
+
               <span className="font-bold">
                 {currentPlatform?.name}
               </span>{" "}
+
               and earned{" "}
+
               <span className="font-bold text-green-700">
                 ₹{stats.totalEarnings}
               </span>{" "}
+
               in total.
+
             </p>
 
           </div>

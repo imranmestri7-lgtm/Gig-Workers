@@ -674,7 +674,45 @@ router.get(
     }
 );
 
+// =====================================
+// RIDER PLATFORM COMPLETED ORDERS
+// GET /api/deliveries/rider/platform-orders/:id/:platform
+// =====================================
 
+router.get(
+    "/rider/platform-orders/:id/:platform",
+    async (req, res) => {
+
+        try {
+
+            const riderId = req.params.id;
+            const platform = req.params.platform;
+
+            const deliveries = await Delivery.find({
+                riderId: riderId,
+                platform: platform,
+                status: "delivered"
+            }).sort({
+                createdAt: -1
+            });
+
+            res.json(deliveries);
+
+        } catch (error) {
+
+            console.log(
+                "PLATFORM ORDERS ERROR:",
+                error
+            );
+
+            res.status(500).json({
+                message: error.message
+            });
+
+        }
+
+    }
+);
 
 
 
