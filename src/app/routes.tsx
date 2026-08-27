@@ -21,6 +21,8 @@ import UberDemo from "./pages/platforms/UberDemo";
 import BlinkitDemo from "./pages/platforms/BlinkitDemo";
 import ZeptoDemo from "./pages/platforms/ZeptoDemo";
 
+import PlatformDashboard from "./pages/PlatformDashboard";
+
 export const router = createBrowserRouter([
 
   {
@@ -83,6 +85,10 @@ export const router = createBrowserRouter([
     Component: RiderDashboard,
   },
 
+  {
+  path: "/platform-dashboard",
+  Component: PlatformDashboard,
+},
 
   {
     path: "/restaurant-dashboard",
