@@ -463,8 +463,55 @@ export default function PlatformDashboard() {
 
         </section>
 
-      </main>
+              {/* Summary */}
 
-    </div>
-  );
+      <section className="mt-8">
+
+        <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
+
+          <h3 className="text-xl font-bold">
+            {currentPlatform?.icon}{" "}
+            {currentPlatform?.name} Summary
+          </h3>
+
+          <p className="text-gray-600 mt-2">
+            You have completed{" "}
+            <span className="font-bold">
+              {stats.totalDeliveries}
+            </span>{" "}
+            deliveries on{" "}
+            <span className="font-bold">
+              {currentPlatform?.name}
+            </span>{" "}
+            and earned{" "}
+            <span className="font-bold text-green-700">
+              ₹{stats.totalEarnings}
+            </span>{" "}
+            in total.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      {/* 👇 PUT COMPLETED PLATFORM DELIVERIES HERE */}
+
+      <section className="mt-10">
+
+        <h2 className="text-2xl font-bold mb-5">
+          {currentPlatform?.icon} Completed{" "}
+          {currentPlatform?.name} Deliveries
+        </h2>
+
+        {/* your code here */}
+
+      </section>
+
+
+    </main>
+
+  </div>
+);
+
 }
