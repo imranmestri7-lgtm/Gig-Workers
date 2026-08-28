@@ -751,5 +751,34 @@ router.get(
     }
 );
 
+// =====================================
+// RIDER DELIVERY HISTORY
+// GET /api/deliveries/rider/history/:id
+// =====================================
+
+router.get("/rider/history/:id", async (req, res) => {
+  try {
+    const deliveries = await Delivery.find({
+      riderId: req.params.id,
+      status: "delivered"
+    }).sort({
+      createdAt: -1
+    });
+
+    res.json(deliveries);
+
+  } catch (error) {
+
+    console.log(
+      "DELIVERY HISTORY ERROR:",
+      error
+    );
+
+    res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
 
 module.exports = router;
