@@ -48,6 +48,8 @@ const platforms: Platform[] = [
 export default function PlatformDashboard() {
   const navigate = useNavigate();
 
+  const [platformOrders, setPlatformOrders] = useState<any[]>([]);
+
   const [selectedPlatform, setSelectedPlatform] =
     useState<string>("zomato");
 
@@ -60,8 +62,6 @@ export default function PlatformDashboard() {
     totalEarnings: 0,
   });
 
-  const [platformOrders, setPlatformOrders] =
-    useState<any[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -72,13 +72,13 @@ export default function PlatformDashboard() {
   const riderId = user._id || user.id;
 
   useEffect(() => {
-    if (!riderId) {
-      return;
-    }
+  if (!riderId) {
+    return;
+  }
 
-    loadPlatformStats();
-    loadPlatformOrders();
-  }, [selectedPlatform, riderId]);
+  loadPlatformStats();
+  loadPlatformOrders();
+}, [selectedPlatform, riderId]);
 
   const loadPlatformStats = async () => {
     try {
@@ -105,6 +105,7 @@ export default function PlatformDashboard() {
     }
   };
 
+  
   const loadPlatformOrders = async () => {
     try {
       const response = await fetch(
