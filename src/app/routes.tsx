@@ -22,6 +22,7 @@ import BlinkitDemo from "./pages/platforms/BlinkitDemo";
 import ZeptoDemo from "./pages/platforms/ZeptoDemo";
 
 import PlatformDashboard from "./pages/PlatformDashboard";
+import RiderProfile from "./pages/RiderProfile";
 
 export const router = createBrowserRouter([
 
@@ -84,6 +85,11 @@ export const router = createBrowserRouter([
     path: "/rider-dashboard",
     Component: RiderDashboard,
   },
+
+  {
+  path: "/rider-profile",
+  Component: RiderProfile,
+},
 
   {
   path: "/platform-dashboard",

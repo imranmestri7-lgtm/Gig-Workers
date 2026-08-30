@@ -60,6 +60,11 @@ export default function RiderDashboard(){
 
 const navigate = useNavigate();
 
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  navigate("/login");
+};
 
 
 const [availableDeliveries,setAvailableDeliveries] =
@@ -901,38 +906,33 @@ Rider Dashboard
 
 </div>
 
+<div className="flex items-center gap-4">
 
+  {/* User Profile */}
+  <button
+    onClick={() => navigate("/rider-profile")}
+    className="flex items-center gap-2 font-bold hover:text-[#A33D20] transition"
+  >
+    <span className="text-xl">
+      👤
+    </span>
 
+    <span>
+      {user.name || "User"}
+    </span>
+  </button>
 
-
-<div className="flex items-center gap-5">
-
-
-<span className="font-bold">
-
-{user.name}
-
-</span>
-
-
-
-<button
-
-onClick={logout}
-
-className="bg-red-100 text-red-600 px-5 py-2 rounded-xl flex gap-2"
-
->
-
-<LogOut size={18}/>
-
-Logout
-
-</button>
-
-
+  {/* Logout */}
+  <button
+    onClick={handleLogout}
+    className="bg-red-100 text-red-600 px-5 py-3 rounded-xl font-bold hover:bg-red-200"
+  >
+    Logout
+  </button>
 
 </div>
+
+
 
 
 
