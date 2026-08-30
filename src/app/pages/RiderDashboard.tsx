@@ -39,6 +39,8 @@ type Delivery = {
 
  riderName?:string;
 
+ distance?: string;
+estimatedTime?: string;
 };
 
 type Earnings = {
@@ -283,6 +285,80 @@ setLoading(false);
 
 };
 
+const handleAccept = async (delivery: Delivery) => {
+  try {
+    const user = JSON.parse(
+      localStorage.getItem("user") || "{}"
+    );
+
+    const riderId = user._id || user.id;
+
+    const response = await fetch(
+      `http://localhost:5000/api/deliveries/accept/${delivery._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          riderId: riderId,
+          riderName: user.name,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Delivery accepted successfully!");
+
+      loadData();
+    } else {
+      alert(data.message || "Failed to accept delivery");
+    }
+
+  } catch (error) {
+    console.log("Accept delivery error:", error);
+    alert("Backend server is not connected");
+  }
+};
+
+const handleReject = async (delivery: Delivery) => {
+  try {
+    const user = JSON.parse(
+      localStorage.getItem("user") || "{}"
+    );
+
+    const riderId = user._id || user.id;
+
+    const response = await fetch(
+      `http://localhost:5000/api/deliveries/reject/${delivery._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          riderId: riderId,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Delivery rejected");
+
+      loadData();
+    } else {
+      alert(data.message || "Failed to reject delivery");
+    }
+
+  } catch (error) {
+    console.log("Reject delivery error:", error);
+    alert("Backend server is not connected");
+  }
+};
 
 
 
@@ -1148,7 +1224,6 @@ Completed
 Available Deliveries
 
 </h2>
-
 
 
 
