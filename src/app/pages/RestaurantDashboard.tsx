@@ -279,18 +279,13 @@ alert(
 "Delivery Created Successfully"
 );
 
-
-
 setPickupLocation("");
-
 setDropLocation("");
-
 setPackageDetails("");
-
 setPayment("");
-
+setPlatform("");
+setOrderId("");
 setShowForm(false);
-
 
 
 fetchDeliveries(user.id);
@@ -672,9 +667,30 @@ onChange={(e)=>setPackageDetails(e.target.value)}
 className="w-full border p-3 rounded-xl"
 
 />
+<select
+  value={platform}
+  onChange={(e) => setPlatform(e.target.value)}
+  className="w-full border p-3 rounded-xl"
+  required
+>
+  <option value="">Select Platform</option>
 
+  <option value="zomato">Zomato</option>
+  <option value="swiggy">Swiggy</option>
+  <option value="uber">Uber</option>
+  <option value="blinkit">Blinkit</option>
+  <option value="zepto">Zepto</option>
+  <option value="other">Other</option>
+</select>
 
-
+<input
+  type="text"
+  placeholder="Order ID"
+  value={orderId}
+  onChange={(e) => setOrderId(e.target.value)}
+  className="w-full border p-3 rounded-xl"
+  required
+/>
 
 <input
 
