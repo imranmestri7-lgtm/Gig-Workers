@@ -53,6 +53,11 @@ useState("");
 const [payment,setPayment] =
 useState("");
 
+const [platform,setPlatform] =
+useState("");
+
+const [orderId,setOrderId] =
+useState("");
 
 // Delivery type
 const [category,setCategory] =
@@ -224,7 +229,11 @@ body:JSON.stringify({
     
     riderId:user.id,
 
-    category:category,   // ✅ ADD THIS LINE
+    category:category,  
+    
+     platform,
+
+     orderId,  
 
     pickupLocation,
 
