@@ -1654,6 +1654,106 @@ Reject
   )}
 
 </section>
+{/* =================================
+    DELIVERY HISTORY
+================================= */}
+
+<section className="mt-12">
+
+  <h2 className="text-3xl font-bold mb-5">
+    Delivery History
+  </h2>
+
+  {deliveryHistory.length === 0 ? (
+
+    <div className="bg-white p-10 rounded-2xl shadow text-center">
+
+      <p className="text-gray-500">
+        No completed deliveries yet.
+      </p>
+
+    </div>
+
+  ) : (
+
+    <div className="grid md:grid-cols-2 gap-6">
+
+      {deliveryHistory.map((delivery) => (
+
+        <div
+          key={delivery._id}
+          className="bg-white border border-gray-200 p-6 rounded-2xl shadow"
+        >
+
+          {/* Platform */}
+
+          <p className="text-red-600 font-bold mb-2">
+            🛵 {delivery.platform}
+          </p>
+
+
+          {/* Restaurant */}
+
+          <h3 className="text-xl font-bold">
+            {delivery.restaurantName}
+          </h3>
+
+
+          {/* Pickup */}
+
+          <p className="mt-3">
+            📍 {delivery.pickupLocation}
+          </p>
+
+
+          {/* Drop */}
+
+          <p>
+            🏠 {delivery.dropLocation}
+          </p>
+
+
+          {/* Package */}
+
+          <p>
+            📦 {delivery.packageDetails}
+          </p>
+
+
+          {/* Payment */}
+
+          <p className="text-green-600 font-bold mt-3">
+            💰 ₹{delivery.payment}
+          </p>
+
+
+          {/* Order ID */}
+
+          <p className="text-gray-600 mt-2">
+            🆔 {delivery.orderId || "Not available"}
+          </p>
+
+
+          {/* Status */}
+
+          <div className="mt-4">
+
+            <span className="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-lg font-bold">
+              ✓ Delivered
+            </span>
+
+          </div>
+
+        </div>
+
+      ))}
+
+    </div>
+
+  )}
+
+</section>
+
 </main>
 </div>
 );
