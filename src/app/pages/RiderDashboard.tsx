@@ -1497,15 +1497,15 @@ My Active Deliveries
 
 activeDeliveries.map((delivery)=>(
 
-
 <div
-
-key={delivery._id}
-
-className="bg-green-50 border border-green-300 p-6 rounded-2xl"
-
-
+  key={delivery._id}
+  onClick={() => {
+    setSelectedDelivery(delivery);
+    setShowMap(false);
+  }}
+  className="bg-green-50 border border-green-300 p-6 rounded-2xl cursor-pointer hover:shadow-lg transition"
 >
+  
 <p className="text-red-600 font-bold mb-2">
    🛵 {delivery.platform}
 </p>
