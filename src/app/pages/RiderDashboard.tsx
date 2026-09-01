@@ -260,68 +260,29 @@ console.log(error);
 };
 
 // =================================
-// GET DELIVERY HISTORY
-// =================================
-
-const fetchDeliveryHistory = async () => {
-
-  try {
-
-    if (!user.id)
-      return;
-
-    const response = await fetch(
-      `http://localhost:5000/api/deliveries/rider/history/${user.id}`
-    );
-
-    const data = await response.json();
-
-    console.log(
-      "Delivery History:",
-      data
-    );
-
-    if (response.ok) {
-
-      setDeliveryHistory(data);
-
-    }
-
-  }
-  catch (error) {
-
-    console.log(
-      "Delivery History Error:",
-      error
-    );
-
-  }
-
-};
-
-
-
-// =================================
 // LOAD DATA
 // =================================
-
 const loadData = async () => {
 
   setLoading(true);
 
-  await Promise.all([
+  try {
 
-    fetchAvailableDeliveries(),
+    await Promise.all([
+      fetchAvailableDeliveries(),
+      fetchActiveDeliveries(),
+      fetchEarnings()
+    ]);
 
-    fetchActiveDeliveries(),
+  } catch (error) {
 
-    fetchDeliveryHistory(),
+    console.log("LOAD DATA ERROR:", error);
 
-    fetchEarnings()
+  } finally {
 
-  ]);
+    setLoading(false);
 
-  setLoading(false);
+  }
 
 };
 
@@ -1387,7 +1348,37 @@ Completed
   </div>
 </div>
 
+{/* =================================
+    DELIVERY HISTORY CARD
+================================= */}
 
+<div className="bg-white rounded-2xl shadow p-6 mt-6">
+
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+    <div>
+
+      <h2 className="text-2xl font-bold">
+        📜 Delivery History
+      </h2>
+
+      <p className="text-gray-500 mt-1">
+        View your completed delivery history and past orders
+      </p>
+
+    </div>
+
+
+    <button
+      onClick={() => navigate("/delivery-history")}
+      className="bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800"
+    >
+      View History →
+    </button>
+
+  </div>
+
+</div>
 
 
 

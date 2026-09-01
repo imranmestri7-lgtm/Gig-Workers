@@ -24,6 +24,8 @@ import ZeptoDemo from "./pages/platforms/ZeptoDemo";
 import PlatformDashboard from "./pages/PlatformDashboard";
 import RiderProfile from "./pages/RiderProfile";
 
+import DeliveryHistory from "./pages/DeliveryHistory";
+
 export const router = createBrowserRouter([
 
   {
@@ -56,6 +58,11 @@ export const router = createBrowserRouter([
         path: "about",
         Component: AboutUs,
       },
+
+      {
+  path: "/delivery-history",
+  element: <DeliveryHistory />,
+},
 
     ],
   },
