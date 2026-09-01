@@ -100,8 +100,13 @@ total:0,
 completed:0
 
 });
-
 const [selectedDelivery, setSelectedDelivery] =
+  useState<Delivery | null>(null);
+
+  const [showDeliveryRequest, setShowDeliveryRequest] =
+  useState(false);
+  
+const [selectedAvailableDelivery, setSelectedAvailableDelivery] =
   useState<Delivery | null>(null);
 
 const [showMap, setShowMap] = useState(false);
@@ -652,17 +657,126 @@ navigate("/login");
 
 
 
-
 const activeEarnings =
-activeDeliveries.reduce(
+  activeDeliveries.reduce(
+    (total,item)=>
+      total + Number(item.payment || 0),
+    0
+  );
 
-(total,item)=>
 
-total + Number(item.payment || 0),
+// =================================
+// NEW DELIVERY REQUEST SCREEN
+// =================================
 
-0
+if (selectedAvailableDelivery) {
+  return (
+    <div className="min-h-screen bg-gray-50">
 
-);
+      <div className="bg-white border-b px-6 py-5">
+        <button
+          onClick={() => setSelectedAvailableDelivery(null)}
+          className="text-gray-700 font-semibold hover:text-black"
+        >
+          ← Back to Available Deliveries
+        </button>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 py-8">
+
+        <h1 className="text-3xl font-bold mb-2">
+          🔔 New Delivery Request
+        </h1>
+
+        <p className="text-gray-500 mb-8">
+          Review the delivery details before accepting.
+        </p>
+
+        <div className="bg-white rounded-2xl shadow p-6">
+
+          <p className="text-red-600 font-bold mb-2">
+            🛵 {selectedAvailableDelivery.platform}
+          </p>
+
+          <h2 className="text-2xl font-bold mb-6">
+            {selectedAvailableDelivery.restaurantName}
+          </h2>
+
+          <div className="space-y-4 text-lg">
+
+            <p>
+              📍 <strong>Pickup:</strong>{" "}
+              {selectedAvailableDelivery.pickupLocation}
+            </p>
+
+            <p>
+              🏠 <strong>Drop:</strong>{" "}
+              {selectedAvailableDelivery.dropLocation}
+            </p>
+
+            <p>
+              📦 <strong>Package:</strong>{" "}
+              {selectedAvailableDelivery.packageDetails}
+            </p>
+
+            <p>
+              📏 <strong>Distance:</strong>{" "}
+              {selectedAvailableDelivery.distance || "Not available"}
+            </p>
+
+            <p>
+              ⏱️ <strong>Estimated Time:</strong>{" "}
+              {selectedAvailableDelivery.estimatedTime || "Not available"}
+            </p>
+
+            <p className="text-green-600 font-bold">
+              💰 <strong>Payment:</strong>{" "}
+              ₹{selectedAvailableDelivery.payment}
+            </p>
+
+            <p>
+              🆔 <strong>Order ID:</strong>{" "}
+              {selectedAvailableDelivery.orderId || "Not available"}
+            </p>
+
+          </div>
+
+        </div>
+
+        <div className="bg-white rounded-2xl shadow p-6 mt-6">
+
+          <div className="flex flex-col md:flex-row gap-4">
+
+            <button
+              onClick={() =>
+                acceptDelivery(selectedAvailableDelivery._id)
+              }
+              className="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold"
+            >
+              ✅ Accept Delivery
+            </button>
+
+            <button
+              onClick={() => {
+                rejectDelivery(selectedAvailableDelivery._id);
+                setSelectedAvailableDelivery(null);
+              }}
+              className="flex-1 bg-red-600 text-white py-4 rounded-xl font-bold"
+            >
+              ❌ Reject Delivery
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+
+
 
 if (selectedDelivery) {
   return (
@@ -1259,14 +1373,12 @@ No deliveries available
 availableDeliveries.map((delivery)=>(
 
 
-
 <div
-
-key={delivery._id}
-
-className="bg-white p-6 rounded-2xl shadow"
-
-
+  key={delivery._id}
+  onClick={() => {
+    setSelectedAvailableDelivery(delivery);
+  }}
+  className="bg-white p-6 rounded-2xl shadow cursor-pointer hover:shadow-lg transition"
 >
 
 <p className="text-red-600 font-bold mb-2">
