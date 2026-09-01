@@ -102,7 +102,7 @@ completed:0
 });
 const [selectedDelivery, setSelectedDelivery] =
   useState<Delivery | null>(null);
-
+  
   const [showDeliveryRequest, setShowDeliveryRequest] =
   useState(false);
   
@@ -819,27 +819,53 @@ if (selectedDelivery) {
 
           <div className="space-y-4 text-lg">
 
-            <p>
-              📍 <strong>Pickup:</strong>{" "}
-              {selectedDelivery.pickupLocation}
-            </p>
+  <p>
+    🛵 <strong>Platform:</strong>{" "}
+    {selectedDelivery.platform}
+  </p>
 
-            <p>
-              🏠 <strong>Drop:</strong>{" "}
-              {selectedDelivery.dropLocation}
-            </p>
+  <p>
+    🏢 <strong>Restaurant / Store:</strong>{" "}
+    {selectedDelivery.restaurantName}
+  </p>
 
-            <p>
-              📦 <strong>Package:</strong>{" "}
-              {selectedDelivery.packageDetails}
-            </p>
+  <p>
+    📍 <strong>Pickup:</strong>{" "}
+    {selectedDelivery.pickupLocation}
+  </p>
 
-            <p className="text-green-600 font-bold">
-              💰 ₹{selectedDelivery.payment}
-            </p>
-            
+  <p>
+    🏠 <strong>Drop:</strong>{" "}
+    {selectedDelivery.dropLocation}
+  </p>
 
-          </div>
+  <p>
+    📦 <strong>Package:</strong>{" "}
+    {selectedDelivery.packageDetails}
+  </p>
+
+  <p>
+    📏 <strong>Distance:</strong>{" "}
+    {selectedDelivery.distance || "Not available"}
+  </p>
+
+  <p>
+    ⏱️ <strong>Estimated Time:</strong>{" "}
+    {selectedDelivery.estimatedTime || "Not available"}
+  </p>
+
+  <p className="text-green-600 font-bold">
+    💰 <strong>Payment:</strong>{" "}
+    ₹{selectedDelivery.payment}
+  </p>
+
+  <p>
+    🆔 <strong>Order ID:</strong>{" "}
+    {selectedDelivery.orderId || "Not available"}
+  </p>
+
+</div>
+          
           
         </div>
 
@@ -1480,136 +1506,119 @@ Reject
 
 
 </section>
-
 <section className="mt-12">
 
+  <h2 className="text-3xl font-bold mb-5">
+    My Active Deliveries
+  </h2>
 
-<h2 className="text-3xl font-bold mb-5">
-My Active Deliveries
-</h2>
+  {activeDeliveries.length === 0 ? (
 
+    <div className="bg-white p-10 rounded-2xl shadow">
+      No active deliveries
+    </div>
 
+  ) : (
 
-<div className="grid md:grid-cols-2 gap-6">
+    <div className="grid md:grid-cols-2 gap-6">
 
+      {activeDeliveries.map((delivery) => (
 
-{
+        <div
+          key={delivery._id}
+          onClick={() => {
+            setSelectedDelivery(delivery);
+            setShowMap(false);
+          }}
+          className="bg-green-50 border border-green-300 p-6 rounded-2xl cursor-pointer hover:shadow-lg transition"
+        >
 
-activeDeliveries.map((delivery)=>(
+          {/* Platform */}
 
-<div
-  key={delivery._id}
-  onClick={() => {
-    setSelectedDelivery(delivery);
-    setShowMap(false);
-  }}
-  className="bg-green-50 border border-green-300 p-6 rounded-2xl cursor-pointer hover:shadow-lg transition"
->
-  
-<p className="text-red-600 font-bold mb-2">
-   🛵 {delivery.platform}
-</p>
-
-<h3 className="font-bold text-xl">
-  {delivery.restaurantName}
-</h3>
-
-<p className="mt-3">
-  📍 {delivery.pickupLocation}
-</p>
-
-<p>
-  🏠 {delivery.dropLocation}
-</p>
-
-<p>
-  📦 {delivery.packageDetails}
-</p>
-
-<p className="font-bold text-green-700 mt-2">
-  ₹{delivery.payment}
-</p>
-
-<div className="mt-5">
-  <p className="font-bold">
-    Status:
-    <span className="ml-2 text-blue-600">
-      {delivery.status}
-    </span>
-  </p>
-</div>
+          <p className="text-red-600 font-bold mb-2">
+            🛵 {delivery.platform}
+          </p>
 
 
-<div className="mt-5">
+          {/* Restaurant */}
 
-  <button
-    onClick={() => {
-      setSelectedDelivery(delivery);
-      setShowMap(false);
-    }}
-    className="w-full bg-black text-white p-3 rounded-xl font-bold"
-  >
-    📋 View Order
-  </button>
+          <h3 className="font-bold text-xl">
+            {delivery.restaurantName}
+          </h3>
 
-</div>
 
-{
-  delivery.status === "delivered" && (
-    <div className="bg-white rounded-2xl shadow p-8 text-center mt-5">
+          {/* Pickup */}
 
-      <div className="text-5xl mb-4">
-        🎉
-      </div>
+          <p className="mt-3">
+            📍 {delivery.pickupLocation}
+          </p>
 
-      <h2 className="text-3xl font-bold text-green-600">
-        Congratulations!
-      </h2>
 
-      <p className="text-gray-600 mt-3">
-        Delivery completed successfully.
-      </p>
+          {/* Drop */}
 
-      <p className="text-xl font-bold text-green-700 mt-5">
-        You earned ₹{delivery.payment}
-      </p>
+          <p>
+            🏠 {delivery.dropLocation}
+          </p>
 
-      <button
-        onClick={() => {
-          setSelectedDelivery(null);
-          setShowMap(false);
-          loadData();
-        }}
-        className="w-full mt-6 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
-      >
-        🚴 Start New Delivery
-      </button>
+
+          {/* Package */}
+
+          <p>
+            📦 {delivery.packageDetails}
+          </p>
+
+
+          {/* Payment */}
+
+          <p className="font-bold text-green-700 mt-2">
+            ₹{delivery.payment}
+          </p>
+
+
+          {/* Status */}
+
+          <div className="mt-5">
+
+            <p className="font-bold">
+
+              Status:
+
+              <span className="ml-2 text-blue-600">
+                {delivery.status}
+              </span>
+
+            </p>
+
+          </div>
+
+
+          {/* View Order */}
+
+          <div className="mt-5">
+
+            <button
+              onClick={(event) => {
+                event.stopPropagation();
+
+                setSelectedDelivery(delivery);
+                setShowMap(false);
+              }}
+              className="w-full bg-black text-white p-3 rounded-xl font-bold"
+            >
+              📋 View Order
+            </button>
+
+          </div>
+
+        </div>
+
+      ))}
 
     </div>
-  )
-}
 
-
-
-
-
-
-
-
-</div>
-
-
-))
-
-
-}
-
-
-</div>
-
+  )}
 
 </section>
-
 </main>
 </div>
 );
