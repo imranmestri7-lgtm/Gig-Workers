@@ -77,7 +77,8 @@ useState<Delivery[]>([]);
 const [activeDeliveries,setActiveDeliveries] =
 useState<Delivery[]>([]);
 
-
+const [deliveryHistory, setDeliveryHistory] =
+  useState<Delivery[]>([]);
 
 const [loading,setLoading] =
 useState(true);
@@ -258,7 +259,45 @@ console.log(error);
 
 };
 
+// =================================
+// GET DELIVERY HISTORY
+// =================================
 
+const fetchDeliveryHistory = async () => {
+
+  try {
+
+    if (!user.id)
+      return;
+
+    const response = await fetch(
+      `http://localhost:5000/api/deliveries/rider/history/${user.id}`
+    );
+
+    const data = await response.json();
+
+    console.log(
+      "Delivery History:",
+      data
+    );
+
+    if (response.ok) {
+
+      setDeliveryHistory(data);
+
+    }
+
+  }
+  catch (error) {
+
+    console.log(
+      "Delivery History Error:",
+      error
+    );
+
+  }
+
+};
 
 
 
@@ -266,27 +305,23 @@ console.log(error);
 // LOAD DATA
 // =================================
 
+const loadData = async () => {
 
-const loadData = async()=>{
+  setLoading(true);
 
+  await Promise.all([
 
-setLoading(true);
+    fetchAvailableDeliveries(),
 
+    fetchActiveDeliveries(),
 
-await Promise.all([
+    fetchDeliveryHistory(),
 
-fetchAvailableDeliveries(),
+    fetchEarnings()
 
-fetchActiveDeliveries(),
+  ]);
 
-fetchEarnings()
-
-]);
-
-
-
-setLoading(false);
-
+  setLoading(false);
 
 };
 
