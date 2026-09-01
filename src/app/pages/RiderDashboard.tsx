@@ -1348,39 +1348,6 @@ Completed
   </div>
 </div>
 
-{/* =================================
-    DELIVERY HISTORY CARD
-================================= */}
-
-<div className="bg-white rounded-2xl shadow p-6 mt-6">
-
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-    <div>
-
-      <h2 className="text-2xl font-bold">
-        📜 Delivery History
-      </h2>
-
-      <p className="text-gray-500 mt-1">
-        View your completed delivery history and past orders
-      </p>
-
-    </div>
-
-
-    <button
-      onClick={() => navigate("/delivery-history")}
-      className="bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800"
-    >
-      View History →
-    </button>
-
-  </div>
-
-</div>
-
-
 
 <section className="mt-10">
 
@@ -1645,105 +1612,40 @@ Reject
   )}
 
 </section>
+
+
 {/* =================================
-    DELIVERY HISTORY
+    DELIVERY HISTORY CARD
 ================================= */}
 
-<section className="mt-12">
+<div className="bg-white rounded-2xl shadow p-6 mt-6">
 
-  <h2 className="text-3xl font-bold mb-5">
-    Delivery History
-  </h2>
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-  {deliveryHistory.length === 0 ? (
+    <div>
 
-    <div className="bg-white p-10 rounded-2xl shadow text-center">
+      <h2 className="text-2xl font-bold">
+        📜 Delivery History
+      </h2>
 
-      <p className="text-gray-500">
-        No completed deliveries yet.
+      <p className="text-gray-500 mt-1">
+        View your completed delivery history and past orders
       </p>
 
     </div>
 
-  ) : (
 
-    <div className="grid md:grid-cols-2 gap-6">
+    <button
+      onClick={() => navigate("/delivery-history")}
+      className="bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800"
+    >
+      View History →
+    </button>
 
-      {deliveryHistory.map((delivery) => (
+  </div>
 
-        <div
-          key={delivery._id}
-          className="bg-white border border-gray-200 p-6 rounded-2xl shadow"
-        >
+</div>
 
-          {/* Platform */}
-
-          <p className="text-red-600 font-bold mb-2">
-            🛵 {delivery.platform}
-          </p>
-
-
-          {/* Restaurant */}
-
-          <h3 className="text-xl font-bold">
-            {delivery.restaurantName}
-          </h3>
-
-
-          {/* Pickup */}
-
-          <p className="mt-3">
-            📍 {delivery.pickupLocation}
-          </p>
-
-
-          {/* Drop */}
-
-          <p>
-            🏠 {delivery.dropLocation}
-          </p>
-
-
-          {/* Package */}
-
-          <p>
-            📦 {delivery.packageDetails}
-          </p>
-
-
-          {/* Payment */}
-
-          <p className="text-green-600 font-bold mt-3">
-            💰 ₹{delivery.payment}
-          </p>
-
-
-          {/* Order ID */}
-
-          <p className="text-gray-600 mt-2">
-            🆔 {delivery.orderId || "Not available"}
-          </p>
-
-
-          {/* Status */}
-
-          <div className="mt-4">
-
-            <span className="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-lg font-bold">
-              ✓ Delivered
-            </span>
-
-          </div>
-
-        </div>
-
-      ))}
-
-    </div>
-
-  )}
-
-</section>
 
 </main>
 </div>
