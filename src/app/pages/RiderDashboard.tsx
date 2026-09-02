@@ -16,6 +16,8 @@ type Delivery = {
 
  _id:string;
 
+ restaurant: string;
+ 
  restaurantName:string;
 
  platform: string;
@@ -1051,16 +1053,19 @@ if (selectedDelivery) {
     </p>
 
     <div className="flex flex-col md:flex-row gap-4 mt-6">
-
-      <button
-        onClick={() => {
-          // message feature will be added next
-          alert("Messaging feature coming next!");
-        }}
-        className="flex-1 bg-gray-900 text-white py-4 rounded-xl font-bold"
-      >
-        💬 Send Message
-      </button>
+<button
+  onClick={() =>
+    navigate("/messages", {
+      state: {
+        deliveryId: selectedDelivery._id,
+        receiverId: selectedDelivery.restaurant,
+      },
+    })
+  }
+  className="w-full bg-[#A33D20] text-white py-3 rounded-xl font-semibold hover:bg-[#8f331b] transition"
+>
+  💬 Send Message
+</button>
 
       <button
         onClick={() => {
