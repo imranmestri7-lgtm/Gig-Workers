@@ -26,6 +26,8 @@ import RiderProfile from "./pages/RiderProfile";
 
 import DeliveryHistory from "./pages/DeliveryHistory";
 
+import Messages from "./pages/Messages";
+
 export const router = createBrowserRouter([
 
   {
@@ -63,6 +65,11 @@ export const router = createBrowserRouter([
   path: "/delivery-history",
   element: <DeliveryHistory />,
 },
+
+{
+  path: "/messages",
+  element: <Messages />,
+}
 
     ],
   },
