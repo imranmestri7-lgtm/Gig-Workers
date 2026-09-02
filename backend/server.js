@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
 const deliveryRoutes = require("./routes/delivery");
-
+const messageRoutes = require("./routes/messageRoutes");
 
 const app = express();
 
@@ -32,7 +32,7 @@ app.use(express.json());
 // ================================
 
 app.use("/api", authRoutes);
-
+app.use("/api/messages", messageRoutes);
 
 // IMPORTANT
 // All delivery APIs start with:
