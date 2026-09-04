@@ -6,6 +6,7 @@ require("dotenv").config();
 const authRoutes = require("./routes/auth");
 const deliveryRoutes = require("./routes/delivery");
 const messageRoutes = require("./routes/messageRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -40,7 +41,8 @@ app.use("/api/messages", messageRoutes);
 
 app.use("/api/deliveries", deliveryRoutes);
 
-
+app.use("/api/messages", messageRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 
 // ================================
