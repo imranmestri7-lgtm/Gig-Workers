@@ -114,6 +114,10 @@ const [selectedAvailableDelivery, setSelectedAvailableDelivery] =
 
 const [showMap, setShowMap] = useState(false);
 
+const [rating, setRating] = useState(0);
+const [reviewComment, setReviewComment] = useState("");
+const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
 // =================================
 // GET AVAILABLE DELIVERY
 // =================================
