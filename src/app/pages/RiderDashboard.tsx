@@ -16,7 +16,7 @@ type Delivery = {
 
  _id:string;
 
- restaurant: string;
+restaurantId: string;
 
  restaurantName:string;
 
@@ -117,6 +117,7 @@ const [showMap, setShowMap] = useState(false);
 const [rating, setRating] = useState(0);
 const [reviewComment, setReviewComment] = useState("");
 const [reviewSubmitted, setReviewSubmitted] = useState(false);
+const [showReview, setShowReview] = useState(false);
 
 // =================================
 // GET AVAILABLE DELIVERY
@@ -367,7 +368,55 @@ const handleReject = async (delivery: Delivery) => {
   }
 };
 
+const submitReview = async () => {
+  if (rating === 0) {
+    alert("Please select a rating");
+    return;
+  }
 
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/reviews",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          deliveryId: selectedDelivery?._id,
+
+          riderId: user.id,
+          riderName: user.name,
+
+          restaurantId: selectedDelivery?.restaurantId,
+          restaurantName: selectedDelivery?.restaurantName,
+
+          rating: rating,
+
+          comment: reviewComment,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("Review response:", data);
+
+    if (response.ok) {
+      alert("Review submitted successfully ⭐");
+
+      setReviewSubmitted(true);
+      setShowReview(false);
+      setRating(0);
+      setReviewComment("");
+    } else {
+      alert(data.message || "Failed to submit review");
+    }
+  } catch (error) {
+    console.log("Review error:", error);
+    alert("Server not connected");
+  }
+};
 
 
 
@@ -1057,12 +1106,20 @@ if (selectedDelivery) {
     </p>
 
     <div className="flex flex-col md:flex-row gap-4 mt-6">
- <button
+
+  <button
+    onClick={() => setShowReview(true)}
+    className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold hover:bg-yellow-600 transition"
+  >
+    ⭐ Rate Restaurant
+  </button>
+
+  <button
     onClick={() =>
       navigate("/messages", {
         state: {
           deliveryId: selectedDelivery._id,
-          receiverId: selectedDelivery.restaurant,
+          receiverId: selectedDelivery.restaurantId,
         },
       })
     }
@@ -1071,18 +1128,18 @@ if (selectedDelivery) {
     💬 Send Message
   </button>
 
-      <button
-        onClick={() => {
-          setSelectedDelivery(null);
-          setShowMap(false);
-          loadData();
-        }}
-        className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
-      >
-        🚴 Start New Delivery
-      </button>
+  <button
+    onClick={() => {
+      setSelectedDelivery(null);
+      setShowMap(false);
+      loadData();
+    }}
+    className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
+  >
+    🚴 Start New Delivery
+  </button>
 
-    </div>
+</div>
 
   </div>
 )}
