@@ -11,14 +11,27 @@ import {
   IndianRupee
 } from "lucide-react";
 
-
 type Delivery = {
-  _id:string;
-  pickupLocation:string;
-  dropLocation:string;
-  packageDetails:string;
-  payment:number;
-  status:string;
+  _id: string;
+
+  restaurantId?: string;
+  restaurantName?: string;
+
+  riderId?: string;
+  riderName?: string;
+
+  pickupLocation: string;
+  dropLocation: string;
+  packageDetails: string;
+  payment: number;
+  status: string;
+
+  platform?: string;
+  orderId?: string;
+  category?: string;
+
+  distance?: string;
+  estimatedTime?: string;
 };
 
 
@@ -809,6 +822,21 @@ className="border p-5 rounded-xl mb-5"
 {delivery.status}
 
 </span>
+
+{delivery.riderId && (
+  <button
+    onClick={() =>
+      navigate("/messages", {
+        state: {
+          delivery: delivery,
+        },
+      })
+    }
+    className="mt-4 bg-[#A33D20] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#8f331b] transition"
+  >
+    💬 Message Rider
+  </button>
+)}
 
 
 </div>
