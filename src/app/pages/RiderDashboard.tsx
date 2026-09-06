@@ -11,38 +11,33 @@ import {
   X
 } from "lucide-react";
 
-
 type Delivery = {
+  _id: string;
 
- _id:string;
+  restaurantId: string;
+  restaurantName: string;
 
-restaurantId: string;
+  riderId?: string;
+  riderName?: string;
 
- restaurantName:string;
+  platform: string;
+  orderId?: string;
 
- platform: string;
+  pickupLocation: string;
+  dropLocation: string;
 
- orderId?: string;
+  packageDetails: string;
+  payment: number;
 
- pickupLocation:string;
+  status:
+    | "available"
+    | "accepted"
+    | "picked"
+    | "out_for_delivery"
+    | "delivered";
 
- dropLocation:string;
-
- packageDetails:string;
-
- payment:number;
-
- status:
- "available" |
- "accepted" |
- "picked" |
- "out_for_delivery" |
- "delivered";
-
- riderName?:string;
-
- distance?: string;
-estimatedTime?: string;
+  distance?: string;
+  estimatedTime?: string;
 };
 
 type Earnings = {
@@ -1113,20 +1108,18 @@ if (selectedDelivery) {
   >
     ⭐ Rate Restaurant
   </button>
-
-  <button
-    onClick={() =>
-      navigate("/messages", {
-        state: {
-          deliveryId: selectedDelivery._id,
-          receiverId: selectedDelivery.restaurantId,
-        },
-      })
-    }
-    className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold hover:bg-[#8f331b] transition"
-  >
-    💬 Send Message
-  </button>
+<button
+  onClick={() =>
+    navigate("/messages", {
+      state: {
+        delivery: selectedDelivery,
+      },
+    })
+  }
+  className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold hover:bg-[#8f331b] transition"
+>
+  💬 Send Message
+</button>
 
   <button
     onClick={() => {

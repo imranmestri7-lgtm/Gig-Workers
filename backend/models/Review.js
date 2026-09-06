@@ -2,21 +2,29 @@ const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
   {
-    // Delivery that this review belongs to
-   deliveryId: {
-  type: String,
-  required: true,
-},
+    // Delivery this review belongs to
+    deliveryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Delivery",
+      required: true,
+    },
 
-riderId: {
-  type: String,
-  required: true,
-},
+    // Rider who gives the review
+    riderId: {
+      type: String,
+      required: true,
+    },
 
-restaurantId: {
-  type: String,
-  required: true,
-},
+    riderName: {
+      type: String,
+      required: true,
+    },
+
+    // Restaurant receiving the review
+    restaurantId: {
+      type: String,
+      required: true,
+    },
 
     restaurantName: {
       type: String,
@@ -31,7 +39,7 @@ restaurantId: {
       max: 5,
     },
 
-    // Optional review message
+    // Optional comment
     comment: {
       type: String,
       trim: true,
