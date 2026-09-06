@@ -11,35 +11,38 @@ const Message = require("../models/Message");
 router.post("/", async (req, res) => {
   try {
     const {
-      deliveryId,
-      senderId,
-      senderName,
-      senderType,
-      receiverId,
-      message,
-    } = req.body;
+  deliveryId,
+  senderId,
+  senderName,
+  senderType,
+  receiverId,
+  receiverType,
+  message,
+} = req.body;
 
     if (
-      !deliveryId ||
-      !senderId ||
-      !senderName ||
-      !senderType ||
-      !receiverId ||
-      !message
-    ) {
+  !deliveryId ||
+  !senderId ||
+  !senderName ||
+  !senderType ||
+  !receiverId ||
+  !receiverType ||
+  !message
+){
       return res.status(400).json({
         message: "All message fields are required",
       });
     }
 
-    const newMessage = new Message({
-      deliveryId,
-      senderId,
-      senderName,
-      senderType,
-      receiverId,
-      message,
-    });
+   const newMessage = new Message({
+  deliveryId,
+  senderId,
+  senderName,
+  senderType,
+  receiverId,
+  receiverType,
+  message,
+});
 
     await newMessage.save();
 

@@ -9,7 +9,7 @@ const messageSchema = new mongoose.Schema(
     },
 
     senderId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       required: true,
     },
 
@@ -25,7 +25,13 @@ const messageSchema = new mongoose.Schema(
     },
 
     receiverId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
+      required: true,
+    },
+
+    receiverType: {
+      type: String,
+      enum: ["rider", "restaurant"],
       required: true,
     },
 
