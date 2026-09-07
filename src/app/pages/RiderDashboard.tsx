@@ -970,33 +970,35 @@ if (selectedDelivery) {
             </div>
 
             <div className="flex items-center gap-3">
-              <span
-                className={
-                  selectedDelivery.status === "delivered"
-                    ? "text-green-600 text-xl"
-                    : "text-gray-400 text-xl"
-                }
-              >
-                {selectedDelivery.status === "delivered"
-                  ? "✓"
-                  : "○"}
-              </span>
-
-              <span>Delivered</span>
-               <button
-    onClick={() =>
-     navigate("/messages", {
-  state: {
-    delivery: selectedDelivery,
-  },
-})
+  <span
+    className={
+      selectedDelivery.status === "delivered"
+        ? "text-green-600 text-xl"
+        : "text-gray-400 text-xl"
     }
-    className="mt-4 w-full bg-[#A33D20] text-white p-3 rounded-xl font-bold hover:bg-[#8f331b] transition"
+  >
+    {selectedDelivery.status === "delivered" ? "✓" : "○"}
+  </span>
+
+  <span>Delivered</span>
+</div>
+
+{/* View Conversation */}
+<div className="mt-6 flex justify-center">
+  <button
+    onClick={() =>
+      navigate("/messages", {
+        state: {
+          delivery: selectedDelivery,
+        },
+      })
+    }
+    className="bg-[#A33D20] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#8f331b] transition"
   >
     💬 View Conversation
   </button>
-
 </div>
+              
 
             </div>
 
