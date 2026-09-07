@@ -10,86 +10,56 @@ const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
-
 // ================================
 // MIDDLEWARE
 // ================================
 
 app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true
-    })
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
 );
 
-
 app.use(express.json());
-
-
-
 
 // ================================
 // ROUTES
 // ================================
 
 app.use("/api", authRoutes);
-app.use("/api/messages", messageRoutes);
-
-// IMPORTANT
-// All delivery APIs start with:
-// http://localhost:5000/api/deliveries
 
 app.use("/api/deliveries", deliveryRoutes);
 
 app.use("/api/messages", messageRoutes);
-app.use("/api/reviews", reviewRoutes);
 
+app.use("/api/reviews", reviewRoutes);
 
 // ================================
 // TEST ROUTE
 // ================================
 
-app.get("/", (req,res)=>{
-
-    res.send("GigWorker Backend Running");
-
+app.get("/", (req, res) => {
+  res.send("GigWorker Backend Running");
 });
-
-
-
 
 // ================================
 // DATABASE
 // ================================
 
-mongoose.connect(process.env.MONGO_URI)
-
-.then(()=>{
-
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
     console.log("MongoDB Connected");
-
-})
-
-.catch((error)=>{
-
-    console.log(
-        "MongoDB Error:",
-        error.message
-    );
-
-});
-
-
-
+  })
+  .catch((error) => {
+    console.log("MongoDB Error:", error.message);
+  });
 
 // ================================
 // SERVER
 // ================================
 
-app.listen(5000,()=>{
-
-    console.log(
-        "Server started on port 5000"
-    );
-
+app.listen(5000, () => {
+  console.log("Server started on port 5000");
 });
