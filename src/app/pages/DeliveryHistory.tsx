@@ -314,6 +314,17 @@ export default function DeliveryHistory() {
 
                     </div>
 
+                    <button
+  onClick={() =>
+    navigate("/messages", {
+      state: { delivery: delivery },
+    })
+  }
+  className="mt-6 bg-[#A33D20] text-white px-4 py-2 rounded-xl font-bold hover:bg-[#8f331b] transition"
+>
+  💬 View Conversation
+</button>
+ 
 
                   </div>
 
