@@ -983,6 +983,21 @@ if (selectedDelivery) {
               </span>
 
               <span>Delivered</span>
+               <button
+    onClick={() =>
+     navigate("/messages", {
+  state: {
+    delivery: selectedDelivery,
+  },
+})
+    }
+    className="mt-4 w-full bg-[#A33D20] text-white p-3 rounded-xl font-bold hover:bg-[#8f331b] transition"
+  >
+    💬 View Conversation
+  </button>
+
+</div>
+
             </div>
 
           </div>
@@ -1138,7 +1153,7 @@ if (selectedDelivery) {
 )}
    </div>
 
-        </div>
+        
 
   );
 }
@@ -1585,68 +1600,40 @@ Reject
           className="bg-green-50 border border-green-300 p-6 rounded-2xl cursor-pointer hover:shadow-lg transition"
         >
 
-          {/* Platform */}
-
           <p className="text-red-600 font-bold mb-2">
             🛵 {delivery.platform}
           </p>
-
-
-          {/* Restaurant */}
 
           <h3 className="font-bold text-xl">
             {delivery.restaurantName}
           </h3>
 
-
-          {/* Pickup */}
-
           <p className="mt-3">
             📍 {delivery.pickupLocation}
           </p>
-
-
-          {/* Drop */}
 
           <p>
             🏠 {delivery.dropLocation}
           </p>
 
-
-          {/* Package */}
-
           <p>
             📦 {delivery.packageDetails}
           </p>
-
-
-          {/* Payment */}
 
           <p className="font-bold text-green-700 mt-2">
             ₹{delivery.payment}
           </p>
 
-
-          {/* Status */}
-
           <div className="mt-5">
-
             <p className="font-bold">
-
               Status:
-
               <span className="ml-2 text-blue-600">
                 {delivery.status}
               </span>
-
             </p>
-
           </div>
 
-
-          {/* View Order */}
-
-          <div className="mt-5">
+          <div className="mt-5 flex flex-col gap-3">
 
             <button
               onClick={(event) => {
@@ -1660,6 +1647,21 @@ Reject
               📋 View Order
             </button>
 
+            <button
+              onClick={(event) => {
+                event.stopPropagation();
+
+                navigate("/messages", {
+                  state: {
+                    delivery: delivery,
+                  },
+                });
+              }}
+              className="w-full bg-[#A33D20] text-white p-3 rounded-xl font-bold hover:bg-[#8f331b] transition"
+            >
+              💬 View Conversation
+            </button>
+
           </div>
 
         </div>
@@ -1671,7 +1673,6 @@ Reject
   )}
 
 </section>
-
 
 {/* =================================
     DELIVERY HISTORY CARD
