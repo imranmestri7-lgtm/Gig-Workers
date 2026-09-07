@@ -993,7 +993,7 @@ if (selectedDelivery) {
         },
       })
     }
-    className="bg-[#A33D20] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#8f331b] transition"
+    className="bg-[#A33D20] text-white px-5 py-3 rounded-xl font-bold hover:bg-[#8f331b] transition"
   >
     💬 View Conversation
   </button>
@@ -1125,18 +1125,6 @@ if (selectedDelivery) {
   >
     ⭐ Rate Restaurant
   </button>
-<button
-  onClick={() =>
-    navigate("/messages", {
-      state: {
-        delivery: selectedDelivery,
-      },
-    })
-  }
-  className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold hover:bg-[#8f331b] transition"
->
-  💬 Send Message
-</button>
 
   <button
     onClick={() => {
