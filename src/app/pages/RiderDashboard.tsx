@@ -112,7 +112,7 @@ const [showMap, setShowMap] = useState(false);
 const [rating, setRating] = useState(0);
 const [reviewComment, setReviewComment] = useState("");
 const [reviewSubmitted, setReviewSubmitted] = useState(false);
-const [showReview, setShowReview] = useState(false);
+const [showReview, setShowReview] = useState(true);
 
 // =================================
 // GET AVAILABLE DELIVERY
@@ -1097,7 +1097,6 @@ if (selectedDelivery) {
 
   </div>
 )}
-       
 {selectedDelivery.status === "delivered" && (
   <div className="bg-white rounded-2xl shadow p-8 text-center">
     <div className="text-5xl mb-4">
@@ -1116,29 +1115,55 @@ if (selectedDelivery) {
       You earned ₹{selectedDelivery.payment}
     </p>
 
-    <div className="flex flex-col md:flex-row gap-4 mt-6">
-      <button
-  onClick={() => {
-    setRating(0);
-    setReviewComment("");
-    setShowReview(true);
-  }}
-  className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold hover:bg-yellow-600 transition"
->
-  ⭐ Rate Restaurant
-</button>
+    <div className="border-t mt-6 pt-6">
+      <h3 className="text-xl font-bold">
+        ⭐ Rate {selectedDelivery.restaurantName}
+      </h3>
+
+      <p className="text-gray-500 mt-2">
+        How was your pickup experience?
+      </p>
+
+      <div className="flex justify-center gap-2 mt-4">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            onClick={() => setRating(star)}
+            className="text-4xl transition hover:scale-110"
+            aria-label={`Give ${star} stars`}
+          >
+            {star <= rating ? "⭐" : "☆"}
+          </button>
+        ))}
+      </div>
+
+      <textarea
+        value={reviewComment}
+        onChange={(event) => setReviewComment(event.target.value)}
+        placeholder="Write an optional comment..."
+        className="w-full border rounded-xl p-4 mt-5 outline-none focus:ring-2 focus:ring-yellow-400"
+        rows={4}
+      />
 
       <button
-        onClick={() => {
-          setSelectedDelivery(null);
-          setShowMap(false);
-          loadData();
-        }}
-        className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
+        onClick={submitReview}
+        className="w-full mt-4 bg-yellow-500 text-white py-3 rounded-xl font-bold hover:bg-yellow-600 transition"
       >
-        🚴 Start New Delivery
+        Submit Rating
       </button>
     </div>
+
+    <button
+      onClick={() => {
+        setSelectedDelivery(null);
+        setShowMap(false);
+        loadData();
+      }}
+      className="w-full mt-4 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
+    >
+      🚴 Start New Delivery
+    </button>
   </div>
 )}
 
@@ -1408,7 +1433,7 @@ Today
 <div className="bg-white p-6 rounded-2xl shadow">
 
 <p className="text-gray-500">
-This Week
+This Weeks
 </p>
 
 <h1 className="text-3xl font-bold">
@@ -1416,7 +1441,6 @@ This Week
 </h1>
 
 </div>
-
 
 
 
