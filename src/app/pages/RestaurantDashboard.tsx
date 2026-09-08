@@ -52,6 +52,9 @@ const [user,setUser] = useState<any>(null);
 const [deliveries,setDeliveries] =
 useState<Delivery[]>([]);
 
+const [showRatings, setShowRatings] =
+useState(false);
+
 const [reviews,setReviews] =
 useState<Review[]>([]);
 
@@ -587,99 +590,26 @@ Total Payment
 
 
 
-<section className="mt-10">
+<div className="bg-white rounded-2xl shadow p-6 mt-10">
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <h2 className="text-2xl font-bold">
+        ⭐ Rider Ratings
+      </h2>
 
-<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
+      <p className="text-gray-500 mt-1">
+        View feedback given by riders
+      </p>
+    </div>
 
-<div>
-
-<h2 className="text-3xl font-bold">
-
-⭐ Rider Ratings
-
-</h2>
-
-<p className="text-gray-500 mt-1">
-
-Feedback from riders who completed your deliveries
-
-</p>
-
+    <button
+      onClick={() => setShowRatings(true)}
+      className="bg-yellow-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-yellow-600 transition"
+    >
+      View Rider Ratings
+    </button>
+  </div>
 </div>
-
-<div className="bg-yellow-50 text-yellow-700 px-5 py-3 rounded-xl font-bold">
-
-{reviews.length ? `⭐ ${averageRating.toFixed(1)} / 5` : "No ratings yet"}
-
-</div>
-
-</div>
-
-{reviews.length === 0 ? (
-
-<div className="bg-white p-8 rounded-2xl shadow text-gray-500">
-
-No rider ratings yet. Completed-delivery ratings will appear here.
-
-</div>
-
-) : (
-
-<div className="grid md:grid-cols-2 gap-5">
-
-{reviews.map((review) => (
-
-<div key={review._id} className="bg-white p-6 rounded-2xl shadow">
-
-<div className="flex items-start justify-between gap-4">
-
-<div>
-
-<h3 className="font-bold text-lg">
-
-{review.riderName}
-
-</h3>
-
-<p className="text-yellow-500 text-xl mt-1">
-
-{"⭐".repeat(review.rating)}
-{"☆".repeat(5 - review.rating)}
-
-</p>
-
-</div>
-
-<span className="text-sm text-gray-400">
-
-{new Date(review.createdAt).toLocaleDateString()}
-
-</span>
-
-</div>
-
-{review.comment && (
-
-<p className="text-gray-600 mt-4">
-
-“{review.comment}”
-
-</p>
-
-)}
-
-</div>
-
-))}
-
-</div>
-
-)}
-
-</section>
-
-
-
 
 
 <div className="bg-[#A33D20] text-white mt-10 p-7 rounded-3xl flex justify-between items-center">
@@ -982,7 +912,70 @@ className="border p-5 rounded-xl mb-5"
 
 </section>
 
+{showRatings && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white rounded-2xl p-8 shadow-2xl">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold">
+            ⭐ Rider Ratings
+          </h2>
 
+          <p className="text-gray-500 mt-1">
+            {reviews.length
+              ? `Average rating: ${averageRating.toFixed(1)} / 5`
+              : "No ratings yet"}
+          </p>
+        </div>
+
+        <button
+          onClick={() => setShowRatings(false)}
+          className="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-bold"
+        >
+          Close
+        </button>
+      </div>
+
+      <div className="mt-6 space-y-4">
+        {reviews.length === 0 ? (
+          <p className="text-gray-500">
+            No rider ratings yet.
+          </p>
+        ) : (
+          reviews.map((review) => (
+            <div
+              key={review._id}
+              className="border rounded-xl p-5"
+            >
+              <div className="flex justify-between gap-4">
+                <div>
+                  <h3 className="font-bold">
+                    {review.riderName}
+                  </h3>
+
+                  <p className="text-yellow-500 text-xl mt-1">
+                    {"⭐".repeat(review.rating)}
+                    {"☆".repeat(5 - review.rating)}
+                  </p>
+                </div>
+
+                <span className="text-sm text-gray-400">
+                  {new Date(review.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+
+              {review.comment && (
+                <p className="text-gray-600 mt-3">
+                  “{review.comment}”
+                </p>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  </div>
+)}
 
 </main>
 
