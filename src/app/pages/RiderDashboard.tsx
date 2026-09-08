@@ -1118,15 +1118,15 @@ if (selectedDelivery) {
 
     <div className="flex flex-col md:flex-row gap-4 mt-6">
       <button
-        onClick={() => {
-          setRating(0);
-          setReviewComment("");
-          setShowReview(true);
-        }}
-        className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold hover:bg-yellow-600 transition"
-      >
-        ⭐ Rate Restaurant
-      </button>
+  onClick={() => {
+    setRating(0);
+    setReviewComment("");
+    setShowReview(true);
+  }}
+  className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold hover:bg-yellow-600 transition"
+>
+  ⭐ Rate Restaurant
+</button>
 
       <button
         onClick={() => {
