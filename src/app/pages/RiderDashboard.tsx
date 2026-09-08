@@ -1100,7 +1100,6 @@ if (selectedDelivery) {
        
 {selectedDelivery.status === "delivered" && (
   <div className="bg-white rounded-2xl shadow p-8 text-center">
-
     <div className="text-5xl mb-4">
       🎉
     </div>
@@ -1118,34 +1117,84 @@ if (selectedDelivery) {
     </p>
 
     <div className="flex flex-col md:flex-row gap-4 mt-6">
+      <button
+        onClick={() => {
+          setRating(0);
+          setReviewComment("");
+          setShowReview(true);
+        }}
+        className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold hover:bg-yellow-600 transition"
+      >
+        ⭐ Rate Restaurant
+      </button>
 
-  <button
-    onClick={() => setShowReview(true)}
-    className="flex-1 bg-yellow-500 text-white py-4 rounded-xl font-bold hover:bg-yellow-600 transition"
-  >
-    ⭐ Rate Restaurant
-  </button>
+      <button
+        onClick={() => {
+          setSelectedDelivery(null);
+          setShowMap(false);
+          loadData();
+        }}
+        className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
+      >
+        🚴 Start New Delivery
+      </button>
+    </div>
+  </div>
+)}
 
-  <button
-    onClick={() => {
-      setSelectedDelivery(null);
-      setShowMap(false);
-      loadData();
-    }}
-    className="flex-1 bg-[#A33D20] text-white py-4 rounded-xl font-bold"
-  >
-    🚴 Start New Delivery
-  </button>
+{showReview && (
+  <div className="bg-white rounded-2xl shadow p-6 mt-6">
+    <h2 className="text-2xl font-bold">
+      ⭐ Rate {selectedDelivery.restaurantName}
+    </h2>
+
+    <p className="text-gray-500 mt-2">
+      How was your pickup experience?
+    </p>
+
+    <div className="flex gap-2 mt-5">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onClick={() => setRating(star)}
+          className="text-4xl transition hover:scale-110"
+          aria-label={`Give ${star} stars`}
+        >
+          {star <= rating ? "⭐" : "☆"}
+        </button>
+      ))}
+    </div>
+
+    <textarea
+      value={reviewComment}
+      onChange={(event) => setReviewComment(event.target.value)}
+      placeholder="Write an optional comment..."
+      className="w-full border rounded-xl p-4 mt-5 outline-none focus:ring-2 focus:ring-yellow-400"
+      rows={4}
+    />
+
+    <div className="flex flex-col md:flex-row gap-4 mt-5">
+      <button
+        onClick={submitReview}
+        className="flex-1 bg-yellow-500 text-white py-3 rounded-xl font-bold hover:bg-yellow-600 transition"
+      >
+        Submit Rating
+      </button>
+
+      <button
+        onClick={() => setShowReview(false)}
+        className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
 
 </div>
 
-  </div>
-)}
-   </div>
-
-        
-
-  );
+);
 }
 
 
