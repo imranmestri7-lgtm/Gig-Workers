@@ -34,6 +34,13 @@ type Delivery = {
   estimatedTime?: string;
 };
 
+type Review = {
+  _id: string;
+  riderName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
 
 export default function RestaurantDashboard(){
 
@@ -45,6 +52,8 @@ const [user,setUser] = useState<any>(null);
 const [deliveries,setDeliveries] =
 useState<Delivery[]>([]);
 
+const [reviews,setReviews] =
+useState<Review[]>([]);
 
 const [showForm,setShowForm] =
 useState(false);
@@ -113,6 +122,7 @@ setUser(userData);
 
 
 fetchDeliveries(userData.id);
+fetchReviews(userData.id);
 
 
 
@@ -174,6 +184,29 @@ alert("Server not connected");
 
 }
 
+
+};
+
+const fetchReviews = async(id:string)=>{
+
+try{
+
+const response = await fetch(
+`http://localhost:5000/api/reviews/restaurant/${id}`
+);
+
+const data = await response.json();
+
+if(response.ok){
+setReviews(data);
+}
+
+}
+catch(error){
+
+console.log("Reviews error:", error);
+
+}
 
 };
 
@@ -364,6 +397,10 @@ total + Number(item.payment || 0),
 
 );
 
+const averageRating = reviews.length
+  ? reviews.reduce((total, review) => total + review.rating, 0) / reviews.length
+  : 0;
+
 
 
 
@@ -546,6 +583,100 @@ Total Payment
 </div>
 
 
+
+
+
+
+<section className="mt-10">
+
+<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
+
+<div>
+
+<h2 className="text-3xl font-bold">
+
+⭐ Rider Ratings
+
+</h2>
+
+<p className="text-gray-500 mt-1">
+
+Feedback from riders who completed your deliveries
+
+</p>
+
+</div>
+
+<div className="bg-yellow-50 text-yellow-700 px-5 py-3 rounded-xl font-bold">
+
+{reviews.length ? `⭐ ${averageRating.toFixed(1)} / 5` : "No ratings yet"}
+
+</div>
+
+</div>
+
+{reviews.length === 0 ? (
+
+<div className="bg-white p-8 rounded-2xl shadow text-gray-500">
+
+No rider ratings yet. Completed-delivery ratings will appear here.
+
+</div>
+
+) : (
+
+<div className="grid md:grid-cols-2 gap-5">
+
+{reviews.map((review) => (
+
+<div key={review._id} className="bg-white p-6 rounded-2xl shadow">
+
+<div className="flex items-start justify-between gap-4">
+
+<div>
+
+<h3 className="font-bold text-lg">
+
+{review.riderName}
+
+</h3>
+
+<p className="text-yellow-500 text-xl mt-1">
+
+{"⭐".repeat(review.rating)}
+{"☆".repeat(5 - review.rating)}
+
+</p>
+
+</div>
+
+<span className="text-sm text-gray-400">
+
+{new Date(review.createdAt).toLocaleDateString()}
+
+</span>
+
+</div>
+
+{review.comment && (
+
+<p className="text-gray-600 mt-4">
+
+“{review.comment}”
+
+</p>
+
+)}
+
+</div>
+
+))}
+
+</div>
+
+)}
+
+</section>
 
 
 
