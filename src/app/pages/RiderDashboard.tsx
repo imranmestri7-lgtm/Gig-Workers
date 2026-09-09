@@ -1716,33 +1716,6 @@ Reject
     DELIVERY HISTORY CARD
 ================================= */}
 
-<div className="bg-white rounded-2xl shadow p-6 mt-6">
-
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-    <div>
-
-      <h2 className="text-2xl font-bold">
-        📜 Delivery History
-      </h2>
-
-      <p className="text-gray-500 mt-1">
-        View your completed delivery history and past orders
-      </p>
-
-    </div>
-
-
-    <button
-      onClick={() => navigate("/delivery-history")}
-      className="bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800"
-    >
-      View History →
-    </button>
-
-  </div>
-
-</div>
 
 
 </main>
