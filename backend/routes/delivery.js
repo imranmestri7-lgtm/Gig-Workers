@@ -3,7 +3,35 @@ const router = express.Router();
 
 const Delivery = require("../models/Delivery");
 
+router.post('/', async (req, res) => {
+  try {
+    const { deliveryId, riderId, riderName, restaurantId, restaurantName, rating, comment } = req.body;
 
+    if (rating < 1 || rating > 5) return res.status(400).json({ message: "Rating must be between 1 and 5" });
+
+    const newReview = new Review({
+      deliveryId, riderId, riderName, restaurantId, restaurantName, rating, comment
+    });
+
+    await newReview.save();
+    res.status(201).json(newReview);
+  } catch (error) {
+    if (error.code === 11000) return res.status(400).json({ message: "You have already reviewed this delivery." });
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// GET: Restaurant viewing their reviews
+router.get('/restaurant/:id', async (req, res) => {
+  try {
+    const reviews = await Review.find({ restaurantId: req.params.id }).sort({ createdAt: -1 });
+    res.status(200).json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+module.exports = router;
 
 // =====================================
 // CREATE DELIVERY (RESTAURANT)

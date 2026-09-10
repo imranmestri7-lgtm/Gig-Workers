@@ -50,5 +50,6 @@ const reviewSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+reviewSchema.index({ deliveryId: 1, riderId: 1 }, { unique: true });
 
 module.exports = mongoose.model("Review", reviewSchema);
