@@ -132,7 +132,12 @@ fetchReviews(userData.id);
 },[]);
 
 
-
+const fetchRiderRatings = async () => {
+  if (user?.id) {
+    await fetchReviews(user.id);
+    setShowRatings(true);
+  }
+};
 
 
 
@@ -585,7 +590,18 @@ Total Payment
 
 </div>
 
-
+<div className="bg-white rounded-2xl shadow p-6 mt-6 flex justify-between items-center border border-gray-100">
+        <div>
+          <h3 className="text-xl font-bold text-gray-800">⭐ Rider Ratings</h3>
+          <p className="text-gray-500 text-sm">See what riders say about your pickups</p>
+        </div>
+        <button 
+          onClick={fetchRiderRatings}
+          className="bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition"
+        >
+          View Ratings
+        </button>
+      </div>
 
 
 
@@ -710,6 +726,11 @@ className="w-full border p-3 rounded-xl"
 
 <option value="">
 Select Delivery Type
+</option>
+
+
+<option value="cafe">
+Cafe & Bakery Delivery
 </option>
 
 

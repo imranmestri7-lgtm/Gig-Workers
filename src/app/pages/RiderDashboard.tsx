@@ -1377,19 +1377,6 @@ Total Earnings
 
 </div>
 
-<div className="bg-white rounded-2xl shadow p-6 mt-8 flex flex-col sm:flex-row justify-between items-center border border-gray-100">
-          <div>
-            <h3 className="text-xl font-bold text-gray-800">⭐ Rider Ratings</h3>
-            <p className="text-gray-500 text-sm">See what riders say about your pickups</p>
-          </div>
-          <button 
-            onClick={fetchRiderRatings}
-            className="mt-4 sm:mt-0 bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition"
-          >
-            View Ratings
-          </button>
-        </div>
-        
 {/* Earnings Overview */}
 
 <section className="mt-10">
