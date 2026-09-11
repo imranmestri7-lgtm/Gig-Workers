@@ -723,11 +723,6 @@ Grocery Delivery
 </option>
 
 
-<option value="cafe">
-Cafe & Bakery Delivery
-</option>
-
-
 </select>
 
 <input
