@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router";
+
 import React from "react";
 import { Link } from "react-router";
 import { 
@@ -56,6 +58,8 @@ const JOBS = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate();
+  
   return (
     <div className="pt-12 pb-24">
       {/* Section 1: Hero */}
