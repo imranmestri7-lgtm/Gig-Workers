@@ -59,7 +59,7 @@ const JOBS = [
 
 export default function Home() {
   const navigate = useNavigate();
-  
+
   return (
     <div className="pt-12 pb-24">
       {/* Section 1: Hero */}
@@ -124,23 +124,35 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {BROWSE_CATEGORIES.map((category) => (
-            <div key={category.id} className="group bg-white rounded-3xl p-3 pb-6 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_-12px_rgba(163,61,32,0.12)] transition-all border border-slate-50 cursor-pointer">
-              <div className="h-48 rounded-2xl overflow-hidden mb-6">
-                <img src={category.image} alt={category.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              </div>
-              <div className="px-4">
-                <h3 className="text-xl font-bold font-['Nunito',sans-serif] text-slate-900 mb-2">{category.title}</h3>
-                <p className="text-slate-600 mb-6">{category.desc}</p>
-                <button className="w-full py-3 rounded-full bg-slate-50 text-slate-800 font-semibold text-sm group-hover:bg-[#A33D20] group-hover:text-white transition-colors">
-                  Find Orders
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+  {BROWSE_CATEGORIES.map((category) => (
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: category.id * 0.1 }} // Staggers the animation slightly for each card
+      key={category.id} 
+      className="group bg-white rounded-3xl p-3 pb-6 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_-12px_rgba(163,61,32,0.12)] transition-all border border-slate-50 cursor-pointer"
+    >
+      <div className="h-48 rounded-2xl overflow-hidden mb-6">
+        <img src={category.image} alt={category.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div className="px-4">
+        <h3 className="text-xl font-bold font-['Nunito',sans-serif] text-slate-900 mb-2">{category.title}</h3>
+        <p className="text-slate-600 mb-6">{category.desc}</p>
+        
+        {/* EXACT FIX: Added onClick to the button right here 👇 */}
+        <button 
+          onClick={() => navigate("/find-deliveries")}
+          className="w-full py-3 rounded-full bg-slate-50 text-slate-800 font-semibold text-sm group-hover:bg-[#A33D20] group-hover:text-white transition-colors"
+        >
+          Find Orders
+        </button>
+      </div>
+    </motion.div>
+  ))}
+</div>
+</section>
 
       {/* Section 3: Featured Workers / Jobs */}
       <section className="bg-white py-24 mb-32 border-y border-slate-100">
