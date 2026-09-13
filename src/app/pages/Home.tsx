@@ -154,27 +154,37 @@ export default function Home() {
 </div>
 </section>
 
-      {/* Section 3: Featured Workers / Jobs */}
+   {/* Section 3: Featured Workers / Jobs */}
       <section className="bg-white py-24 mb-32 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-['Nunito',sans-serif] font-bold text-slate-900 mb-12 text-center">Fresh delivery routes near you</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {JOBS.map((job) => (
-              <div key={job.id} className="bg-[#FDFBF7] rounded-[24px] p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row lg:flex-col items-center sm:items-start lg:items-center gap-6">
-                <div className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 shrink-0 rounded-[1.5rem] overflow-hidden shadow-sm">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: job.id * 0.1 }}
+                key={job.id} 
+                className="bg-[#FDFBF7] rounded-[24px] p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center gap-6"
+              >
+                <div className="w-32 h-32 shrink-0 rounded-[1.5rem] overflow-hidden shadow-sm">
                   <img src={job.image} alt={job.title} className="w-full h-full object-cover" />
                 </div>
-                <div className="flex-1 text-center sm:text-left lg:text-center w-full">
+                <div className="flex-1 w-full">
                   <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-[#A33D20] text-xs font-bold uppercase tracking-wider mb-3">
                     {job.type}
                   </span>
                   <h3 className="text-xl font-bold font-['Nunito',sans-serif] text-slate-900 mb-2">{job.title}</h3>
-                  <p className="text-slate-600 font-medium mb-6 flex items-center justify-center sm:justify-start lg:justify-center gap-2">
+                  <p className="text-slate-600 font-medium mb-6 flex items-center justify-center gap-2">
                     <Banknote className="w-5 h-5 text-slate-400" /> {job.salary}
                   </p>
                   <div className="flex items-center gap-3 w-full">
-                    <button className="flex-1 py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-colors">
+                    <button 
+                      onClick={() => navigate("/signup")}
+                      className="flex-1 py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-colors"
+                    >
                       Apply to Ride
                     </button>
                     <button className="w-12 h-12 flex items-center justify-center rounded-xl bg-white text-slate-400 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 transition-colors">
@@ -182,17 +192,20 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
           
-          <div className="mt-12 text-center">
-            <Link to="/find-deliveries" className="inline-block px-6 py-3 rounded-full border-2 border-slate-200 text-slate-700 font-semibold hover:border-slate-300 transition-colors">
+          {/* This spacing and button was accidentally deleted! */}
+          <div className="mt-16 text-center">
+            <Link to="/find-deliveries" className="inline-block px-8 py-3 rounded-full border-2 border-slate-200 text-slate-700 font-semibold hover:border-slate-300 transition-colors">
               View all delivery shifts
             </Link>
           </div>
         </div>
       </section>
+
+      {/* Section 4: Benefits Section */}
 
       {/* Section 4: Benefits Section */}
       <section className="max-w-7xl mx-auto px-6 mb-32">
