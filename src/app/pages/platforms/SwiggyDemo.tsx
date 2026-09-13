@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function SwiggyDemo() {
   const [form, setForm] = useState({
@@ -47,25 +48,17 @@ export default function SwiggyDemo() {
 
       const data = await response.json();
 
-      if (response.ok) {
-        setMessage(
-          "✅ Delivery sent to GigWorker successfully!"
-        );
+if (response.ok) {
+        toast.success("Delivery sent to GigWorker successfully! 🚀");
       } else {
-        setMessage(
-          "❌ " +
-            (data.message ||
-              "Failed to create delivery")
+        toast.error(
+          data.message || "Failed to create delivery"
         );
       }
     } catch (error) {
       console.log(error);
-
-      setMessage(
-        "❌ Backend server is not connected"
-      );
+      toast.error("Backend server is not connected");
     }
-  };
 
   return (
     <div className="min-h-screen bg-orange-50">
@@ -231,4 +224,5 @@ export default function SwiggyDemo() {
 
     </div>
   );
+}
 }

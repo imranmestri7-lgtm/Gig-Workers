@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import DeliveryMap from "../components/DeliveryMap";
+import OrderStepper from "../components/OrderStepper";
 
 import {
   Package,
@@ -1670,6 +1671,8 @@ Reject
               </span>
             </p>
           </div>
+
+          <OrderStepper status={delivery.status} />
 
           <div className="mt-5 flex flex-col gap-3">
 

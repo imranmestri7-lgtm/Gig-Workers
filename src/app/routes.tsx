@@ -119,10 +119,9 @@ export const router = createBrowserRouter([
   path: "/zomato-demo",
   Component: ZomatoDemo,
 },
-
 {
-  path: "/swiggy-demo",
-  Component: SwiggyDemo,
+  path: "/zomato-demo",
+  Component: ZomatoDemo, // ✅ Correct: Just pass the component reference without ()
 },
 
 {
