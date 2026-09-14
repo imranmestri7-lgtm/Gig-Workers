@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import DeliveryMap from "../components/DeliveryMap";
 import OrderStepper from "../components/OrderStepper";
+import Navbar from "../components/Navbar";
 
 import {
   Package,
@@ -114,6 +115,7 @@ const [rating, setRating] = useState(0);
 const [reviewComment, setReviewComment] = useState("");
 const [reviewSubmitted, setReviewSubmitted] = useState(false);
 const [showReview, setShowReview] = useState(false);
+
 
 // =================================
 // GET AVAILABLE DELIVERY
@@ -265,170 +267,147 @@ console.log(error);
 // =================================
 // LOAD DATA
 // =================================
-const loadData = async () => {
+  // LOAD DATA & AUTO-POLLING
+  // =================================
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        fetchAvailableDeliveries(),
+        fetchActiveDeliveries(),
+        fetchEarnings(),
+      ]);
+    } catch (error) {
+      console.log("LOAD DATA ERROR:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  setLoading(true);
+  useEffect(() => {
+    loadData();
 
-  try {
-
-    await Promise.all([
-      fetchAvailableDeliveries(),
-      fetchActiveDeliveries(),
-      fetchEarnings()
-    ]);
-
-  } catch (error) {
-
-    console.log("LOAD DATA ERROR:", error);
-
-  } finally {
-
-    setLoading(false);
-
-  }
-
-};
-
-const handleAccept = async (delivery: Delivery) => {
-  try {
-    const user = JSON.parse(
-      localStorage.getItem("user") || "{}"
-    );
-
-    const riderId = user._id || user.id;
-
-    const response = await fetch(
-      `http://localhost:5000/api/deliveries/accept/${delivery._id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          riderId: riderId,
-          riderName: user.name,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert("Delivery accepted successfully!");
-
+    // Auto-poll backend every 10 seconds for real-time dispatch updates
+    const interval = setInterval(() => {
       loadData();
-    } else {
-      alert(data.message || "Failed to accept delivery");
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // =================================
+  // HANDLE ACCEPT
+  // =================================
+  const handleAccept = async (delivery: Delivery) => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+      const riderId = currentUser._id || currentUser.id;
+
+      const response = await fetch(
+        `http://localhost:5000/api/deliveries/accept/${delivery._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            riderId: riderId,
+            riderName: currentUser.name,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Delivery accepted successfully!");
+        loadData();
+      } else {
+        alert(data.message || "Failed to accept delivery");
+      }
+    } catch (error) {
+      console.log("Accept delivery error:", error);
+      alert("Backend server is not connected");
+    }
+  };
+
+  // =================================
+  // HANDLE REJECT
+  // =================================
+  const handleReject = async (delivery: Delivery) => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+      const riderId = currentUser._id || currentUser.id;
+
+      const response = await fetch(
+        `http://localhost:5000/api/deliveries/reject/${delivery._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            riderId: riderId,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Delivery rejected");
+        loadData();
+      } else {
+        alert(data.message || "Failed to reject delivery");
+      }
+    } catch (error) {
+      console.log("Reject delivery error:", error);
+      alert("Backend server is not connected");
+    }
+  };
+
+  // =================================
+  // SUBMIT REVIEW
+  // =================================
+  const submitReview = async () => {
+    if (rating === 0) {
+      alert("Please select a rating");
+      return;
     }
 
-  } catch (error) {
-    console.log("Accept delivery error:", error);
-    alert("Backend server is not connected");
-  }
-};
-
-const handleReject = async (delivery: Delivery) => {
-  try {
-    const user = JSON.parse(
-      localStorage.getItem("user") || "{}"
-    );
-
-    const riderId = user._id || user.id;
-
-    const response = await fetch(
-      `http://localhost:5000/api/deliveries/reject/${delivery._id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          riderId: riderId,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert("Delivery rejected");
-
-      loadData();
-    } else {
-      alert(data.message || "Failed to reject delivery");
-    }
-
-  } catch (error) {
-    console.log("Reject delivery error:", error);
-    alert("Backend server is not connected");
-  }
-};
-
-const submitReview = async () => {
-  if (rating === 0) {
-    alert("Please select a rating");
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      "http://localhost:5000/api/reviews",
-      {
+    try {
+      const response = await fetch("http://localhost:5000/api/reviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           deliveryId: selectedDelivery?._id,
-
           riderId: user.id,
           riderName: user.name,
-
           restaurantId: selectedDelivery?.restaurantId,
           restaurantName: selectedDelivery?.restaurantName,
-
           rating: rating,
-
           comment: reviewComment,
         }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Review submitted successfully ⭐");
+        setReviewSubmitted(true);
+        setShowReview(false);
+        setRating(0);
+        setReviewComment("");
+      } else {
+        alert(data.message || "Failed to submit review");
       }
-    );
-
-    const data = await response.json();
-
-    console.log("Review response:", data);
-
-    if (response.ok) {
-      alert("Review submitted successfully ⭐");
-
-      setReviewSubmitted(true);
-      setShowReview(false);
-      setRating(0);
-      setReviewComment("");
-    } else {
-      alert(data.message || "Failed to submit review");
+    } catch (error) {
+      console.log("Review error:", error);
+      alert("Server not connected");
     }
-  } catch (error) {
-    console.log("Review error:", error);
-    alert("Server not connected");
-  }
-};
-
-
-
-useEffect(()=>{
-
-
-loadData();
-
-
-},[]);
-
-
-
-
-
-
+  };
 
 // =================================
 // ACCEPT
