@@ -45,6 +45,11 @@ export default function RiderProfile() {
                 ? user.name.charAt(0).toUpperCase()
                 : "R"}
             </div>
+            <img 
+      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+      alt="Rider Profile" 
+      className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-orange-500"
+    />
 
             <div>
               <h2 className="text-2xl font-bold">
