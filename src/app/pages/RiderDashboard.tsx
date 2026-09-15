@@ -1254,21 +1254,42 @@ Rider Dashboard
 
 <main className="max-w-7xl mx-auto p-8">
 
+{/* 🚀 Realistic Logistics Hero Banner with EV Scooter Image */}
+  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative border border-slate-800">
+    
+    {/* Background Realistic Image with Subtle Overlay */}
+    <div className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 opacity-25 md:opacity-35 pointer-events-none">
+      <img 
+        src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80" 
+        alt="EV Delivery Scooter" 
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    {/* Content */}
+    <div className="z-10 space-y-2 max-w-xl">
+      <span className="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block">
+        ⚡ EV Fleet Active & Synced
+      </span>
+      <h2 className="text-3xl md:text-4xl font-black tracking-tight">
+        Welcome {user.name} 👋
+      </h2>
+      <p className="text-slate-300 text-sm font-medium">
+        Accept deliveries and start earning. Live auto-polling is active.
+      </p>
+    </div>
+
+    {/* Quick Status Pill */}
+    <div className="z-10 bg-white/10 backdrop-blur-md px-5 py-4 rounded-2xl border border-white/10 shrink-0 text-center md:text-right shadow-lg">
+      <p className="text-xs text-slate-300 font-semibold uppercase tracking-wider">Status</p>
+      <p className="text-emerald-400 font-black text-base flex items-center gap-1.5 justify-center md:justify-end mt-0.5">
+        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" /> Online
+      </p>
+    </div>
+
+  </div>
 
 
-<h2 className="text-4xl font-bold">
-
-Welcome {user.name} 👋
-
-</h2>
-
-
-
-<p className="text-gray-600">
-
-Accept deliveries and start earning.
-
-</p>
 
 
 
