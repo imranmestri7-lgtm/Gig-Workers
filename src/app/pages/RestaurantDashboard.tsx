@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-
 import {
   LogOut,
   Package,
@@ -8,7 +7,8 @@ import {
   Truck,
   User,
   MapPin,
-  IndianRupee
+  IndianRupee,
+  ChefHat
 } from "lucide-react";
 
 type Delivery = {
