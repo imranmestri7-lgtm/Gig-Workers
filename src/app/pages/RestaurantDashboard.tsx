@@ -488,23 +488,41 @@ Logout
 
 
 
+<main className="max-w-7xl mx-auto p-6 md:p-8 space-y-8">
 
-<main className="max-w-7xl mx-auto p-8">
+  {/* 🍔 Realistic Restaurant Hero Banner with Food Photography */}
+  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-orange-950 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative border border-slate-800">
+    
+    {/* Background High-End Food Image */}
+    <div className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 opacity-25 md:opacity-30 pointer-events-none">
+      <img 
+        src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" 
+        alt="Gourmet Kitchen" 
+        className="w-full h-full object-cover"
+      />
+    </div>
 
+    <div className="z-10 space-y-2 max-w-xl">
+      <span className="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block">
+        🔥 Kitchen Portal Active
+      </span>
+      <h2 className="text-3xl md:text-4xl font-black tracking-tight">
+        Welcome {user?.name} 👋
+      </h2>
+      <p className="text-slate-300 text-sm font-medium">
+        Create delivery requests, dispatch orders, and monitor your kitchen performance.
+      </p>
+    </div>
 
-
-<h2 className="text-4xl font-bold">
-
-Welcome {user?.name} 👋
-
-</h2>
-
-
-<p className="text-gray-600 mt-2">
-
-Create delivery requests and connect with riders.
-
-</p>
+    {/* Quick Action Pill */}
+    <div className="z-10 bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 flex items-center gap-3 shadow-lg shrink-0">
+      <ChefHat className="w-8 h-8 text-orange-400" />
+      <div>
+        <p className="text-xs text-slate-300 font-semibold uppercase">Total Revenue</p>
+        <p className="text-xl font-black">₹{totalPayment}</p>
+      </div>
+    </div>
+  </div>
 
 
 
