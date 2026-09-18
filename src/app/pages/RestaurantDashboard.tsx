@@ -679,9 +679,7 @@ Create Delivery
 
 
 
-
-{
-showForm &&
+{showForm && (
 
 
 <form
@@ -823,189 +821,151 @@ loading?
 
 </button>
 
-
 </form>
-
-
-}
-
-
-
+)}
 
 
 
 
 <section className="bg-white mt-10 p-6 rounded-2xl shadow">
+  <h2 className="text-2xl font-bold mb-5">
+    My Deliveries
+  </h2>
 
-
-<h2 className="text-2xl font-bold mb-5">
-
-My Deliveries
-
-</h2>
-
-
-
-
-{
-deliveries.length===0?
-
-
-<p>No delivery created</p>
-
-
-:
-
-deliveries.map((delivery)=>(
-
-
-<div
-
-key={delivery._id}
-
-className="border p-5 rounded-xl mb-5"
-
-
->
-
-
-<h3 className="text-xl font-bold">
-
-{delivery.packageDetails}
-
-</h3>
-
-
-
-<p>
-
-<MapPin className="inline"/>
-
-{delivery.pickupLocation}
-
-→
-
-{delivery.dropLocation}
-
-</p>
-
-
-
-<p className="font-bold text-[#A33D20]">
-
-₹{delivery.payment}
-
-</p>
-
-
-
-
-<span className="bg-yellow-100 px-3 py-1 rounded-full">
-
-{delivery.status}
-
-</span>
-
-{delivery.riderId && (
-  <button
-    onClick={() =>
-      navigate("/messages", {
-        state: {
-          delivery: delivery,
-        },
-      })
-    }
-    className="mt-4 bg-[#A33D20] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#8f331b] transition"
-  >
-    💬 Message Rider
-  </button>
-)}
-
-
-</div>
-
-
-))
-
-
-}
-
-
-
-</section>
-
-{showRatings && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-    <div className="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white rounded-2xl p-8 shadow-2xl">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">
-            ⭐ Rider Ratings
-          </h2>
-
-          <p className="text-gray-500 mt-1">
-            {reviews.length
-              ? `Average rating: ${averageRating.toFixed(1)} / 5`
-              : "No ratings yet"}
-          </p>
-        </div>
-
-        <button
-          onClick={() => setShowRatings(false)}
-          className="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-bold"
+  {deliveries.length === 0 ? (
+    <p>No delivery created</p>
+  ) : (
+    <div>
+      {deliveries.map((delivery) => (
+        <div
+          key={delivery._id}
+          className="border border-slate-100 bg-white p-6 rounded-3xl shadow-sm mb-5 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-all"
         >
-          Close
-        </button>
-      </div>
+          {/* Realistic Food Thumbnail & Info */}
+          <div className="flex items-center gap-4">
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80"
+              alt="Meal dish"
+              className="w-16 h-16 rounded-2xl object-cover shadow-sm border border-slate-100 shrink-0"
+            />
 
-      <div className="mt-6 space-y-4">
-        {reviews.length === 0 ? (
-          <p className="text-gray-500">
-            No rider ratings yet.
-          </p>
-        ) : (
-          reviews.map((review) => (
-            <div
-              key={review._id}
-              className="border rounded-xl p-5"
-            >
-              <div className="flex justify-between gap-4">
-                <div>
-                  <h3 className="font-bold">
-                    {review.riderName}
-                  </h3>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="bg-orange-50 text-orange-700 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-orange-100">
+                  {delivery.platform || "Direct"}
+                </span>
 
-                  <p className="text-yellow-500 text-xl mt-1">
-                    {"⭐".repeat(review.rating)}
-                    {"☆".repeat(5 - review.rating)}
-                  </p>
-                </div>
-
-                <span className="text-sm text-gray-400">
-                  {new Date(review.createdAt).toLocaleDateString()}
+                <span className="bg-slate-100 text-slate-700 text-xs font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                  {delivery.status || "Pending"}
                 </span>
               </div>
 
-              {review.comment && (
-                <p className="text-gray-600 mt-3">
-                  “{review.comment}”
-                </p>
+              <h3 className="text-base font-extrabold text-slate-900">
+                {delivery.packageDetails}
+              </h3>
+
+              <p>
+                <MapPin className="inline" />{" "}
+                {delivery.pickupLocation} → {delivery.dropLocation}
+              </p>
+
+              <p className="font-bold text-[#A33D20]">
+                ₹{delivery.payment}
+              </p>
+
+              <span className="bg-yellow-100 px-3 py-1 rounded-full">
+                {delivery.status}
+              </span>
+
+              {delivery.riderId && (
+                <button
+                  onClick={() =>
+                    navigate("/messages", {
+                      state: { delivery: delivery },
+                    })
+                  }
+                  className="mt-4 bg-[#A33D20] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#8f331b] transition"
+                >
+                  💬 Message Rider
+                </button>
               )}
             </div>
-          ))
-        )}
-      </div>
+          </div>
+        </div>
+      ))}
     </div>
-  </div>
+  )}
+</section>
+
+        {showRatings && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white rounded-2xl p-8 shadow-2xl">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    ⭐ Rider Ratings
+                  </h2>
+
+                  <p className="text-gray-500 mt-1">
+                    {reviews.length
+                      ? `Average rating: ${averageRating.toFixed(1)} / 5`
+                      : "No ratings yet"}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setShowRatings(false)}
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-bold"
+                >
+                  Close
+                </button>
+              </div>
+
+              <div className="mt-6 space-y-4">
+                {reviews.length === 0 ? (
+                  <p className="text-gray-500">
+                    No rider ratings yet.
+                  </p>
+                ) : (
+                  reviews.map((review) => (
+                    <div
+                      key={review._id}
+                      className="border rounded-xl p-5"
+                    >
+                      <div className="flex justify-between gap-4">
+                        <div>
+                          <h3 className="font-bold">
+                            {review.riderName}
+                          </h3>
+
+                          <p className="text-yellow-500 text-sm mt-0.5">
+                            {review.rating >= 1 ? "⭐" : "☆"}
+                            {review.rating >= 2 ? "⭐" : "☆"}
+                            {review.rating >= 3 ? "⭐" : "☆"}
+                            {review.rating >= 4 ? "⭐" : "☆"}
+                            {review.rating >= 5 ? "⭐" : "☆"}
+                          </p>
+                        </div>
+
+                        <span className="text-sm text-gray-400">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+{review.comment && (
+  <p className="text-gray-600 mt-3">
+    "{review.comment}"
+  </p>
 )}
 
-</main>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
-
-</div>
-
-
-);
-
-
+      </main>
+    </div>
+  );
 }
