@@ -42,6 +42,25 @@ type Review = {
   createdAt: string;
 };
 
+// Helper to choose an image based on dish details or category
+const getDishImage = (details: string = "", category: string = "") => {
+  const text = (details + " " + category).toLowerCase();
+  
+  if (text.includes("pizza")) {
+    return "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80";
+  } else if (text.includes("burger")) {
+    return "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80";
+  } else if (text.includes("cafe") || text.includes("coffee") || text.includes("bakery")) {
+    return "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80";
+  } else if (text.includes("grocery") || text.includes("vegetable")) {
+    return "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80";
+  } else if (text.includes("chicken") || text.includes("biryani") || text.includes("meal")) {
+    return "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80";
+  } else {
+    return "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80";
+  }
+};
+
 export default function RestaurantDashboard(){
 
 const navigate = useNavigate();
