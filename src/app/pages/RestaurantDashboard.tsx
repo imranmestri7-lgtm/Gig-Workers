@@ -850,8 +850,7 @@ loading?
   <h2 className="text-2xl font-bold mb-5">
     My Deliveries
   </h2>
-
-  {deliveries.length === 0 ? (
+{deliveries.length === 0 ? (
     <p>No delivery created</p>
   ) : (
     <div>
@@ -863,7 +862,7 @@ loading?
           {/* Realistic Food Thumbnail & Info */}
           <div className="flex items-center gap-4">
             <img
-              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80"
+              src={getDishImage(delivery.packageDetails, delivery.category)}
               alt="Meal dish"
               className="w-16 h-16 rounded-2xl object-cover shadow-sm border border-slate-100 shrink-0"
             />
