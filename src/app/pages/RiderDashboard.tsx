@@ -54,7 +54,28 @@ completed:number;
 
 };
 
-
+// Helper to choose an image directly related to the specific dish name
+const getDishImage = (details: string = "", category: string = "") => {
+  const text = (details + " " + category).toLowerCase();
+  
+  if (text.includes("pizza")) {
+    return "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80"; // Pizza
+  } else if (text.includes("burger")) {
+    return "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80"; // Burger
+  } else if (text.includes("biryani")) {
+    return "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80"; // Biryani
+  } else if (text.includes("chicken") || text.includes("chicken dish")) {
+    return "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=400&q=80"; // Chicken Dish / Curry
+  } else if (text.includes("noodle") || text.includes("pasta") || text.includes("chinese")) {
+    return "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=400&q=80"; // Noodles / Pasta
+  } else if (text.includes("cafe") || text.includes("coffee") || text.includes("bakery") || text.includes("cake")) {
+    return "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80"; // Cafe / Coffee / Cake
+  } else if (text.includes("grocery") || text.includes("vegetable")) {
+    return "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80"; // Groceries
+  } else {
+    return "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80"; // Default meal
+  }
+};
 
 export default function RiderDashboard(){
 
