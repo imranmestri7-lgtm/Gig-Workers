@@ -25,6 +25,9 @@ type Delivery = {
   platform: string;
   orderId?: string;
 
+  category?: string;
+  
+
   pickupLocation: string;
   dropLocation: string;
 
@@ -1522,9 +1525,7 @@ No deliveries available
 
 
 {
-
 availableDeliveries.map((delivery)=>(
-
 
 <div
   key={delivery._id}
@@ -1536,10 +1537,11 @@ availableDeliveries.map((delivery)=>(
 
 <div className="flex items-center gap-4">
   <img 
-    src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80" 
+    src={getDishImage(delivery.packageDetails, delivery.category)} 
     alt="Food item" 
     className="w-16 h-16 rounded-2xl object-cover shadow-sm border border-slate-100 shrink-0"
   />
+
   <div>
     <h4 className="font-bold text-slate-900">{delivery.restaurantName}</h4>
     <p className="text-xs text-slate-500">📍 {delivery.dropLocation}</p>
