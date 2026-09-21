@@ -2,7 +2,7 @@ import React from "react";
 import { CheckCircle, Clock, Package, Truck, MapPin } from "lucide-react";
 
 interface OrderStepperProps {
-  status: string; // "available" | "accepted" | "picked" | "delivered"
+  status: string; // "available" | "accepted" | "picked" | "out_for_delivery" | "delivered"
 }
 
 export default function OrderStepper({ status }: OrderStepperProps) {
