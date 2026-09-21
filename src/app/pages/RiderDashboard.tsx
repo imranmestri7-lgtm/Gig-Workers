@@ -1466,9 +1466,7 @@ Completed
   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
     <div>
-      <h2 className="text-2xl font-bold">
-        🏢 Platform Dashboard
-      </h2>
+      
 
       <p className="text-gray-500 mt-1">
         View your deliveries and earnings from each platform
