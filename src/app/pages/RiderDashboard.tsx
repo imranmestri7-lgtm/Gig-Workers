@@ -1467,6 +1467,9 @@ Completed
 
     <div>
       
+      <h2 className="text-2xl font-bold">
+        🏢 Platform Dashboard
+      </h2>
 
       <p className="text-gray-500 mt-1">
         View your deliveries and earnings from each platform
@@ -1546,9 +1549,6 @@ availableDeliveries.map((delivery)=>(
   </div>
 </div>
 
-<p className="text-red-600 font-bold mb-2">
-  🛵 {delivery.platform}
-</p>
 
 <h3 className="text-xl font-bold">
 
