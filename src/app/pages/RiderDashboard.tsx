@@ -1549,6 +1549,9 @@ availableDeliveries.map((delivery)=>(
   </div>
 </div>
 
+<p className="text-red-600 font-bold mb-2">
+  🛵 {delivery.platform}
+</p>
 
 <h3 className="text-xl font-bold">
 

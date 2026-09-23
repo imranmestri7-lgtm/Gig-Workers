@@ -40,16 +40,14 @@ export default function RiderProfile() {
 
           <div className="flex items-center gap-5 mb-8">
 
-            <div className="w-20 h-20 rounded-full bg-black text-white flex items-center justify-center text-3xl font-bold">
-              {user.name
-                ? user.name.charAt(0).toUpperCase()
-                : "R"}
+            <div className="relative">
+              <img 
+                src={user.profileImage || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"} 
+                alt="Rider Profile" 
+                className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-[#A33D20]"
+              />
+              <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-2 border-white rounded-full" title="Online" />
             </div>
-            <img 
-      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
-      alt="Rider Profile" 
-      className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-orange-500"
-    />
 
             <div>
               <h2 className="text-2xl font-bold">
@@ -59,9 +57,14 @@ export default function RiderProfile() {
               <p className="text-gray-500">
                 GigWorker Rider
               </p>
+
+              <span className="inline-block mt-1 text-xs font-bold bg-orange-100 text-[#A33D20] px-3 py-1 rounded-full">
+                ⚡ Active Fleet
+              </span>
             </div>
 
           </div>
+          
 
 
           {/* Account Information */}
