@@ -25,6 +25,8 @@ type Delivery = {
 
   estimatedTime?: string;
 
+  category?: string;
+
 };
 
 // Helper to choose an image directly related to the specific dish name
@@ -228,23 +230,22 @@ export default function DeliveryHistory() {
                   >
 
 
-                    {/* PLATFORM */}
-
-                    <p className="text-red-600 font-bold mb-2">
-
-                      🛵 {delivery.platform}
-
-                    </p>
-
-
-                    {/* RESTAURANT */}
-
-                    <h2 className="text-2xl font-bold">
-
-                      {delivery.restaurantName}
-
-                    </h2>
-
+                   {/* Image and Restaurant Details Header */}
+                    <div className="flex items-center gap-4 mb-4">
+                      <img 
+                        src={getDishImage(delivery.packageDetails, delivery.category)} 
+                        alt="Food item" 
+                        className="w-16 h-16 rounded-2xl object-cover shadow-sm border border-slate-100 shrink-0"
+                      />
+                      <div>
+                        <p className="text-red-600 font-bold text-xs uppercase tracking-wider">
+                          🛵 {delivery.platform}
+                        </p>
+                        <h2 className="text-xl font-bold text-slate-900">
+                          {delivery.restaurantName}
+                        </h2>
+                      </div>
+                    </div>
 
                     {/* PICKUP */}
 
