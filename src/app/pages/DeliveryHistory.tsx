@@ -47,7 +47,9 @@ const getDishImage = (details: string = "", category: string = "") => {
     return "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80"; // Cafe / Coffee / Cake
   } else if (text.includes("grocery") || text.includes("vegetable")) {
     return "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80"; // Groceries
-  } 
+  } else {
+    return "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80"; // Default meal
+  }
 };
 
 export default function DeliveryHistory() {
