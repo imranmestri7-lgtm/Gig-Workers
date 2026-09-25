@@ -292,16 +292,6 @@ export default function DeliveryHistory() {
                     </p>
 
 
-                    {/* TIME */}
-
-                    <p className="mt-2">
-
-                      ⏱️ <strong>Estimated Time:</strong>{" "}
-
-                      {delivery.estimatedTime ||
-                        "Not available"}
-
-                    </p>
 
 
                     {/* PAYMENT */}
