@@ -399,6 +399,12 @@ setLoading(false);
 
 const logout=()=>{
 
+
+localStorage.removeItem("token");
+
+localStorage.removeItem("user");
+
+
 navigate("/login");
 
 
@@ -646,45 +652,22 @@ Total Payment
   </div>
 </div>
 
-
-<div className="bg-[#A33D20] text-white mt-10 p-7 rounded-3xl flex justify-between items-center">
-
-
-<div>
-
-<h2 className="text-2xl font-bold">
-
-Need Rider?
-
-</h2>
-
-
-<p>
-
-Post your delivery now
-
-</p>
-
-
-</div>
-
-
-
-<button
-
-onClick={()=>setShowForm(!showForm)}
-
-className="bg-white text-[#A33D20] px-6 py-3 rounded-xl font-bold flex gap-2"
-
->
-
-<PlusCircle/>
-
-Create Delivery
-
-</button>
-
-
+{/* Paste this new block right where the old one was 👇 */}
+<div className="bg-gradient-to-r from-[#A33D20] to-orange-600 rounded-2xl shadow-lg p-6 flex flex-col md:flex-row items-center justify-between text-white transform transition-all duration-300 hover:scale-[1.01] hover:shadow-xl mt-8">
+  <div>
+    <h2 className="text-2xl font-black tracking-tight flex items-center gap-2">
+      Need a Rider? <span className="animate-bounce">🛵</span>
+    </h2>
+    <p className="text-orange-100 font-medium mt-1">
+      Post your delivery now and dispatch it to our EV fleet instantly.
+    </p>
+  </div>
+  <button 
+    onClick={() => navigate("/create-delivery")} 
+    className="mt-4 md:mt-0 bg-white text-[#A33D20] px-8 py-3.5 rounded-xl font-extrabold shadow-md hover:bg-orange-50 hover:shadow-lg active:scale-95 transition-all flex items-center gap-2"
+  >
+    <span className="text-xl">⊕</span> Create Delivery
+  </button>
 </div>
 
 
