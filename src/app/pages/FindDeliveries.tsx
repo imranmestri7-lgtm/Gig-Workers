@@ -354,14 +354,6 @@ Available Deliveries
 loading ?
 
 
-<p className="text-center text-xl">
-
-Loading deliveries...
-
-</p>
-
-
-
 :
 
 filteredDeliveries.length===0 ?
