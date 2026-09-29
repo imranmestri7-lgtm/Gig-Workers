@@ -782,75 +782,72 @@ loading?
 
 
 
-
 <section className="bg-white mt-10 p-6 rounded-2xl shadow">
   <h2 className="text-2xl font-bold mb-5">
     My Deliveries
   </h2>
-{deliveries.length === 0 ? (
-    <p>No delivery created</p>
-  ) : (
-    <div>
-      {deliveries.map((delivery) => (
-        <div
-          key={delivery._id}
-          className="border border-slate-100 bg-white p-6 rounded-3xl shadow-sm mb-5 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-all"
-        >
-          {/* Realistic Food Thumbnail & Info */}
-          <div className="flex items-center gap-4">
-            <img
-              src={getDishImage(delivery.packageDetails, delivery.category)}
-              alt="Meal dish"
-              className="w-16 h-16 rounded-2xl object-cover shadow-sm border border-slate-100 shrink-0"
-            />
 
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="bg-orange-50 text-orange-700 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-orange-100">
+  {deliveries.length === 0 ? (
+    <p className="text-slate-500 font-medium">No delivery created</p>
+  ) : (
+    <div className="space-y-4 mt-6">
+      {deliveries.map((delivery) => (
+        <div 
+          key={delivery._id} 
+          className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-xl hover:ring-1 hover:ring-[#A33D20]/20 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+        >
+          
+          {/* Left Side: Image & Info */}
+          <div className="flex items-center gap-5">
+            <div className="relative overflow-hidden rounded-2xl shadow-sm shrink-0">
+              <img 
+                src={getDishImage(delivery.packageDetails, delivery.category)} 
+                alt="Food" 
+                className="w-20 h-20 object-cover transform transition-transform duration-500 group-hover:scale-110" 
+              />
+            </div>
+
+            <div>
+              <div className="flex gap-2 mb-1.5">
+                <span className="text-[10px] font-black uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md border border-orange-100">
                   {delivery.platform || "Direct"}
                 </span>
-
-                <span className="bg-slate-100 text-slate-700 text-xs font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
                   {delivery.status || "Pending"}
                 </span>
               </div>
-
-              <h3 className="text-base font-extrabold text-slate-900">
-                {delivery.packageDetails}
+              <h3 className="font-extrabold text-lg text-slate-900 leading-tight">
+                {delivery.packageDetails || "Food Order"}
               </h3>
-
-              <p>
-                <MapPin className="inline" />{" "}
-                {delivery.pickupLocation} → {delivery.dropLocation}
+              <p className="text-sm font-medium text-slate-500 mt-1 flex items-center gap-1">
+                <MapPin className="w-4 h-4 text-slate-400" /> {delivery.pickupLocation} <span className="text-slate-300">→</span> {delivery.dropLocation}
               </p>
-
-              <p className="font-bold text-[#A33D20]">
-                ₹{delivery.payment}
-              </p>
-
-              <span className="bg-yellow-100 px-3 py-1 rounded-full">
-                {delivery.status}
-              </span>
-
-              {delivery.riderId && (
-                <button
-                  onClick={() =>
-                    navigate("/messages", {
-                      state: { delivery: delivery },
-                    })
-                  }
-                  className="mt-4 bg-[#A33D20] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#8f331b] transition"
-                >
-                  💬 Message Rider
-                </button>
-              )}
             </div>
           </div>
+
+          {/* Right Side: Price & Actions */}
+          <div className="flex items-center justify-between md:flex-col md:items-end gap-3 border-t md:border-t-0 pt-4 md:pt-0 border-slate-100 shrink-0">
+            <p className="text-2xl font-black text-slate-900">
+              <span className="text-orange-600 text-lg mr-0.5">₹</span>{delivery.payment}
+            </p>
+            
+            {/* Only show Message Rider if a rider is assigned */}
+            {delivery.riderId && (
+              <button 
+                onClick={() => navigate("/messages", { state: { delivery: delivery } })}
+                className="bg-[#A33D20] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-red-900/20 hover:bg-[#8f331b] hover:shadow-lg active:scale-95 transition-all flex items-center gap-2"
+              >
+                💬 Message Rider
+              </button>
+            )}
+          </div>
+
         </div>
       ))}
     </div>
   )}
 </section>
+
 
         {showRatings && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
