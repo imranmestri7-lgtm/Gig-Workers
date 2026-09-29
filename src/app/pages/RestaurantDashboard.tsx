@@ -546,88 +546,48 @@ Logout
 
 
 
+<div className="grid md:grid-cols-3 gap-6 mt-6">
+  
+  {/* Card 1: Total Deliveries */}
+  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-orange-200 cursor-default group">
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-slate-500 font-semibold text-sm group-hover:text-orange-600 transition-colors">Total Deliveries</p>
+        <h1 className="text-4xl font-black text-slate-900 mt-1">{deliveries.length}</h1>
+      </div>
+      <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
+        <Truck className="w-5 h-5" />
+      </div>
+    </div>
+  </div>
 
+  {/* Card 2: Requests */}
+  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-orange-200 cursor-default group">
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-slate-500 font-semibold text-sm group-hover:text-orange-600 transition-colors">Requests</p>
+        <h1 className="text-4xl font-black text-slate-900 mt-1">{deliveries.length}</h1>
+      </div>
+      <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
+        <Package className="w-5 h-5" />
+      </div>
+    </div>
+  </div>
 
-<div className="grid md:grid-cols-3 gap-6 mt-8">
-
-
-<div className="bg-white p-6 rounded-2xl shadow">
-
-<Truck/>
-
-<p className="text-gray-500">
-
-Total Deliveries
-
-</p>
-
-
-<h1 className="text-4xl font-bold">
-
-{deliveries.length}
-
-</h1>
-
-
-</div>
-
-
-
-
-
-<div className="bg-white p-6 rounded-2xl shadow">
-
-<Package/>
-
-
-<p className="text-gray-500">
-
-Requests
-
-</p>
-
-
-<h1 className="text-4xl font-bold">
-
-{deliveries.length}
-
-</h1>
-
+  {/* Card 3: Total Payment */}
+  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-green-200 cursor-default group">
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-slate-500 font-semibold text-sm group-hover:text-green-600 transition-colors">Total Payment</p>
+        <h1 className="text-4xl font-black text-slate-900 mt-1">₹{totalPayment}</h1>
+      </div>
+      <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+        <IndianRupee className="w-5 h-5" />
+      </div>
+    </div>
+  </div>
 
 </div>
-
-
-
-
-
-
-<div className="bg-white p-6 rounded-2xl shadow">
-
-
-<IndianRupee/>
-
-
-<p className="text-gray-500">
-
-Total Payment
-
-</p>
-
-
-<h1 className="text-4xl font-bold">
-
-₹{totalPayment}
-
-</h1>
-
-
-</div>
-
-
-
-</div>
-
-
 
 
 
