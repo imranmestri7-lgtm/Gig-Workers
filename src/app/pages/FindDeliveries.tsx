@@ -354,6 +354,14 @@ Available Deliveries
 loading ?
 
 
+<p className="text-center text-xl">
+
+Loading deliveries...
+
+</p>
+
+
+
 :
 
 filteredDeliveries.length===0 ?
@@ -457,15 +465,6 @@ Available
 
 
 
-
-
-<p className="flex gap-2">
-
-<Package/>
-
-{delivery.packageDetails}
-
-</p>
 
 
 
