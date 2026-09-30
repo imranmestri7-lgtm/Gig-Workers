@@ -467,6 +467,15 @@ Available
 
 
 
+<p className="flex gap-2">
+
+<Package/>
+
+{delivery.packageDetails}
+
+</p>
+
+
 
 
 

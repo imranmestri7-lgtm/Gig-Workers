@@ -15,6 +15,8 @@ import AboutUs from "./pages/AboutUs";
 import RiderDashboard from "./pages/RiderDashboard";
 import RestaurantDashboard from "./pages/RestaurantDashboard";
 
+import CreateDelivery from "./pages/CreateDelivery";
+
 import ZomatoDemo from "./pages/platforms/ZomatoDemo";
 import SwiggyDemo from "./pages/platforms/SwiggyDemo";
 import UberDemo from "./pages/platforms/UberDemo";
@@ -113,6 +115,11 @@ export const router = createBrowserRouter([
   {
     path: "/restaurant-dashboard",
     Component: RestaurantDashboard,
+  },
+
+  {
+    path: "/create-delivery",
+    Component: CreateDelivery,
   },
 
   {
