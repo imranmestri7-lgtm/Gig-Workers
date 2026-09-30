@@ -14,17 +14,41 @@ export default function CreateDelivery() {
     payment: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+ // Read logged-in restaurant user from localStorage
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    // Here you will eventually add your API call to save the delivery
-    console.log("Delivery Created:", formData);
-    
-    setTimeout(() => {
+
+    const newDelivery = {
+      restaurantId: user.id || user._id,
+      restaurantName: user.name || "Restaurant",
+      packageDetails: formData.packageDetails,
+      pickupLocation: formData.pickupLocation,
+      dropLocation: formData.dropLocation,
+      payment: Number(formData.payment),
+      status: "available", // Default status for new orders!
+      platform: "Direct",
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/deliveries/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newDelivery),
+      });
+
+      if (response.ok) {
+        navigate("/restaurant-dashboard");
+      } else {
+        console.error("Failed to create delivery");
+      }
+    } catch (error) {
+      console.error("Error creating delivery:", error);
+    } finally {
       setLoading(false);
-      navigate("/restaurant-dashboard"); // Send them back to dashboard after creating
-    }, 1000);
+    }
   };
 
   return (
