@@ -79,119 +79,60 @@ const getDishImage = (details: string = "", category: string = "") => {
     return "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80"; // Default meal
   }
 };
+export default function RiderDashboard() {
+  const navigate = useNavigate();
 
-export default function RiderDashboard(){
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
+  // State Management
+  const [availableDeliveries, setAvailableDeliveries] = useState<Delivery[]>([]);
+  const [activeDeliveries, setActiveDeliveries] = useState<Delivery[]>([]);
+  const [deliveryHistory, setDeliveryHistory] = useState<Delivery[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  navigate("/login");
-};
+  const [earnings, setEarnings] = useState<Earnings>({
+    today: 0,
+    week: 0,
+    total: 0,
+    completed: 0,
+  });
 
+  const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
+  const [showDeliveryRequest, setShowDeliveryRequest] = useState(false);
+  const [selectedAvailableDelivery, setSelectedAvailableDelivery] = useState<Delivery | null>(null);
 
-const [availableDeliveries,setAvailableDeliveries] =
-useState<Delivery[]>([]);
+  const [showMap, setShowMap] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [showReview, setShowReview] = useState(false);
 
+  // =================================
+  // GET AVAILABLE DELIVERIES
+  // =================================
+  const fetchAvailableDeliveries = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/deliveries/available/${user.id || user._id}`
+      );
 
+      const data = await response.json();
+      console.log("Available deliveries:", data);
 
-const [activeDeliveries,setActiveDeliveries] =
-useState<Delivery[]>([]);
-
-const [deliveryHistory, setDeliveryHistory] =
-  useState<Delivery[]>([]);
-
-const [loading,setLoading] =
-useState(true);
-
-
-
-const user =
-JSON.parse(localStorage.getItem("user") || "{}");
-
-
-const [earnings,setEarnings] =
-useState<Earnings>({
-
-today:0,
-
-week:0,
-
-total:0,
-
-completed:0
-
-});
-const [selectedDelivery, setSelectedDelivery] =
-  useState<Delivery | null>(null);
-  
-  const [showDeliveryRequest, setShowDeliveryRequest] =
-  useState(false);
-  
-const [selectedAvailableDelivery, setSelectedAvailableDelivery] =
-  useState<Delivery | null>(null);
-
-const [showMap, setShowMap] = useState(false);
-
-const [rating, setRating] = useState(0);
-const [reviewComment, setReviewComment] = useState("");
-const [reviewSubmitted, setReviewSubmitted] = useState(false);
-const [showReview, setShowReview] = useState(false);
-
-
-// =================================
-// GET AVAILABLE DELIVERY
-// =================================
-
-
-const fetchAvailableDeliveries = async()=>{
-
-
-try{
-
-const response = await fetch(
-`http://localhost:5000/api/deliveries/available/${user.id}`
-);
-
-
-const data =
-await response.json();
-
-
-
-console.log(
-"Available deliveries:",
-data
-);
-
-
-
-if(response.ok){
-
-setAvailableDeliveries(data);
-
-}
-
-
-}
-catch(error){
-
-console.log(error);
-
-alert("Server not connected");
-
-}
-
-
-};
-
-
-
-
-
-
+      if (response.ok) {
+        setAvailableDeliveries(data);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      alert("Server not connected");
+    }
+  };
 
 // =================================
 // GET MY ACTIVE DELIVERY
@@ -287,37 +228,41 @@ console.log(error);
 
 
 };
+// =================================
+// LOAD ALL RIDER DATA
+// =================================
+const loadData = async () => {
+  const userId = user.id || user._id;
+  if (!userId) return;
+
+  try {
+    // Fetch available deliveries alongside any other required data
+    await Promise.all([
+      fetchAvailableDeliveries(),
+      // Add any additional fetch methods here (e.g., fetchActiveDeliveries(), fetchEarnings())
+    ]);
+  } catch (error) {
+    console.error("Error loading dashboard data:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
 // =================================
-// LOAD DATA
+// REAL-TIME AUTO-POLLING USEEFFECT
 // =================================
-  // LOAD DATA & AUTO-POLLING
-  // =================================
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      await Promise.all([
-        fetchAvailableDeliveries(),
-        fetchActiveDeliveries(),
-        fetchEarnings(),
-      ]);
-    } catch (error) {
-      console.log("LOAD DATA ERROR:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+useEffect(() => {
+  // Initial data load on mount
+  loadData();
 
-  useEffect(() => {
+  // Auto-poll backend every 10 seconds for real-time order updates
+  const interval = setInterval(() => {
     loadData();
+  }, 10000);
 
-    // Auto-poll backend every 10 seconds for real-time dispatch updates
-    const interval = setInterval(() => {
-      loadData();
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
+  // Cleanup interval on unmount
+  return () => clearInterval(interval);
+}, []);
 
   // =================================
   // HANDLE ACCEPT
