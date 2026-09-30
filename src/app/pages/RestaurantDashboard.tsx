@@ -119,46 +119,33 @@ useState("");
 // =============================
 // LOGIN CHECK
 // =============================
+useEffect(() => {
+  const savedUser = localStorage.getItem("user");
 
-useEffect(()=>{
+  if (!savedUser) {
+    navigate("/login");
+    return;
+  }
 
+  const userData = JSON.parse(savedUser);
+  setUser(userData);
 
-const savedUser =
-localStorage.getItem("user");
+  // Safely grab user ID regardless of key name (_id vs id)
+  const userId = userData.id || userData._id;
 
-
-if(!savedUser){
-
-navigate("/login");
-return;
-
-}
-
-
-const userData =
-JSON.parse(savedUser);
-
-
-
-setUser(userData);
-
-
-fetchDeliveries(userData.id);
-fetchReviews(userData.id);
-
-
-
-},[]);
-
+  if (userId) {
+    fetchDeliveries(userId);
+    fetchReviews(userId);
+  }
+}, []);
 
 const fetchRiderRatings = async () => {
-  if (user?.id) {
-    await fetchReviews(user.id);
+  const userId = user?.id || user?._id;
+  if (userId) {
+    await fetchReviews(userId);
     setShowRatings(true);
   }
 };
-
-
 
 // =============================
 // GET RESTAURANT DELIVERY
@@ -815,6 +802,9 @@ loading?
                 <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
                   {delivery.status || "Pending"}
                 </span>
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+  {delivery.status || "available"}
+</span>
               </div>
               <h3 className="font-extrabold text-lg text-slate-900 leading-tight">
                 {delivery.packageDetails || "Food Order"}
