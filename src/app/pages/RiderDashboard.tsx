@@ -228,18 +228,21 @@ console.log(error);
 
 
 };
+
 // =================================
 // LOAD ALL RIDER DATA
 // =================================
+
 const loadData = async () => {
   const userId = user.id || user._id;
   if (!userId) return;
 
   try {
-    // Fetch available deliveries alongside any other required data
+    // Fetch available deliveries, active deliveries, and earnings in parallel
     await Promise.all([
       fetchAvailableDeliveries(),
-      // Add any additional fetch methods here (e.g., fetchActiveDeliveries(), fetchEarnings())
+      fetchActiveDeliveries(),
+      fetchEarnings(),
     ]);
   } catch (error) {
     console.error("Error loading dashboard data:", error);
@@ -247,7 +250,6 @@ const loadData = async () => {
     setLoading(false);
   }
 };
-
 // =================================
 // REAL-TIME AUTO-POLLING USEEFFECT
 // =================================
