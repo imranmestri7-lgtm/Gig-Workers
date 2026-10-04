@@ -1221,133 +1221,98 @@ Rider Dashboard
 
 
 
-
-
 <main className="max-w-7xl mx-auto p-8">
 
-{/* 🚀 Realistic Logistics Hero Banner with EV Scooter Image */}
-  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative border border-slate-800">
+  {/* 🚀 Animated Hero Banner with Custom Utility Classes */}
+  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative border border-slate-800 animate-slide-up">
     
-    {/* Background Realistic Image with Subtle Overlay */}
-    <div className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 opacity-25 md:opacity-35 pointer-events-none">
-      <img 
-        src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80" 
-        alt="EV Delivery Scooter" 
-        className="w-full h-full object-cover"
-      />
-    </div>
+    {/* Ambient Background Glow Sphere */}
+    <div className="absolute -top-10 -right-10 w-72 h-72 bg-orange-500/20 rounded-full blur-3xl animate-ambient-glow pointer-events-none" />
 
-    {/* Content */}
-    <div className="z-10 space-y-2 max-w-xl">
-      <span className="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block">
-        ⚡ EV Fleet Active & Synced
-      </span>
-      <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-        Welcome {user.name} 👋
+    <div className="z-10 space-y-3 max-w-xl">
+      <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 text-orange-400 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+        <span>⚡ Live Dispatch Active</span>
+      </div>
+      <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white">
+        Welcome back, {user.name || "Rider"} 👋
       </h2>
       <p className="text-slate-300 text-sm font-medium">
-        Accept deliveries and start earning. Live auto-polling is active.
+        Accept orders in real-time. Live auto-polling synced with local dispatch servers.
       </p>
     </div>
 
-    {/* Quick Status Pill */}
-    <div className="z-10 bg-white/10 backdrop-blur-md px-5 py-4 rounded-2xl border border-white/10 shrink-0 text-center md:text-right shadow-lg">
-      <p className="text-xs text-slate-300 font-semibold uppercase tracking-wider">Status</p>
-      <p className="text-emerald-400 font-black text-base flex items-center gap-1.5 justify-center md:justify-end mt-0.5">
-        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" /> Online
+    {/* Floating Interactive Badge */}
+    <div className="z-10 bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 shrink-0 text-center md:text-right shadow-lg animate-float">
+      <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">System Status</p>
+      <p className="text-emerald-400 font-black text-base flex items-center gap-2 justify-center md:justify-end mt-1">
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        </span>
+        <span>Online & Auto-Syncing</span>
       </p>
     </div>
-
   </div>
 
+  {/* 📊 Interactive Metric Cards with Micro-Animations */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 animate-slide-up">
+    {/* Available Orders */}
+    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:border-orange-200 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Available Orders</p>
+          <h3 className="text-4xl font-black text-slate-900 mt-2 group-hover:text-orange-600 transition-colors">
+            {availableDeliveries.length}
+          </h3>
+        </div>
+        <div className="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 font-black text-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">
+          <Package className="w-7 h-7" />
+        </div>
+      </div>
+      <p className="text-xs text-slate-500 font-semibold mt-4 flex items-center gap-1.5">
+        <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" /> Nearby dispatch requests
+      </p>
+    </div>
 
+    {/* Active Deliveries */}
+    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:border-emerald-200 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Deliveries</p>
+          <h3 className="text-4xl font-black text-emerald-600 mt-2">
+            {activeDeliveries.length}
+          </h3>
+        </div>
+        <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 font-black text-2xl group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300 shadow-sm">
+          <MapPin className="w-7 h-7" />
+        </div>
+      </div>
+      <p className="text-xs text-emerald-600 font-semibold mt-4 flex items-center gap-1.5">
+        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" /> Orders currently in route
+      </p>
+    </div>
 
+    {/* Earnings */}
+    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:border-teal-200 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Earnings</p>
+          <h3 className="text-4xl font-black text-slate-900 mt-2 group-hover:text-teal-600 transition-colors">
+            ₹{earnings.total}
+          </h3>
+        </div>
+        <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 font-black text-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">
+          <IndianRupee className="w-7 h-7" />
+        </div>
+      </div>
+      <p className="text-xs text-slate-500 font-semibold mt-4">
+        Today: <span className="text-emerald-600 font-bold">₹{earnings.today}</span> • Completed: {earnings.completed}
+      </p>
+    </div>
+  </div>
 
-
-
-
-
-
-<div className="grid md:grid-cols-3 gap-6 mt-8">
-
-
-<div className="bg-white p-6 rounded-2xl shadow">
-
-<Package/>
-
-<p>
-
-Available
-
-</p>
-
-
-<h1 className="text-4xl font-bold">
-
-{availableDeliveries.length}
-
-</h1>
-
-
-</div>
-
-
-
-
-
-<div className="bg-white p-6 rounded-2xl shadow">
-
-
-<MapPin/>
-
-
-<p>
-
-Active
-
-</p>
-
-
-<h1 className="text-4xl font-bold">
-
-{activeDeliveries.length}
-
-</h1>
-
-
-</div>
-
-
-
-
-
-<div className="bg-white p-6 rounded-2xl shadow">
-
-
-<IndianRupee/>
-
-
-<p>
-
-Total Earnings
-
-</p>
-
-
-<h1 className="text-4xl font-bold">
-
-₹{earnings.total}
-
-</h1>
-
-
-</div>
-
-
-
-
-
-</div>
+  {/* Next sections like Earnings Overview & Available Deliveries remain below... */}
 
 {/* Earnings Overview */}
 
