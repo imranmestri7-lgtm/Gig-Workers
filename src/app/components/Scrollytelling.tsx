@@ -114,13 +114,20 @@ export default function Scrollytelling() {
           <div className="relative rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-800 h-[480px]">
             {steps.map((step, index) => {
               // Calculate scroll progress triggers for each frame
-              const start = index / steps.length;
-              const end = (index + 1) / steps.length;
-              const opacity = useTransform(
-                scrollYProgress,
-                [start - 0.1, start, end - 0.1, end],
-                [0, 1, 1, 0]
-              );
+             const stepSize = 1 / steps.length;
+const start = index * stepSize;
+const end = (index + 1) * stepSize;
+
+// Strictly monotonic ranges bounded between 0 and 1
+const fadeInStart = Math.max(0, start - 0.05);
+const fadeOutEnd = Math.min(1, end + 0.05);
+
+const opacity = useTransform(
+  scrollYProgress,
+  [fadeInStart, start + 0.05, end - 0.05, fadeOutEnd],
+  [index === 0 ? 1 : 0, 1, 1, index === steps.length - 1 ? 1 : 0]
+);
+
               const scale = useTransform(
                 scrollYProgress,
                 [start, end],
