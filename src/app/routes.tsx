@@ -30,6 +30,8 @@ import DeliveryHistory from "./pages/DeliveryHistory";
 
 import Messages from "./pages/Messages";
 
+import EarningsHistory from "./pages/EarningsHistory";
+
 export const router = createBrowserRouter([
 
   {
@@ -107,6 +109,11 @@ export const router = createBrowserRouter([
   Component: RiderProfile,
 },
 
+{
+    path: "/earnings-history",
+    Component: EarningsHistory,
+  },
+
   {
   path: "/platform-dashboard",
   Component: PlatformDashboard,
@@ -122,10 +129,7 @@ export const router = createBrowserRouter([
     Component: CreateDelivery,
   },
 
-  {
-  path: "/zomato-demo",
-  Component: ZomatoDemo,
-},
+ 
 {
   path: "/zomato-demo",
   Component: ZomatoDemo, // ✅ Correct: Just pass the component reference without ()
