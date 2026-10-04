@@ -18,11 +18,30 @@
     50% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
   }
 
+  /* 🚀 ADD THESE NEW ANIMATIONS HERE */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes ambientGlow {
+    0%, 100% { opacity: 0.25; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.08); }
+  }
+
   .animate-slide-up {
     animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-pulse-glow {
     animation: pulseGlow 2s infinite;
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-ambient-glow {
+    animation: ambientGlow 3s ease-in-out infinite;
   }
 }

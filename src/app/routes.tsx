@@ -30,8 +30,6 @@ import DeliveryHistory from "./pages/DeliveryHistory";
 
 import Messages from "./pages/Messages";
 
-import EarningsHistory from "./pages/EarningsHistory";
-
 export const router = createBrowserRouter([
 
   {
@@ -65,14 +63,14 @@ export const router = createBrowserRouter([
         Component: AboutUs,
       },
 
-      {
-  path: "/delivery-history",
-  element: <DeliveryHistory />,
+    {
+  path: "delivery-history",
+  Component: DeliveryHistory,
 },
 
 {
-  path: "/messages",
-  element: <Messages />,
+  path: "messages",
+  Component: Messages,
 }
 
     ],
@@ -108,11 +106,10 @@ export const router = createBrowserRouter([
   path: "/rider-profile",
   Component: RiderProfile,
 },
-
 {
-    path: "/earnings-history",
-    Component: EarningsHistory,
-  },
+  path: "/earnings-history",
+  Component: DeliveryHistory,
+},
 
   {
   path: "/platform-dashboard",
