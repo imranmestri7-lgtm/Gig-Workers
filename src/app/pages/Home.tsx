@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import Scrollytelling from "../components/Scrollytelling";
 
 import React from "react";
 import { Link } from "react-router";
@@ -111,6 +112,11 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
         </motion.div>
       </section>
+
+      {/* 🚀 Interactive Scrollytelling Section */}
+      <div className="mb-32">
+        <Scrollytelling />
+      </div>
 
       {/* Section 2: Category Cards */}
       <section className="max-w-7xl mx-auto px-6 mb-32">
