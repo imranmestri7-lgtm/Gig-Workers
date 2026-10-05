@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import Scrollytelling from "../components/Scrollytelling";
+import AnimatedLogo from "../components/AnimatedLogo";
 
 import React from "react";
 import { Link } from "react-router";
@@ -117,6 +118,11 @@ export default function Home() {
       <div className="mb-32">
         <Scrollytelling />
       </div>
+
+      {/* 🌟 Animated Logo & Partner Marquee Ticker */}
+<div className="mb-32">
+  <AnimatedLogo />
+</div>
 
       {/* Section 2: Category Cards */}
       <section className="max-w-7xl mx-auto px-6 mb-32">
