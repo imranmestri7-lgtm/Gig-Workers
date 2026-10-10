@@ -33,9 +33,10 @@ export default function AboutUs() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="rounded-[3rem] overflow-hidden h-[400px] md:h-[500px] shadow-lg mt-12"
         >
+          {/* 🚀 HIGH-QUALITY MODERN FOOD DELIVERY PICKUP IMAGE */}
           <img 
-            src="https://images.unsplash.com/photo-1555992336-fb0d29498b13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXRybyUyMHJlc3RhdXJhbnR8ZW58MXx8fHwxNzc4NjU5MjgwfDA&ixlib=rb-4.1.0&q=80&w=1080" 
-            alt="Classic retro restaurant" 
+            src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80" 
+            alt="Chef preparing fresh meal for delivery partner pickup" 
             className="w-full h-full object-cover"
           />
         </motion.div>
