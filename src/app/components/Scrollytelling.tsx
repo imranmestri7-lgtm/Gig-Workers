@@ -61,18 +61,19 @@ export default function Scrollytelling() {
   return (
     <section
       ref={containerRef}
-      className="relative bg-slate-900 text-white py-20 px-6 md:px-12"
+      className="relative bg-[#FAF9F5] text-slate-900 py-20 px-6 md:px-12"
     >
       <div className="max-w-7xl mx-auto mb-16 text-center space-y-4">
         <span className="text-xs font-black uppercase tracking-widest text-orange-400 bg-orange-500/10 border border-orange-500/20 px-4 py-1.5 rounded-full inline-block">
           ✨ Interactive Experience
         </span>
-        <h2 className="text-4xl md:text-5xl font-black tracking-tight text-white">
-          How GigWorker Logistics Works
-        </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">
-          Scroll down to watch our real-time order dispatch and delivery ecosystem in action.
-        </p>
+        {/* 🚀 NEW (Navy blue text) */}
+<h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+  How GigWorker Logistics Works
+</h2>
+<p className="text-lg text-slate-700">
+  Scroll down to watch our real-time order dispatch and delivery ecosystem in action.
+</p>
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start relative">
