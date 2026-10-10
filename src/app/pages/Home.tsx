@@ -100,19 +100,21 @@ export default function Home() {
           </motion.div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="relative rounded-[2rem] overflow-hidden shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] h-[400px] md:h-[600px] w-full"
-        >
-          <img 
-            src="https://images.unsplash.com/photo-1774978236819-1cfbb59793c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmFuZ2UlMjBkZWxpdmVyeSUyMGJhZyUyMHNjb290ZXJ8ZW58MXx8fHwxNzc4NjU5Mjc5fDA&ixlib=rb-4.1.0&q=80&w=1080" 
-            alt="Delivery rider with orange uniform checking phone on scooter" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
-        </motion.div>
+       <motion.div 
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7, delay: 0.3 }}
+  className="relative rounded-[2rem] overflow-hidden shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] h-[450px] md:h-[600px] w-full bg-slate-100"
+>
+  {/* 🚀 VERIFIED: Delivery rider on scooter with helmet */}
+  <img 
+    src="https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=1600&q=80" 
+    alt="Full body GigWorker delivery rider on scooter with helmet and bag" 
+    className="w-full h-full object-cover object-center" 
+  />
+  
+  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/10 to-transparent" />
+</motion.div>
       </section>
 
       {/* 🚀 Interactive Scrollytelling Section */}
