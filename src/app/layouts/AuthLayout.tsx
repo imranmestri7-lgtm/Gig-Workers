@@ -16,11 +16,11 @@ export default function AuthLayout() {
 
       {/* Image Side */}
       <div className="hidden lg:block lg:flex-1 relative overflow-hidden bg-slate-900 rounded-l-[3rem] shadow-[-20px_0_40px_-12px_rgba(0,0,0,0.1)] my-6 mr-6">
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent z-10"></div>
         <img 
-          src="https://images.unsplash.com/photo-1762848023162-c211ef0aa0c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aW50YWdlJTIwZGVsaXZlcnklMjBwZXJzb258ZW58MXx8fHwxNzc4NjU5Mjg1fDA&ixlib=rb-4.1.0&q=80&w=1080" 
-          alt="Vintage delivery rider smiling" 
-          className="w-full h-full object-cover opacity-90"
+          src="https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=1200&q=80" 
+          alt="Modern food delivery rider on scooter" 
+          className="w-full h-full object-cover"
         />
         <div className="absolute bottom-16 left-16 right-16 z-20">
           <h2 className="text-4xl font-['Nunito',sans-serif] font-bold text-white mb-4">
