@@ -88,7 +88,9 @@ export default function Scrollytelling() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 viewport={{ margin: "-20% 0px -20% 0px", once: false }}
-                className="bg-slate-800/60 backdrop-blur-xl p-8 rounded-3xl border border-slate-700/80 shadow-2xl relative space-y-4 group hover:border-orange-500/40 transition-all"
+              
+
+className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative space-y-4 group hover:border-[#A33D20]/50 transition-all"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400 bg-slate-700/50 px-3 py-1 rounded-full">
