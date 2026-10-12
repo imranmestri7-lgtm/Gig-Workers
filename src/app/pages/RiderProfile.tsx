@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router";
+import React, { useState, useRef } from "react";
+import { Camera } from "lucide-react";
 
 export default function RiderProfile() {
   const navigate = useNavigate();
@@ -6,6 +8,32 @@ export default function RiderProfile() {
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"
   );
+
+  // 1. Profile image state initialized with stored user photo or default fallback
+  const [profileImage, setProfileImage] = useState<string>(
+    user.profileImage || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
+  );
+
+  // 2. Ref for hidden input
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // 3. Click handler to open native file chooser
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // 4. File change handler to set new image preview
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+
+      // Save to localStorage so image persists across refreshes
+      const updatedUser = { ...user, profileImage: imageUrl };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -40,13 +68,34 @@ export default function RiderProfile() {
 
           <div className="flex items-center gap-5 mb-8">
 
-            <div className="relative">
+            {/* Hidden File Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              accept="image/*"
+              className="hidden"
+            />
+
+            {/* Interactive Clickable Profile Circle */}
+            <div 
+              onClick={handleAvatarClick}
+              className="relative cursor-pointer group overflow-hidden w-24 h-24 rounded-full border-2 border-[#A33D20] shadow-md"
+              title="Click to select photo"
+            >
               <img 
-                src={user.profileImage || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"} 
+                src={profileImage} 
                 alt="Rider Profile" 
-                className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-[#A33D20]"
+                className="w-full h-full object-cover"
               />
-              <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-2 border-white rounded-full" title="Online" />
+
+              {/* Hover Camera Overlay */}
+              <div className="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <Camera className="w-6 h-6" />
+              </div>
+
+              {/* Online Status Dot */}
+              <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-2 border-white rounded-full z-10" title="Online" />
             </div>
 
             <div>
@@ -65,7 +114,6 @@ export default function RiderProfile() {
 
           </div>
           
-
 
           {/* Account Information */}
           <div className="grid md:grid-cols-2 gap-6">
